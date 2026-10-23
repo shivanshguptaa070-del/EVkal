@@ -1,5 +1,6 @@
 import { RotateCcw, Calendar } from 'lucide-react';
 import { Header } from './components/Header';
+import { LandingHeroPage } from './components/LandingHeroPage';
 import { TransformerControlPanel } from './components/TransformerControlPanel';
 import { ScenarioSelector } from './components/ScenarioSelector';
 import { EVFleetManagerTable } from './components/EVFleetManagerTable';
@@ -13,6 +14,18 @@ import { useSimulationStore } from './store/useSimulationStore';
 
 export default function App() {
   const { activeTab, resetSimulation } = useSimulationStore();
+
+  if (activeTab === 'LANDING') {
+    return (
+      <div className="min-h-screen bg-[#0B0F17] flex flex-col font-sans selection:bg-emerald-500/20 selection:text-emerald-400">
+        <LandingHeroPage />
+        {/* Interactive EV Session Modal (P0) */}
+        <EVSessionModal />
+        {/* Interactive 5-Stage P2P Booking Modal (P1) */}
+        <BookingSimModal />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#F1F5F9] text-slate-900 flex flex-col font-sans selection:bg-emerald-500/20 selection:text-emerald-700">

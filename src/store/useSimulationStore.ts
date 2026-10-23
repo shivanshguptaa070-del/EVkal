@@ -18,7 +18,7 @@ const INITIAL_P2P_QUERY: LowBatterySearchQuery = {
 };
 
 export type ScenarioPreset = 'EVENING_RUSH' | 'VALLEY_SHIFT' | 'INFEASIBLE_REQUEST';
-export type ActiveTab = 'P0_GRID' | 'P1_P2P';
+export type ActiveTab = 'LANDING' | 'P0_GRID' | 'P1_P2P';
 
 const INITIAL_BACKGROUND = backgroundLoadData as BackgroundLoadSlot[];
 const SCENARIOS = scenariosData as {
@@ -84,6 +84,7 @@ interface SimulationState {
   closeBookingModal: () => void;
   setBookingStage: (stage: 'REVIEW' | 'TRANSMITTING' | 'ACCEPTED' | 'CHARGING' | 'COMPLETED') => void;
   advanceBookingStage: () => void;
+  toggleNetworkFallback: () => void;
 }
 
 // Initial solver execution
@@ -96,7 +97,7 @@ const initialSolverOutput = runSmartChargingOptimisation(
 );
 
 export const useSimulationStore = create<SimulationState>((set, get) => ({
-  activeTab: 'P0_GRID',
+  activeTab: 'LANDING',
   isModalOpen: false,
   selectedVehicleId: null,
 
@@ -302,6 +303,21 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
     const currentIndex = sequence.indexOf(bookingStage);
     if (currentIndex < sequence.length - 1) {
       set({ bookingStage: sequence[currentIndex + 1] });
+    }
+  },
+
+  toggleNetworkFallback: () => {
+    const { isLive } = get();
+    if (isLive) {
+      set({
+        isLive: false,
+        provenance: 'SYNTHETIC_FALLBACK',
+      });
+    } else {
+      set({
+        isLive: true,
+        provenance: 'LIVE_API',
+      });
     }
   },
 }));

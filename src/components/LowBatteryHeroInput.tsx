@@ -137,6 +137,16 @@ export function LowBatteryHeroInput() {
         </div>
       </div>
 
+      {/* Honest Range Advisory Banner (D04 Compliance) */}
+      {isCritical && (
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-orange-100/70 border border-orange-200/90 text-[11px] text-amber-950 font-medium">
+          <AlertTriangle className="h-3.5 w-3.5 text-orange-600 shrink-0" />
+          <span>
+            <strong>Honest Range Advisory:</strong> Battery percentage is not a guarantee of distance. Road travel distance and traffic will reduce reachable range.
+          </span>
+        </div>
+      )}
+
       {/* Prominent Wide Action Button */}
       <div className="pt-1">
         <button
