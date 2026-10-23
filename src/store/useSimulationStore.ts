@@ -326,9 +326,9 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
 
   resetP2PFilters: () => set({ p2pFilters: INITIAL_P2P_FILTERS }),
 
-  openListChargerModal: () => set({ isListChargerModalOpen: true, p2pSubView: 'LIST_CHARGER' }),
-  closeListChargerModal: () => set({ isListChargerModalOpen: false, p2pSubView: 'BROWSE' }),
-  setP2PSubView: (view) => set({ p2pSubView: view }),
+  openListChargerModal: () => set({ isListChargerModalOpen: false, p2pSubView: 'LIST_CHARGER' }),
+  closeListChargerModal: () => set({ isListChargerModalOpen: false, p2pSubView: 'FIND_CHARGERS' }),
+  setP2PSubView: (view) => set({ isListChargerModalOpen: false, p2pSubView: view }),
 
   addChargerListing: (listing) => {
     set((state) => ({

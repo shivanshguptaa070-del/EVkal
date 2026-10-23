@@ -9,11 +9,10 @@ import { MyBookingsPage } from './MyBookingsPage';
 import { HostEarningsPage } from './HostEarningsPage';
 import { MembershipPricingPage } from './MembershipPricingPage';
 import { BookingSimModal } from './BookingSimModal';
-import { ListChargerModal } from './ListChargerModal';
 import { useSimulationStore } from '../store/useSimulationStore';
 
 export function P2PChargerSharingTab() {
-  const { p2pSubView, setP2PSubView, openListChargerModal } = useSimulationStore();
+  const { p2pSubView, setP2PSubView } = useSimulationStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedConnector, setSelectedConnector] = useState('TYPE_2');
   const [selectedRadius, setSelectedRadius] = useState(5);
@@ -39,7 +38,7 @@ export function P2PChargerSharingTab() {
               onConnectorChange={setSelectedConnector}
               selectedRadius={selectedRadius}
               onRadiusChange={setSelectedRadius}
-              onToggleFilterModal={openListChargerModal}
+              onToggleFilterModal={() => setP2PSubView('LIST_CHARGER')}
             />
 
             {/* Main 2-Column Interface: Left Map + Right Nearby Chargers List */}
@@ -84,7 +83,6 @@ export function P2PChargerSharingTab() {
 
       {/* Interactive Modals */}
       <BookingSimModal />
-      <ListChargerModal />
     </div>
   );
 }
