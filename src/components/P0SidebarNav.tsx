@@ -1,21 +1,30 @@
 import {
+  Home,
   LayoutDashboard,
   Car,
   IndianRupee,
   Calendar,
   BarChart3,
   Sprout,
-  User,
+  Compass,
+  ArrowRight,
 } from 'lucide-react';
 import { useSimulationStore, type P0SubPage } from '../store/useSimulationStore';
 
 interface NavItem {
-  id: P0SubPage;
+  id: string;
   title: string;
   icon: React.ComponentType<{ className?: string }>;
+  isLanding?: boolean;
 }
 
 const NAV_ITEMS: NavItem[] = [
+  {
+    id: 'LANDING',
+    title: 'Landing Page',
+    icon: Home,
+    isLanding: true,
+  },
   {
     id: 'PAGE_1_DASHBOARD',
     title: 'Dashboard',
@@ -41,24 +50,23 @@ const NAV_ITEMS: NavItem[] = [
     title: 'Results',
     icon: BarChart3,
   },
-  {
-    id: 'PAGE_6_PROFILE',
-    title: 'Profile',
-    icon: User,
-  },
 ];
 
 export function P0SidebarNav() {
   const { activeP0SubPage, setActiveP0SubPage, setActiveTab, activeTab } = useSimulationStore();
 
   return (
-    <aside className="w-60 xl:w-64 shrink-0 bg-[#07131F] text-slate-300 flex flex-col justify-between p-5 border-r border-slate-800/80 min-h-screen sticky top-0 z-40">
-      <div className="space-y-7">
+    <aside className="w-60 xl:w-64 shrink-0 bg-[#07131F] text-slate-300 flex flex-col justify-between p-5 border-r border-slate-800/80 sticky top-0 h-screen z-40">
+      <div className="space-y-6">
         {/* Brand Header */}
         <div className="px-1 pt-1">
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => { setActiveTab('P0_GRID'); setActiveP0SubPage('PAGE_1_DASHBOARD'); }}>
+          <div
+            className="flex items-center gap-2 cursor-pointer group"
+            onClick={() => setActiveTab('LANDING')}
+            title="Go to EVkal Landing Page"
+          >
             <div className="relative flex items-center justify-center">
-              <span className="text-2xl font-black tracking-tight text-white flex items-center font-sans">
+              <span className="text-2xl font-black tracking-tight text-white flex items-center font-sans group-hover:text-emerald-400 transition-colors">
                 E
                 <span className="relative">
                   V
@@ -73,13 +81,39 @@ export function P0SidebarNav() {
           </p>
         </div>
 
+        {/* Switch to P2P Community Sharing (P1) Button */}
+        <div className="pt-1">
+          <button
+            type="button"
+            id="p0-switch-to-p1-p2p"
+            onClick={() => setActiveTab('P1_P2P')}
+            className="w-full flex items-center justify-between p-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 hover:border-emerald-500/50 hover:bg-slate-850 text-slate-300 hover:text-white transition-all text-left shadow-sm group cursor-pointer"
+            title="Switch to P1 Community Charger Sharing"
+          >
+            <div className="flex items-center gap-2.5">
+              <div className="h-7 w-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center group-hover:scale-105 transition-transform">
+                <Compass className="h-4 w-4" />
+              </div>
+              <div>
+                <div className="text-[11px] font-bold text-white leading-tight">
+                  P2P Charger Sharing (P1)
+                </div>
+                <div className="text-[10px] text-slate-400 leading-tight">
+                  Delhi Community Radar
+                </div>
+              </div>
+            </div>
+            <ArrowRight className="h-3.5 w-3.5 text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all" />
+          </button>
+        </div>
+
         {/* Navigation Items */}
         <nav className="space-y-1.5">
           {NAV_ITEMS.map((item) => {
             const Icon = item.icon;
-            const isProf = item.id === 'PAGE_6_PROFILE';
-            const isActive = isProf
-              ? activeTab === 'PROFILE' || activeP0SubPage === 'PAGE_6_PROFILE'
+            const isLanding = item.isLanding;
+            const isActive = isLanding
+              ? activeTab === 'LANDING'
               : activeTab === 'P0_GRID' && activeP0SubPage === item.id;
 
             return (
@@ -88,12 +122,11 @@ export function P0SidebarNav() {
                 id={`sidebar-nav-${item.id.toLowerCase()}`}
                 type="button"
                 onClick={() => {
-                  if (isProf) {
-                    setActiveTab('PROFILE');
-                    setActiveP0SubPage('PAGE_6_PROFILE');
+                  if (isLanding) {
+                    setActiveTab('LANDING');
                   } else {
                     setActiveTab('P0_GRID');
-                    setActiveP0SubPage(item.id);
+                    setActiveP0SubPage(item.id as P0SubPage);
                   }
                 }}
                 className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-xs font-semibold transition-all cursor-pointer ${

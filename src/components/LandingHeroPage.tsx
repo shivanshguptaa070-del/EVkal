@@ -667,13 +667,29 @@ export function LandingHeroPage() {
               </div>
 
               {/* Action Link Footer */}
-              <button
-                onClick={() => setActiveTab('P0_GRID')}
-                className="inline-flex items-center gap-2 text-sm font-bold text-emerald-700 hover:text-emerald-800 transition-colors pt-2 group cursor-pointer"
-              >
-                <span>Explore Full Grid Optimizer Simulation</span>
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-1.5 transition-transform stroke-[2.5]" />
-              </button>
+              <div className="flex flex-wrap items-center gap-4 pt-2">
+                <button
+                  onClick={() => {
+                    setActiveP0SubPage('PAGE_1_DASHBOARD');
+                    setActiveTab('P0_GRID');
+                  }}
+                  className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-emerald-700 hover:text-emerald-800 transition-colors group cursor-pointer"
+                >
+                  <span>Explore Grid Dashboard</span>
+                  <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform stroke-[2.5]" />
+                </button>
+                <span className="text-slate-300">•</span>
+                <button
+                  onClick={() => {
+                    setActiveP0SubPage('PAGE_0_OPTIMIZER');
+                    setActiveTab('P0_GRID');
+                  }}
+                  className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-800 hover:text-emerald-600 transition-colors group cursor-pointer"
+                >
+                  <span>Launch Full Optimizer</span>
+                  <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform stroke-[2.5]" />
+                </button>
+              </div>
             </div>
 
             {/* ── CARD 2: P2P COMMUNITY CHARGER SHARING (P1) ── */}
@@ -1142,7 +1158,7 @@ export function LandingHeroPage() {
 
           <div className="flex flex-wrap items-center gap-6 text-slate-400">
             <button onClick={() => setActiveTab('P0_GRID')} className="hover:text-emerald-400 transition-colors cursor-pointer">
-              P0 Grid Optimizer
+              P0 Grid Dashboard
             </button>
             <button onClick={() => setActiveTab('P1_P2P')} className="hover:text-emerald-400 transition-colors cursor-pointer">
               P1 Community Sharing

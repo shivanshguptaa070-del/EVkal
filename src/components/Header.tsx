@@ -142,7 +142,7 @@ export function Header() {
             <span>Overview</span>
           </button>
 
-          {/* 2. Grid Optimizer */}
+          {/* 2. Grid Dashboard */}
           <button
             type="button"
             onClick={() => setActiveTab('P0_GRID')}
@@ -157,7 +157,7 @@ export function Header() {
             }`}
           >
             <BarChart2 className="h-4 w-4" />
-            <span>Grid Optimizer</span>
+            <span>Grid Dashboard</span>
           </button>
 
           {/* 3. P2P Charger Sharing */}

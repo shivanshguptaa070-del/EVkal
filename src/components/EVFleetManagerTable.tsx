@@ -1,18 +1,14 @@
-import { Plus, Edit2, AlertCircle, Car } from 'lucide-react';
+import { Plus, Edit2, Car } from 'lucide-react';
 import { useSimulationStore } from '../store/useSimulationStore';
 import { getVehicleImage } from '../utils/vehicleImages';
 
-function VehicleAvatar({ model, isInfeasible }: { model: string; isInfeasible: boolean }) {
-  if (isInfeasible) {
-    return (
-      <div className="h-7 w-10 rounded-md bg-red-50 border border-red-200 flex items-center justify-center text-red-500 shrink-0">
-        <AlertCircle className="h-4 w-4" />
-      </div>
-    );
-  }
-
+function VehicleAvatar({ model, isInfeasible }: { model: string; isInfeasible?: boolean }) {
   return (
-    <div className="h-7 w-10 rounded-md bg-slate-50 border border-slate-200/90 flex items-center justify-center p-0.5 shrink-0 overflow-hidden shadow-2xs">
+    <div
+      className={`h-7 w-10 rounded-md bg-slate-50 border flex items-center justify-center p-0.5 shrink-0 overflow-hidden shadow-2xs ${
+        isInfeasible ? 'border-red-300 ring-1 ring-red-400' : 'border-slate-200/90'
+      }`}
+    >
       <img
         src={getVehicleImage(model)}
         alt={model}
@@ -36,7 +32,7 @@ export function EVFleetManagerTable() {
         <button
           type="button"
           onClick={() => openSessionModal()}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-500 text-emerald-700 bg-emerald-50/50 hover:bg-emerald-100/60 text-xs font-bold transition-colors shadow-sm"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-500 text-emerald-700 bg-emerald-50/50 hover:bg-emerald-100/60 text-xs font-bold transition-colors shadow-sm cursor-pointer"
         >
           <Plus className="h-3.5 w-3.5" />
           <span>Add EV Session</span>
@@ -51,7 +47,7 @@ export function EVFleetManagerTable() {
                 <th className="py-2.5 px-2 w-6 text-center">#</th>
                 <th className="py-2.5 px-2">Vehicle Model</th>
                 <th className="py-2.5 px-2 text-right">Battery (kWh)</th>
-                <th className="py-2.5 px-2 text-right">Energy (kWh)</th>
+                <th className="py-2.5 px-2 text-right">Energy Needed (kWh)</th>
                 <th className="py-2.5 px-2 text-center">Arrival</th>
                 <th className="py-2.5 px-2 text-center">Departure</th>
                 <th className="py-2.5 px-2 text-center">Smart Scheduling</th>

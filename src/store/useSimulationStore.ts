@@ -52,6 +52,13 @@ export type P0SubPage =
   | 'PAGE_5_RESULTS'
   | 'PAGE_6_PROFILE';
 
+export type P1SubPage =
+  | 'P2P_EXPLORE'
+  | 'P2P_EMERGENCY'
+  | 'P2P_LIST_CHARGER'
+  | 'P2P_BOOKINGS'
+  | 'P2P_EARNINGS';
+
 
 const INITIAL_BACKGROUND = backgroundLoadData as BackgroundLoadSlot[];
 const SCENARIOS = scenariosData as {
@@ -298,6 +305,7 @@ interface SimulationState {
   p2pFilters: P2PFilterState;
   chargerListings: ChargerListing[];
   isListChargerModalOpen: boolean;
+  activeP1SubPage: P1SubPage;
   p2pSubView: 'BROWSE' | 'LIST_CHARGER';
   newlyAddedListingId: string | null;
   selectedChargerForBooking: ChargerListing | null;
@@ -307,6 +315,7 @@ interface SimulationState {
   // Actions
   setActiveTab: (tab: ActiveTab) => void;
   setActiveP0SubPage: (page: P0SubPage) => void;
+  setActiveP1SubPage: (page: P1SubPage) => void;
   setP2PSubView: (view: 'BROWSE' | 'LIST_CHARGER') => void;
   setTransformerCapacity: (capacityKw: number) => void;
   setScenario: (scenario: ScenarioPreset) => void;
@@ -378,7 +387,8 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
   p2pFilters: INITIAL_P2P_FILTERS,
   chargerListings: INITIAL_CHARGERS,
   isListChargerModalOpen: false,
-  p2pSubView: 'LIST_CHARGER',
+  activeP1SubPage: 'P2P_EXPLORE',
+  p2pSubView: 'BROWSE',
   newlyAddedListingId: null,
   selectedChargerForBooking: null,
   bookingStage: 'REVIEW',
@@ -386,6 +396,11 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
 
   setActiveTab: (tab) => set({ activeTab: tab }),
   setActiveP0SubPage: (page) => set({ activeP0SubPage: page }),
+  setActiveP1SubPage: (page) =>
+    set({
+      activeP1SubPage: page,
+      p2pSubView: page === 'P2P_LIST_CHARGER' ? 'LIST_CHARGER' : 'BROWSE',
+    }),
 
   setActiveProfileTab: (tab) => set({ activeProfileTab: tab }),
 
@@ -633,9 +648,23 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
 
   resetP2PFilters: () => set({ p2pFilters: INITIAL_P2P_FILTERS }),
 
-  openListChargerModal: () => set({ isListChargerModalOpen: true, p2pSubView: 'LIST_CHARGER' }),
-  closeListChargerModal: () => set({ isListChargerModalOpen: false, p2pSubView: 'BROWSE' }),
-  setP2PSubView: (view) => set({ p2pSubView: view }),
+  openListChargerModal: () =>
+    set({
+      isListChargerModalOpen: true,
+      p2pSubView: 'LIST_CHARGER',
+      activeP1SubPage: 'P2P_LIST_CHARGER',
+    }),
+  closeListChargerModal: () =>
+    set({
+      isListChargerModalOpen: false,
+      p2pSubView: 'BROWSE',
+      activeP1SubPage: 'P2P_EXPLORE',
+    }),
+  setP2PSubView: (view) =>
+    set({
+      p2pSubView: view,
+      activeP1SubPage: view === 'LIST_CHARGER' ? 'P2P_LIST_CHARGER' : 'P2P_EXPLORE',
+    }),
 
   addChargerListing: (listing) => {
     set((state) => ({

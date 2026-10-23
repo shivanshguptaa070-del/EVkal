@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import {
+  Home,
   Calendar,
   Bell,
   ChevronDown,
@@ -41,28 +42,14 @@ export function TopBar() {
 
   return (
     <header className="flex flex-wrap items-center justify-between gap-4 pb-6">
-      {/* Left: Location Indicators (Matching Reference Mockup) + Simulation Pills */}
+      {/* Left: Location Indicators (Matching Reference Mockup media_1792788491187.jpg) */}
       <div className="flex flex-wrap items-center gap-3">
-        {/* Country Selector Pill (From Screenshot) */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200/90 text-xs font-semibold text-slate-800 shadow-2xs">
-          <MapPin className="h-3.5 w-3.5 text-emerald-600" />
-          <span>India (IN)</span>
-          <ChevronDown className="h-3 w-3 text-slate-400" />
-        </div>
-
-        {/* City / Feeder Sector Selector (From Screenshot) */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200/90 text-xs font-semibold text-slate-800 shadow-2xs">
-          <MapPin className="h-3.5 w-3.5 text-emerald-600" />
-          <span>Sector-Alpha, Noida</span>
-          <ChevronDown className="h-3 w-3 text-slate-400" />
-        </div>
-
-        {/* Live / Fallback Toggle Pill */}
+        {/* Grid: India (NR) Pill (From Screenshot) */}
         <button
           type="button"
           onClick={toggleNetworkFallback}
-          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-50 border border-slate-200 hover:border-slate-300 text-xs font-semibold text-slate-700 shadow-2xs transition-colors cursor-pointer"
-          title="Toggle Grid API mode"
+          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200/90 text-xs font-semibold text-slate-800 shadow-2xs hover:bg-slate-50 transition-colors cursor-pointer"
+          title="Toggle Grid API Mode"
         >
           <span className="relative flex h-2 w-2">
             <span
@@ -76,33 +63,34 @@ export function TopBar() {
               }`}
             />
           </span>
-          <span className="text-[11px]">{isLive ? 'Live Grid' : 'Synthetic'}</span>
+          <span>Grid: India (NR)</span>
+          <ChevronDown className="h-3 w-3 text-slate-400" />
         </button>
 
-        {/* Quick Nav: P0 Grid Optimizer */}
+
+        {/* Landing Page Link */}
         <button
           type="button"
-          onClick={() => setActiveTab('P0_GRID')}
-          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-            activeTab === 'P0_GRID'
-              ? 'bg-emerald-600 text-white shadow-xs'
-              : 'bg-white border border-slate-200/90 text-slate-700 hover:border-emerald-300 hover:bg-emerald-50/40'
-          }`}
+          onClick={() => setActiveTab('LANDING')}
+          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white border border-slate-200/90 text-xs font-semibold text-slate-700 hover:border-emerald-300 hover:text-emerald-700 hover:bg-emerald-50/40 shadow-2xs transition-all cursor-pointer"
+          title="Return to Landing Page"
         >
-          <span>P0 Grid Optimizer</span>
+          <Home className="h-3.5 w-3.5 text-emerald-600" />
+          <span>Home</span>
         </button>
 
-        {/* Quick Nav: P1 P2P Sharing */}
+        {/* P2P Charger Sharing Pill (From Screenshot) */}
         <button
           type="button"
           onClick={() => setActiveTab('P1_P2P')}
-          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+          className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer shadow-2xs ${
             activeTab === 'P1_P2P'
               ? 'bg-emerald-600 text-white shadow-xs'
               : 'bg-white border border-slate-200/90 text-slate-700 hover:border-emerald-300 hover:bg-emerald-50/40'
           }`}
         >
-          <span>P1 P2P Sharing</span>
+          <MapPin className="h-3.5 w-3.5 text-emerald-600" />
+          <span>P2P Charger Sharing</span>
         </button>
       </div>
 
@@ -310,7 +298,7 @@ export function TopBar() {
                   }}
                   className="w-full text-left px-3 py-1.5 rounded-lg hover:bg-slate-50 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
                 >
-                  Go to <strong>P0 Smart Grid Optimizer</strong>
+                  Go to <strong>P0 Feeder Dashboard</strong>
                 </button>
                 <button
                   type="button"
