@@ -168,26 +168,26 @@ grep -r "import.*react" src/services/ → 0 results
 
 **Tasks (after images received):**
 
-- [ ] **3.1** Zustand store `src/store/useSimulationStore.ts` (react-patterns: Zustand for high-frequency cross-tree updates):
+- [x] **3.1** Zustand store `src/store/useSimulationStore.ts` (react-patterns: Zustand for high-frequency cross-tree updates):
   - State: `transformerCapacity`, `backgroundLoad`, `evFleet`, `activeScenario`, `provenance`, `solverOutput`
   - Any state change synchronously reruns `runSmartChargingOptimisation()` — target <2 ms
   - No derived state stored separately (react-patterns rule: derive in render)
-- [ ] **3.2** `<Header />` — EVkal title, live clock (`useEffect` + `setInterval`), `<GridStressBadge />`, `<ProvenanceTag />` (LIVE / DEMO BASELINE / SYNTHETIC)
-- [ ] **3.3** `<ModeTabs />` — segment control toggling P0 (Smart Grid) / P1 (P2P Sharing)
-- [ ] **3.4** `<TransformerControlPanel />` — capacity slider 50–200 kW (5 kW steps), 90% safety margin line, circular SVG utilisation gauge
-- [ ] **3.5** `<ScenarioSelector />` — 3 preset buttons:
+- [x] **3.2** `<Header />` — EVkal title, live clock (`useEffect` + `setInterval`), `<GridStressBadge />`, `<ProvenanceTag />` (LIVE / DEMO BASELINE / SYNTHETIC)
+- [x] **3.3** `<ModeTabs />` — segment control toggling P0 (Smart Grid) / P1 (P2P Sharing)
+- [x] **3.4** `<TransformerControlPanel />` — capacity slider 50–200 kW (5 kW steps), 90% safety margin line, circular SVG utilisation gauge
+- [x] **3.5** `<ScenarioSelector />` — 3 preset buttons:
   - **Evening Rush** → loads benchmark baseline (122.8 kW overload)
   - **Valley Shift** → loads optimised schedule (79.2 kW)
   - **Infeasible Request** → triggers +6 h feasibility alert
-- [ ] **3.6** `<BeforeAfterMetricsCard />` — 4 KPI cards (numbers from store, never hardcoded):
+- [x] **3.6** `<BeforeAfterMetricsCard />` — 4 KPI cards (numbers from store, never hardcoded):
   - Peak before/after · % reduction pill · overload kWh avoided · ₹ fleet savings
-- [ ] **3.7** `<DualCurveLoadChart />` (Chart.js canvas):
+- [x] **3.7** `<DualCurveLoadChart />` (Chart.js canvas):
   - Orange dashed = baseline · Emerald solid = optimised · Red dashed = capacity line · Crimson fill = overload danger zone
   - Multi-line tooltip on hover
-- [ ] **3.8** `<EVFleetManagerTable />` + `<EVSessionModal />`:
+- [x] **3.8** `<EVFleetManagerTable />` + `<EVSessionModal />`:
   - 7 vehicle rows: model, battery kWh, required kWh, arrival slot, deadline slot
   - Flexibility toggle (`Flexible` / `Immediate`) — updates store, reruns solver
-- [ ] **3.9** `<HourlyScheduleHeatmap />` — 24-slot strip coloured by `LocalTransformerTier`, ₹ rate shown per slot
+- [x] **3.9** `<HourlyScheduleHeatmap />` — 24-slot strip coloured by `LocalTransformerTier`, ₹ rate shown per slot
 
 **✅ Phase 3 Gate:**
 ```

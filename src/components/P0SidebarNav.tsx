@@ -1,182 +1,143 @@
-import React from 'react';
 import {
   LayoutDashboard,
-  Cpu,
   Car,
-  CircleDollarSign,
-  AlertTriangle,
-  ChevronLeft,
-  ChevronRight,
-  Sparkles,
+  IndianRupee,
+  Calendar,
+  BarChart3,
+  Sprout,
+  User,
 } from 'lucide-react';
 import { useSimulationStore, type P0SubPage } from '../store/useSimulationStore';
 
 interface NavItem {
   id: P0SubPage;
-  pageNumber: string;
   title: string;
-  subtitle: string;
   icon: React.ComponentType<{ className?: string }>;
-  tag: string;
 }
 
 const NAV_ITEMS: NavItem[] = [
   {
-    id: 'PAGE_1_OPTIMIZER',
-    pageNumber: '01',
-    title: 'Grid Optimization',
-    subtitle: 'Dual-curve load & fleet controls',
+    id: 'PAGE_1_DASHBOARD',
+    title: 'Dashboard',
     icon: LayoutDashboard,
-    tag: 'Main',
   },
   {
-    id: 'PAGE_2_TRANSFORMER',
-    pageNumber: '02',
-    title: 'Transformer Analytics',
-    subtitle: 'Feeder load & thermal health',
-    icon: Cpu,
-    tag: 'Feeder',
-  },
-  {
-    id: 'PAGE_3_FLEET',
-    pageNumber: '03',
-    title: 'EV Fleet Scheduling',
-    subtitle: 'Roster & flexibility solver',
+    id: 'PAGE_2_FLEET',
+    title: 'EV Fleet',
     icon: Car,
-    tag: 'Fleet',
   },
   {
-    id: 'PAGE_4_TARIFF',
-    pageNumber: '04',
-    title: 'Tariff & Economics',
-    subtitle: 'TOU pricing & fleet savings',
-    icon: CircleDollarSign,
-    tag: 'Tariff',
+    id: 'PAGE_3_TARIFF',
+    title: 'Dynamic Tariff',
+    icon: IndianRupee,
   },
   {
-    id: 'PAGE_5_DIAGNOSTICS',
-    pageNumber: '05',
-    title: 'Feasibility & Alerts',
-    subtitle: 'Overload alerts & deadline checks',
-    icon: AlertTriangle,
-    tag: 'Safety',
+    id: 'PAGE_4_SCHEDULER',
+    title: 'Scheduler',
+    icon: Calendar,
+  },
+  {
+    id: 'PAGE_5_RESULTS',
+    title: 'Results',
+    icon: BarChart3,
+  },
+  {
+    id: 'PAGE_6_PROFILE',
+    title: 'Profile',
+    icon: User,
   },
 ];
 
 export function P0SidebarNav() {
-  const { activeP0SubPage, setActiveP0SubPage } = useSimulationStore();
-  const [isCollapsed, setIsCollapsed] = React.useState<boolean>(false);
+  const { activeP0SubPage, setActiveP0SubPage, setActiveTab, activeTab } = useSimulationStore();
 
   return (
-    <aside
-      className={`transition-all duration-300 ease-in-out shrink-0 bg-white border border-slate-200/90 rounded-2xl p-3 shadow-sm flex flex-col justify-between ${
-        isCollapsed ? 'w-16' : 'w-64'
-      }`}
-      aria-label="P0 Core Features Navigation"
-    >
-      <div className="space-y-4">
-        {/* Sidebar Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100 px-1">
-          {!isCollapsed && (
-            <div>
-              <div className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-emerald-700">
-                <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
-                <span>P0 Core Features</span>
-              </div>
-              <p className="text-[11px] text-slate-500 font-medium">5 Dedicated Sub-Pages</p>
+    <aside className="w-60 xl:w-64 shrink-0 bg-[#07131F] text-slate-300 flex flex-col justify-between p-5 border-r border-slate-800/80 min-h-screen sticky top-0 z-40">
+      <div className="space-y-7">
+        {/* Brand Header */}
+        <div className="px-1 pt-1">
+          <div className="flex items-center gap-2 cursor-pointer" onClick={() => { setActiveTab('P0_GRID'); setActiveP0SubPage('PAGE_1_DASHBOARD'); }}>
+            <div className="relative flex items-center justify-center">
+              <span className="text-2xl font-black tracking-tight text-white flex items-center font-sans">
+                E
+                <span className="relative">
+                  V
+                  <Sprout className="h-4 w-4 text-emerald-400 absolute -top-2.5 -right-1 transform rotate-12 drop-shadow-[0_0_8px_rgba(52,211,153,0.9)]" />
+                </span>
+                <span className="text-2xl font-black tracking-tight text-emerald-400 ml-0.5">kal</span>
+              </span>
             </div>
-          )}
-          <button
-            type="button"
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className="p-1.5 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors mx-auto"
-            title={isCollapsed ? 'Expand navigation' : 'Collapse navigation'}
-            aria-label={isCollapsed ? 'Expand navigation' : 'Collapse navigation'}
-          >
-            {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-          </button>
+          </div>
+          <p className="text-[11px] text-slate-400 font-medium tracking-wide mt-1">
+            Smarter Charging &bull; Stronger Grids
+          </p>
         </div>
 
-        {/* Navigation Item List */}
+        {/* Navigation Items */}
         <nav className="space-y-1.5">
           {NAV_ITEMS.map((item) => {
             const Icon = item.icon;
-            const isActive = activeP0SubPage === item.id;
+            const isProf = item.id === 'PAGE_6_PROFILE';
+            const isActive = isProf
+              ? activeTab === 'PROFILE' || activeP0SubPage === 'PAGE_6_PROFILE'
+              : activeTab === 'P0_GRID' && activeP0SubPage === item.id;
 
             return (
               <button
                 key={item.id}
+                id={`sidebar-nav-${item.id.toLowerCase()}`}
                 type="button"
-                onClick={() => setActiveP0SubPage(item.id)}
-                className={`w-full group flex items-center gap-3 p-2.5 rounded-xl text-left transition-all relative ${
+                onClick={() => {
+                  if (isProf) {
+                    setActiveTab('PROFILE');
+                    setActiveP0SubPage('PAGE_6_PROFILE');
+                  } else {
+                    setActiveTab('P0_GRID');
+                    setActiveP0SubPage(item.id);
+                  }
+                }}
+                className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                   isActive
-                    ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20 font-bold'
-                    : 'text-slate-700 hover:bg-slate-100/80 font-medium'
+                    ? 'bg-[#00A86B] text-white shadow-lg shadow-emerald-600/30 font-bold'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
                 }`}
-                title={`${item.pageNumber}. ${item.title}`}
               >
-                {/* Active Indicator Bar */}
-                {isActive && (
-                  <span className="absolute -left-1 top-2 bottom-2 w-1.5 bg-emerald-600 rounded-r-full" />
-                )}
-
-                {/* Number Badge or Icon */}
-                <div
-                  className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 text-xs font-mono font-bold transition-transform group-hover:scale-105 ${
-                    isActive
-                      ? 'bg-white/20 text-white'
-                      : 'bg-slate-100 text-slate-600 group-hover:bg-emerald-100 group-hover:text-emerald-700'
-                  }`}
-                >
-                  <Icon className="h-4 w-4" />
-                </div>
-
-                {/* Text Labels (when expanded) */}
-                {!isCollapsed && (
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center justify-between gap-1">
-                      <span className="text-xs truncate block leading-snug">
-                        <span className="font-mono text-[10px] opacity-75 mr-1">{item.pageNumber}.</span>
-                        {item.title}
-                      </span>
-                      <span
-                        className={`text-[9px] px-1.5 py-0.5 rounded-md font-mono uppercase font-semibold ${
-                          isActive
-                            ? 'bg-white/25 text-white'
-                            : 'bg-slate-100 text-slate-500'
-                        }`}
-                      >
-                        {item.tag}
-                      </span>
-                    </div>
-                    <span
-                      className={`text-[10px] truncate block leading-tight ${
-                        isActive ? 'text-emerald-100' : 'text-slate-600 font-normal'
-                      }`}
-                    >
-                      {item.subtitle}
-                    </span>
-                  </div>
-                )}
+                <Icon className={`h-4 w-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+                <span className="tracking-wide text-[13px]">{item.title}</span>
               </button>
             );
           })}
         </nav>
       </div>
 
-      {/* Sidebar Footer Info */}
-      {!isCollapsed && (
-        <div className="pt-3 border-t border-slate-100 text-[10px] text-slate-600 px-1 font-mono">
-          <div className="flex items-center justify-between">
-            <span>Status</span>
-            <span className="text-emerald-700 font-semibold flex items-center gap-1">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-              Live Sync
-            </span>
+      {/* Bottom Eco Callout Card (media_1792781020968.jpg) */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#063326] to-[#021A13] border border-emerald-800/50 p-4 text-left shadow-lg">
+        <div className="relative z-10 space-y-2">
+          <div className="h-8 w-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 border border-emerald-500/30">
+            <Sprout className="h-4 w-4" />
           </div>
-          <div className="text-[10px] text-slate-600 mt-1">Hackathon Track: #053</div>
+          <div>
+            <h4 className="text-xs font-bold text-white tracking-wide">Cleaner Grids</h4>
+            <p className="text-[11px] text-emerald-400/90 font-medium">Greener Tomorrow</p>
+          </div>
         </div>
-      )}
+
+        {/* Decorative Wind Turbine & Rolling Hills SVG graphic */}
+        <div className="absolute right-0 bottom-0 pointer-events-none opacity-30">
+          <svg width="100" height="70" viewBox="0 0 100 70" fill="none">
+            {/* Hills */}
+            <path d="M-10 70 Q 25 45 60 70 Z" fill="#10B981" />
+            <path d="M40 70 Q 75 40 110 70 Z" fill="#059669" />
+            {/* Wind turbine mast */}
+            <line x1="75" y1="20" x2="75" y2="60" stroke="#34D399" strokeWidth="2" strokeLinecap="round" />
+            {/* Wind turbine rotor */}
+            <circle cx="75" cy="20" r="2.5" fill="#34D399" />
+            <line x1="75" y1="20" x2="60" y2="10" stroke="#34D399" strokeWidth="1.5" strokeLinecap="round" />
+            <line x1="75" y1="20" x2="90" y2="15" stroke="#34D399" strokeWidth="1.5" strokeLinecap="round" />
+            <line x1="75" y1="20" x2="75" y2="35" stroke="#34D399" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+        </div>
+      </div>
     </aside>
   );
 }

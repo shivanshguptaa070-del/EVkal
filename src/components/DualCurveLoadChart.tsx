@@ -256,7 +256,7 @@ export function DualCurveLoadChart() {
 
   return (
     <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm space-y-3">
-      {/* Chart Header & Inline Legend Matching Reference Mockup */}
+      {/* Chart Header & Inline Legend */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
         <div>
           <h3 className="text-base font-bold tracking-tight text-slate-800">
@@ -275,27 +275,27 @@ export function DualCurveLoadChart() {
             <span className="font-semibold text-emerald-700">EVkal Optimized</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-5 h-0.5 border-t border-dashed border-slate-600 inline-block"></span>
+            <span className="w-5 h-0.5 border-t border-dashed border-slate-500 inline-block"></span>
             <span className="text-slate-500">Rated Capacity ({capacity.toFixed(0)} kW)</span>
           </div>
         </div>
       </div>
 
-      {/* Floating Peak Badges Overlay */}
+      {/* Floating Peak Badges */}
       <div className="flex flex-wrap items-center gap-3 pt-1 text-xs font-mono">
         {maxBaseline > capacity && (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-100 text-red-700 border border-red-300 font-bold shadow-xs">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-100 text-red-700 border border-red-300 font-bold">
             <span className="h-1.5 w-1.5 rounded-full bg-red-600 animate-pulse"></span>
             Baseline Peak: {maxBaseline.toFixed(1)} kW (OVERLOAD ZONE)
           </span>
         )}
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold shadow-xs">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-600"></span>
           Optimized Peak: {maxOptimised.toFixed(1)} kW (SAFE)
         </span>
       </div>
 
-      {/* Canvas with custom callouts plugin */}
+      {/* Canvas */}
       <div className="h-72 md:h-80 w-full pt-1">
         <Line data={data} options={options} plugins={[calloutsPlugin]} />
       </div>

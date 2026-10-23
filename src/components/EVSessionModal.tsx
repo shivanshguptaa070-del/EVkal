@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { X, BatteryCharging, CheckCircle, AlertTriangle, ArrowRight, Zap, Sparkles } from 'lucide-react';
+import { X, BatteryCharging, CheckCircle, AlertTriangle, ArrowRight, Sparkles } from 'lucide-react';
 import { useSimulationStore } from '../store/useSimulationStore';
 import type { EVSessionInput } from '../types/evSession';
 import { validateChargingFeasibility } from '../domain/feasibilityValidator';
+import { getVehicleImage } from '../utils/vehicleImages';
 
 const VEHICLE_PRESETS: { model: string; battery: number; defaultPower: number; tagline: string }[] = [
   { model: 'Tata Nexon EV Max', battery: 40.5, defaultPower: 7.2, tagline: 'Comfortable. Electric. Everyday.' },
@@ -86,8 +87,12 @@ function EVSessionForm({ initialVehicle, nextId, onClose, onSave }: EVSessionFor
         {/* Vehicle Hero Badge */}
         <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
           <div className="flex items-center gap-3">
-            <div className="h-11 w-11 rounded-lg bg-emerald-100/60 border border-emerald-200 flex items-center justify-center text-emerald-700">
-              <Zap className="h-6 w-6" />
+            <div className="h-12 w-16 rounded-lg bg-white border border-slate-200 flex items-center justify-center p-1 overflow-hidden shrink-0 shadow-2xs">
+              <img
+                src={getVehicleImage(model)}
+                alt={model}
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
               <h3 className="text-sm font-extrabold text-slate-900 leading-tight">{model}</h3>

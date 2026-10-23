@@ -92,7 +92,7 @@ export function HourlyScheduleHeatmap() {
                 Hour
               </th>
               {optimisedSlots.map((slot) => (
-                <th key={slot.hour} className="py-2 px-0 text-[10px] font-mono text-slate-500">
+                <th key={slot.hour} className="py-2 px-0 text-[10px] font-mono text-slate-600">
                   {String(slot.hour).padStart(2, '0')}
                 </th>
               ))}
@@ -138,7 +138,7 @@ export function HourlyScheduleHeatmap() {
         </table>
       </div>
 
-      {/* Mandatory Honest Data Disclaimer from D02 / D04 */}
+      {/* Mandatory Honest Data Disclaimer */}
       <div className="flex items-center gap-2 text-xs text-slate-500 pt-2 border-t border-slate-100">
         <div className="h-4 w-4 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
           <Info className="h-2.5 w-2.5" />
