@@ -80,6 +80,7 @@ function cloneFleet(fleet: EVSessionInput[]): EVSessionInput[] {
   return JSON.parse(JSON.stringify(fleet));
 }
 
+<<<<<<< HEAD
 // Initial profile data matching the reference screen
 const INITIAL_USER_PROFILE: UserProfileData = {
   personal: {
@@ -274,6 +275,14 @@ const INITIAL_USER_PROFILE: UserProfileData = {
   },
 };
 
+export type P2PSubView =
+  | 'BROWSE'
+  | 'FIND_CHARGERS'
+  | 'LIST_CHARGER'
+  | 'MY_BOOKINGS'
+  | 'HOST_EARNINGS'
+  | 'MEMBERSHIP';
+
 interface SimulationState {
   // Navigation & UI state
   activeTab: ActiveTab;
@@ -306,7 +315,7 @@ interface SimulationState {
   chargerListings: ChargerListing[];
   isListChargerModalOpen: boolean;
   activeP1SubPage: P1SubPage;
-  p2pSubView: 'BROWSE' | 'LIST_CHARGER';
+  p2pSubView: P2PSubView;
   newlyAddedListingId: string | null;
   selectedChargerForBooking: ChargerListing | null;
   bookingStage: 'REVIEW' | 'TRANSMITTING' | 'ACCEPTED' | 'CHARGING' | 'COMPLETED';
@@ -316,7 +325,7 @@ interface SimulationState {
   setActiveTab: (tab: ActiveTab) => void;
   setActiveP0SubPage: (page: P0SubPage) => void;
   setActiveP1SubPage: (page: P1SubPage) => void;
-  setP2PSubView: (view: 'BROWSE' | 'LIST_CHARGER') => void;
+  setP2PSubView: (view: P2PSubView) => void;
   setTransformerCapacity: (capacityKw: number) => void;
   setScenario: (scenario: ScenarioPreset) => void;
   toggleVehicleFlexibility: (vehicleId: string) => void;
@@ -663,7 +672,14 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
   setP2PSubView: (view) =>
     set({
       p2pSubView: view,
-      activeP1SubPage: view === 'LIST_CHARGER' ? 'P2P_LIST_CHARGER' : 'P2P_EXPLORE',
+      activeP1SubPage:
+        view === 'LIST_CHARGER'
+          ? 'P2P_LIST_CHARGER'
+          : view === 'MY_BOOKINGS'
+          ? 'P2P_BOOKINGS'
+          : view === 'HOST_EARNINGS'
+          ? 'P2P_EARNINGS'
+          : 'P2P_EXPLORE',
     }),
 
   addChargerListing: (listing) => {
