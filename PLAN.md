@@ -1,4 +1,4 @@
-﻿# EVkal — IMPLEMENTATION PLAN
+# EVkal — IMPLEMENTATION PLAN
 **Project:** EVkal · Smart EV Charging & P2P Sharing Decision-Support System
 **Hackathon Problem:** #053
 **Solo Developer · Phase-by-Phase · Verify Before Moving On**
@@ -211,22 +211,22 @@ Browser: Infeasible Request → red alert with "+6 h extension recommended"
 
 **Tasks (after images received):**
 
-- [ ] **4.1** `src/domain/p2pMarketplaceEngine.ts` (pure TS, no React):
+- [x] **4.1** `src/domain/p2pMarketplaceEngine.ts` (pure TS, no React):
   - `haversineDistanceKm(a, b)` — straight-line distance calculation
   - `filterCompatibleChargers(listings, request)` — connector match + radius
   - `transitionBookingState(current)` → next state in 5-stage machine
-- [ ] **4.2** `src/data/sampleChargerListings.json` — 6 realistic Delhi NCR listings:
+- [x] **4.2** `src/data/sampleChargerListings.json` — 6 realistic Delhi NCR listings:
   - Connector types, kW power, time windows, ±350 m obfuscated coordinates
   - `[DEMO LISTING]` flag on each
-- [ ] **4.3** `<LowBatteryHeroInput />`:
+- [x] **4.3** `<LowBatteryHeroInput />`:
   - Battery % slider — orange pulse animation at ≤10% (`@keyframes pulse`)
   - Estimated range, connector type dropdown, search radius slider
   - Straight-line distance disclaimer always visible
-- [ ] **4.4** `<ProximityRadarMap />` (SVG, not a real map library):
+- [x] **4.4** `<ProximityRadarMap />` (SVG, not a real map library):
   - Driver at centre, concentric range rings, host pins with privacy circles
   - No exact coordinates revealed pre-booking
-- [ ] **4.5** `<NearbyChargerCard />` — host badge, `[DEMO]` pill, power rating, ₹ price, connector icon, "Request Slot" button
-- [ ] **4.6** `<BookingSimModal />` — 5-stage state machine:
+- [x] **4.5** `<NearbyChargerCard />` — host badge, `[DEMO]` pill, power rating, ₹ price, connector icon, "Request Slot" button
+- [x] **4.6** `<BookingSimModal />` — 5-stage state machine:
   1. **Review** — listing summary, T&Cs
   2. **Transmitting** — animated progress indicator
   3. **Accepted** — exact address + gate PIN revealed
