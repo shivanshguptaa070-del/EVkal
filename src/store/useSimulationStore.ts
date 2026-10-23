@@ -57,6 +57,14 @@ function cloneFleet(fleet: EVSessionInput[]): EVSessionInput[] {
   return JSON.parse(JSON.stringify(fleet));
 }
 
+export type P2PSubView =
+  | 'BROWSE'
+  | 'FIND_CHARGERS'
+  | 'LIST_CHARGER'
+  | 'MY_BOOKINGS'
+  | 'HOST_EARNINGS'
+  | 'MEMBERSHIP';
+
 interface SimulationState {
   // Navigation & UI state
   activeTab: ActiveTab;
@@ -82,7 +90,7 @@ interface SimulationState {
   p2pFilters: P2PFilterState;
   chargerListings: ChargerListing[];
   isListChargerModalOpen: boolean;
-  p2pSubView: 'BROWSE' | 'LIST_CHARGER';
+  p2pSubView: P2PSubView;
   newlyAddedListingId: string | null;
   selectedChargerForBooking: ChargerListing | null;
   bookingStage: 'REVIEW' | 'TRANSMITTING' | 'ACCEPTED' | 'CHARGING' | 'COMPLETED';
@@ -90,7 +98,7 @@ interface SimulationState {
 
   // Actions
   setActiveTab: (tab: ActiveTab) => void;
-  setP2PSubView: (view: 'BROWSE' | 'LIST_CHARGER') => void;
+  setP2PSubView: (view: P2PSubView) => void;
   setTransformerCapacity: (capacityKw: number) => void;
   setScenario: (scenario: ScenarioPreset) => void;
   toggleVehicleFlexibility: (vehicleId: string) => void;
