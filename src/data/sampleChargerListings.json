@@ -1,0 +1,158 @@
+[
+  {
+    "id": "HOST-DEL-001",
+    "hostName": "Rajesh K.",
+    "isHostVerified": true,
+    "isDemoListing": true,
+    "connectorTypes": ["TYPE_2", "CCS_2"],
+    "maxPowerKw": 7.4,
+    "pricePerKwhInr": 11.50,
+    "availabilityWindows": [
+      { "dayOfWeek": 1, "startHour": 8, "endHour": 22 },
+      { "dayOfWeek": 2, "startHour": 8, "endHour": 22 },
+      { "dayOfWeek": 3, "startHour": 8, "endHour": 22 },
+      { "dayOfWeek": 4, "startHour": 8, "endHour": 22 },
+      { "dayOfWeek": 5, "startHour": 8, "endHour": 22 },
+      { "dayOfWeek": 6, "startHour": 9, "endHour": 23 },
+      { "dayOfWeek": 7, "startHour": 9, "endHour": 23 }
+    ],
+    "location": {
+      "latitude": 28.5244,
+      "longitude": 77.1558,
+      "approximateLocality": "Vasant Kunj Sector C, New Delhi",
+      "exactAddress": "Villa 42, Pocket 2, Sector C, Vasant Kunj, New Delhi 110070"
+    },
+    "accessNotes": "Covered driveway parking slot #2. 15A socket & Type 2 gun ready.",
+    "gatePin": "4892"
+  },
+  {
+    "id": "HOST-DEL-002",
+    "hostName": "Dr. Neha Sharma",
+    "isHostVerified": true,
+    "isDemoListing": true,
+    "connectorTypes": ["TYPE_2"],
+    "maxPowerKw": 11.0,
+    "pricePerKwhInr": 12.00,
+    "availabilityWindows": [
+      { "dayOfWeek": 1, "startHour": 6, "endHour": 23 },
+      { "dayOfWeek": 2, "startHour": 6, "endHour": 23 },
+      { "dayOfWeek": 3, "startHour": 6, "endHour": 23 },
+      { "dayOfWeek": 4, "startHour": 6, "endHour": 23 },
+      { "dayOfWeek": 5, "startHour": 6, "endHour": 23 },
+      { "dayOfWeek": 6, "startHour": 6, "endHour": 23 },
+      { "dayOfWeek": 7, "startHour": 6, "endHour": 23 }
+    ],
+    "location": {
+      "latitude": 28.5412,
+      "longitude": 77.1735,
+      "approximateLocality": "Hauz Khas Enclave, New Delhi",
+      "exactAddress": "B-14/2 Hauz Khas Enclave, New Delhi 110016"
+    },
+    "accessNotes": "Near community park. Wallbox Pulsar Plus installed on boundary pillar.",
+    "gatePin": "1738"
+  },
+  {
+    "id": "HOST-DEL-003",
+    "hostName": "Arjun Bhasin",
+    "isHostVerified": false,
+    "isDemoListing": true,
+    "connectorTypes": ["BHARAT_AC001", "TYPE_2"],
+    "maxPowerKw": 3.3,
+    "pricePerKwhInr": 9.50,
+    "availabilityWindows": [
+      { "dayOfWeek": 1, "startHour": 18, "endHour": 8 },
+      { "dayOfWeek": 2, "startHour": 18, "endHour": 8 },
+      { "dayOfWeek": 3, "startHour": 18, "endHour": 8 },
+      { "dayOfWeek": 4, "startHour": 18, "endHour": 8 },
+      { "dayOfWeek": 5, "startHour": 18, "endHour": 8 },
+      { "dayOfWeek": 6, "startHour": 14, "endHour": 10 },
+      { "dayOfWeek": 7, "startHour": 14, "endHour": 10 }
+    ],
+    "location": {
+      "latitude": 28.5103,
+      "longitude": 77.1921,
+      "approximateLocality": "Saket Block J, New Delhi",
+      "exactAddress": "J-88 Saket, Ground Floor Portico, New Delhi 110017"
+    },
+    "accessNotes": "Open portico. Ring bell or input gate PIN to access porch.",
+    "gatePin": "9021"
+  },
+  {
+    "id": "HOST-DEL-004",
+    "hostName": "GreenRide Community Hub",
+    "isHostVerified": true,
+    "isDemoListing": true,
+    "connectorTypes": ["CCS_2", "CHADEMO"],
+    "maxPowerKw": 22.0,
+    "pricePerKwhInr": 14.50,
+    "availabilityWindows": [
+      { "dayOfWeek": 1, "startHour": 0, "endHour": 24 },
+      { "dayOfWeek": 2, "startHour": 0, "endHour": 24 },
+      { "dayOfWeek": 3, "startHour": 0, "endHour": 24 },
+      { "dayOfWeek": 4, "startHour": 0, "endHour": 24 },
+      { "dayOfWeek": 5, "startHour": 0, "endHour": 24 },
+      { "dayOfWeek": 6, "startHour": 0, "endHour": 24 },
+      { "dayOfWeek": 7, "startHour": 0, "endHour": 24 }
+    ],
+    "location": {
+      "latitude": 28.5682,
+      "longitude": 77.1611,
+      "approximateLocality": "Chanakyapuri Diplomatic Enclave, New Delhi",
+      "exactAddress": "Gate 3, Green Complex, Shantipath, New Delhi 110021"
+    },
+    "accessNotes": "Commercial fast DC station available for neighborhood sharing.",
+    "gatePin": "5500"
+  },
+  {
+    "id": "HOST-DEL-005",
+    "hostName": "Vipin Singhal",
+    "isHostVerified": true,
+    "isDemoListing": true,
+    "connectorTypes": ["TYPE_2"],
+    "maxPowerKw": 7.4,
+    "pricePerKwhInr": 10.80,
+    "availabilityWindows": [
+      { "dayOfWeek": 1, "startHour": 10, "endHour": 19 },
+      { "dayOfWeek": 2, "startHour": 10, "endHour": 19 },
+      { "dayOfWeek": 3, "startHour": 10, "endHour": 19 },
+      { "dayOfWeek": 4, "startHour": 10, "endHour": 19 },
+      { "dayOfWeek": 5, "startHour": 10, "endHour": 19 },
+      { "dayOfWeek": 6, "startHour": 10, "endHour": 19 },
+      { "dayOfWeek": 7, "startHour": 10, "endHour": 19 }
+    ],
+    "location": {
+      "latitude": 28.5355,
+      "longitude": 77.2104,
+      "approximateLocality": "Malviya Nagar Shivalik, New Delhi",
+      "exactAddress": "Plot 19, Shivalik Colony, Malviya Nagar, New Delhi 110017"
+    },
+    "accessNotes": "Basement car lift slot B1. Host WhatsApp alert required.",
+    "gatePin": "6312"
+  },
+  {
+    "id": "HOST-DEL-006",
+    "hostName": "Suresh Goel",
+    "isHostVerified": false,
+    "isDemoListing": true,
+    "connectorTypes": ["CHADEMO"],
+    "maxPowerKw": 15.0,
+    "pricePerKwhInr": 13.00,
+    "availabilityWindows": [
+      { "dayOfWeek": 1, "startHour": 7, "endHour": 21 },
+      { "dayOfWeek": 2, "startHour": 7, "endHour": 21 },
+      { "dayOfWeek": 3, "startHour": 7, "endHour": 21 },
+      { "dayOfWeek": 4, "startHour": 7, "endHour": 21 },
+      { "dayOfWeek": 5, "startHour": 7, "endHour": 21 },
+      { "dayOfWeek": 6, "startHour": 7, "endHour": 21 },
+      { "dayOfWeek": 7, "startHour": 7, "endHour": 21 }
+    ],
+    "location": {
+      "latitude": 28.4988,
+      "longitude": 77.1722,
+      "approximateLocality": "Mehrauli Heritage Zone, New Delhi",
+      "exactAddress": "Khasra 404, Near Qutub Minar, Mehrauli, New Delhi 110030"
+    },
+    "accessNotes": "Dedicated commercial bay next to convenience store.",
+    "gatePin": "7789"
+  }
+]
