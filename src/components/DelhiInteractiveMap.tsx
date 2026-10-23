@@ -8,13 +8,13 @@ interface DelhiInteractiveMapProps {
 }
 
 export function DelhiInteractiveMap({ onSelectCharger }: DelhiInteractiveMapProps) {
-  const { chargerListings, openBookingModal } = useSimulationStore();
+  const { chargerListings, openBookingModal, p2pQuery } = useSimulationStore();
   const [zoomLevel, setZoomLevel] = useState<number>(1);
 
   // Center on You (Hauz Khas / Saket area in South Delhi)
   const cx = 350;
   const cy = 290;
-  const radiusPx = 170 * zoomLevel;
+  const radiusPx = (p2pQuery.radiusKm * 34) * zoomLevel;
 
   const handlePinClick = (listing: ChargerListing) => {
     if (onSelectCharger) {
@@ -350,7 +350,7 @@ export function DelhiInteractiveMap({ onSelectCharger }: DelhiInteractiveMapProp
               You
             </text>
             <text x="52" y="33" textAnchor="middle" fill="#EF4444" fontSize="11" fontWeight="700">
-              15% Battery
+              {p2pQuery.vehicleBatteryPct}% Battery
             </text>
           </g>
         </g>

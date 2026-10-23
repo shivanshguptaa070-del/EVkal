@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { LowBatteryHeroInput } from './LowBatteryHeroInput';
 import { P2PFilterBar } from './P2PFilterBar';
 import { DelhiInteractiveMap } from './DelhiInteractiveMap';
 import { P2PNearbyChargersList } from './P2PNearbyChargersList';
@@ -14,7 +15,10 @@ export function P2PChargerSharingTab() {
 
   return (
     <div className="space-y-5 animate-fade-in pb-10">
-      {/* 1. Top Search & Filter Toolbar (Matches Mockup Exactly) */}
+      {/* 1. Critical Low Battery Alert Function (At the Top) */}
+      <LowBatteryHeroInput />
+
+      {/* 2. Top Search & Filter Toolbar */}
       <P2PFilterBar
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -25,14 +29,14 @@ export function P2PChargerSharingTab() {
         onToggleFilterModal={openListChargerModal}
       />
 
-      {/* 2. Main 2-Column Interface: Left Map + Right Nearby Chargers List */}
+      {/* 3. Main 2-Column Interface: Left Map + Right Nearby Chargers List */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left Column (5.8 cols): Interactive Delhi South Map */}
+        {/* Left Column (6 cols): Interactive Delhi South Map */}
         <section className="lg:col-span-6 xl:col-span-6 h-full">
           <DelhiInteractiveMap />
         </section>
 
-        {/* Right Column (6.2 cols): Nearby Chargers List */}
+        {/* Right Column (6 cols): Nearby Chargers List */}
         <section className="lg:col-span-6 xl:col-span-6 h-full">
           <P2PNearbyChargersList
             searchQuery={searchQuery}
@@ -42,7 +46,7 @@ export function P2PChargerSharingTab() {
         </section>
       </div>
 
-      {/* 3. Interactive Modals */}
+      {/* 4. Interactive Modals */}
       <BookingSimModal />
       <ListChargerModal />
     </div>

@@ -29,8 +29,8 @@ const INITIAL_P2P_QUERY: LowBatterySearchQuery = {
   driverLat: 28.5355,
   driverLon: 77.1735,
   radiusKm: 5.0,
-  vehicleBatteryPct: 7,
-  estimatedRangeKm: 12,
+  vehicleBatteryPct: 15,
+  estimatedRangeKm: 26,
   requiredConnector: 'TYPE_2',
 };
 
