@@ -2,17 +2,15 @@ import { useState } from 'react';
 import { Shield, Plus, Minus, Crosshair, Home } from 'lucide-react';
 import { useSimulationStore } from '../store/useSimulationStore';
 import { searchNearbyChargers } from '../domain/p2pMarketplaceEngine';
-import sampleChargerListings from '../data/sampleChargerListings.json';
-import type { ChargerListing } from '../types/p2p';
 
 export function ProximityRadarMap() {
-  const { p2pQuery, openBookingModal } = useSimulationStore();
+  const { p2pQuery, openBookingModal, chargerListings, newlyAddedListingId, p2pFilters } = useSimulationStore();
   const [zoomLevel, setZoomLevel] = useState<number>(1);
   const [hoveredListingId, setHoveredListingId] = useState<string | null>(null);
 
   // Pure domain search & ranking
   const searchResults = searchNearbyChargers(
-    sampleChargerListings as ChargerListing[],
+    chargerListings,
     p2pQuery,
     5, // Friday
     19 // 19:00 IST
@@ -182,6 +180,14 @@ export function ProximityRadarMap() {
             const py = cy - pinR * Math.cos(angle);
 
             const isHovered = hoveredListingId === listing.id;
+            const isNewlyAdded = newlyAddedListingId === listing.id;
+
+            // Check against minimal filter chips
+            const matchesFilters =
+              (!p2pFilters.fastOnly || listing.maxPowerKw >= 7.4) &&
+              (!p2pFilters.verifiedOnly || listing.isHostVerified) &&
+              (!p2pFilters.coveredOnly || listing.accessNotes.toLowerCase().includes('covered')) &&
+              (!p2pFilters.availableNowOnly || isAvailableNow);
 
             // Pin styling
             let pinColor = '#10B981'; // Emerald (Available & Compatible)
@@ -204,11 +210,26 @@ export function ProximityRadarMap() {
             return (
               <g
                 key={listing.id}
-                className="cursor-pointer transition-transform duration-150"
-                onMouseEnter={() => setHoveredListingId(listing.id)}
+                className={`cursor-pointer transition-all duration-200 ${
+                  matchesFilters ? 'opacity-100' : 'opacity-25 grayscale'
+                }`}
+                onMouseEnter={() => matchesFilters && setHoveredListingId(listing.id)}
                 onMouseLeave={() => setHoveredListingId(null)}
-                onClick={() => openBookingModal(listing)}
+                onClick={() => matchesFilters && openBookingModal(listing)}
               >
+                {/* Newly Added Pulsing Ripple */}
+                {isNewlyAdded && (
+                  <circle
+                    cx={px}
+                    cy={py}
+                    r="38"
+                    fill="none"
+                    stroke="#10B981"
+                    strokeWidth="2.5"
+                    className="animate-ping opacity-75"
+                  />
+                )}
+
                 {/* Obfuscated ±350m Privacy Halo */}
                 <circle
                   cx={px}

@@ -8,8 +8,9 @@ interface NearbyChargerCardProps {
 }
 
 export function NearbyChargerCard({ result, isRecommended = false }: NearbyChargerCardProps) {
-  const { openBookingModal } = useSimulationStore();
+  const { openBookingModal, newlyAddedListingId } = useSimulationStore();
   const { listing, straightLineDistanceKm, isCompatible } = result;
+  const isNewlyAdded = newlyAddedListingId === listing.id;
 
   // Approximate drive time based on straight-line distance (urban ~3.2 min/km)
   const estMinutes = Math.round(straightLineDistanceKm * 3.2);
@@ -17,19 +18,25 @@ export function NearbyChargerCard({ result, isRecommended = false }: NearbyCharg
   return (
     <div
       className={`relative bg-white rounded-2xl border p-4.5 transition-all duration-200 shadow-sm hover:shadow-md ${
-        isRecommended
+        isNewlyAdded
+          ? 'border-teal-400 ring-2 ring-teal-400/40 bg-gradient-to-br from-teal-50/40 via-white to-white'
+          : isRecommended
           ? 'border-emerald-300 ring-1 ring-emerald-200/80 bg-gradient-to-br from-emerald-50/20 via-white to-white'
           : isCompatible
           ? 'border-slate-200/90 hover:border-slate-300'
           : 'border-slate-200/60 bg-slate-50/50 opacity-80'
       }`}
     >
-      {/* Recommended Top Ribbon */}
-      {isRecommended && (
+      {/* Newly Added Ribbon */}
+      {isNewlyAdded ? (
+        <div className="absolute -top-3 left-4 inline-flex items-center gap-1 px-3 py-0.5 rounded-full bg-gradient-to-r from-teal-600 to-emerald-600 text-white text-[11px] font-black uppercase tracking-wider shadow-sm animate-pulse">
+          <span>✨ Just Listed by You</span>
+        </div>
+      ) : isRecommended ? (
         <div className="absolute -top-3 left-4 inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-emerald-500 text-white text-[11px] font-black uppercase tracking-wider shadow-sm">
           <span>★ Recommended</span>
         </div>
-      )}
+      ) : null}
 
       <div className="flex flex-col sm:flex-row gap-4 items-start">
         {/* Left Photo Thumbnail */}

@@ -1,14 +1,21 @@
+import { useState } from 'react';
 import { User, Zap, Car, ArrowRight } from 'lucide-react';
 import { LowBatteryHeroInput } from './LowBatteryHeroInput';
-import { ProximityRadarMap } from './ProximityRadarMap';
-import { NearbyChargersList } from './NearbyChargersList';
+import { P2PFilterBar } from './P2PFilterBar';
+import { DelhiInteractiveMap } from './DelhiInteractiveMap';
+import { P2PNearbyChargersList } from './P2PNearbyChargersList';
+import { BookingSimModal } from './BookingSimModal';
+import { ListChargerModal } from './ListChargerModal';
 import { useSimulationStore } from '../store/useSimulationStore';
 
 export function P2PChargerSharingTab() {
-  const { userProfile, openProfileView, setActiveProfileTab } = useSimulationStore();
+  const { userProfile, openProfileView, setActiveProfileTab, openListChargerModal } = useSimulationStore();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedConnector, setSelectedConnector] = useState('TYPE_2');
+  const [selectedRadius, setSelectedRadius] = useState(5);
 
   return (
-    <div className="space-y-6 animate-fade-in font-sans">
+    <div className="space-y-5 animate-fade-in pb-10 font-sans">
       {/* P1 User Profile & Host Quick Bar */}
       <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-xs flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
@@ -85,21 +92,40 @@ export function P2PChargerSharingTab() {
         </div>
       </div>
 
-      {/* 1. Low Battery Emergency Hero Card */}
+      {/* 1. Critical Low Battery Emergency Hero Card */}
       <LowBatteryHeroInput />
 
-      {/* 2. Main 2-Column Discovery Interface */}
+      {/* 2. Top Search & Filter Toolbar */}
+      <P2PFilterBar
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        selectedConnector={selectedConnector}
+        onConnectorChange={setSelectedConnector}
+        selectedRadius={selectedRadius}
+        onRadiusChange={setSelectedRadius}
+        onToggleFilterModal={openListChargerModal}
+      />
+
+      {/* 3. Main 2-Column Interface: Left Interactive Delhi Map + Right Nearby Chargers List */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left Column (6 cols): Proximity Radar Map */}
-        <section className="lg:col-span-6 h-full">
-          <ProximityRadarMap />
+        {/* Left Column (6 cols): Interactive Delhi South Map */}
+        <section className="lg:col-span-6 xl:col-span-6 h-full">
+          <DelhiInteractiveMap />
         </section>
 
-        {/* Right Column (6 cols): Available Chargers List */}
-        <section className="lg:col-span-6 h-full">
-          <NearbyChargersList />
+        {/* Right Column (6 cols): Nearby Chargers List with Photo Cards */}
+        <section className="lg:col-span-6 xl:col-span-6 h-full">
+          <P2PNearbyChargersList
+            searchQuery={searchQuery}
+            selectedConnector={selectedConnector}
+            selectedRadius={selectedRadius}
+          />
         </section>
       </div>
+
+      {/* 4. Interactive Modals */}
+      <BookingSimModal />
+      <ListChargerModal />
     </div>
   );
 }
