@@ -1,19 +1,18 @@
-import { RotateCcw, Calendar } from 'lucide-react';
 import { Header } from './components/Header';
 import { LandingHeroPage } from './components/LandingHeroPage';
-import { TransformerControlPanel } from './components/TransformerControlPanel';
-import { ScenarioSelector } from './components/ScenarioSelector';
-import { EVFleetManagerTable } from './components/EVFleetManagerTable';
-import { BeforeAfterMetricsCard } from './components/BeforeAfterMetricsCard';
-import { DualCurveLoadChart } from './components/DualCurveLoadChart';
-import { HourlyScheduleHeatmap } from './components/HourlyScheduleHeatmap';
+import { P0SidebarNav } from './components/P0SidebarNav';
+import { Page1GridOptimizationDashboard } from './components/pages/Page1GridOptimizationDashboard';
+import { Page2TransformerAnalytics } from './components/pages/Page2TransformerAnalytics';
+import { Page3EVFleetScheduling } from './components/pages/Page3EVFleetScheduling';
+import { Page4TariffEconomics } from './components/pages/Page4TariffEconomics';
+import { Page5FeasibilityDiagnostics } from './components/pages/Page5FeasibilityDiagnostics';
 import { EVSessionModal } from './components/EVSessionModal';
 import { P2PChargerSharingTab } from './components/P2PChargerSharingTab';
 import { BookingSimModal } from './components/BookingSimModal';
 import { useSimulationStore } from './store/useSimulationStore';
 
 export default function App() {
-  const { activeTab, resetSimulation } = useSimulationStore();
+  const { activeTab, activeP0SubPage } = useSimulationStore();
 
   if (activeTab === 'LANDING') {
     return (
@@ -35,69 +34,19 @@ export default function App() {
       {/* Main Workspace Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
         {activeTab === 'P0_GRID' ? (
-          /* P0: Smart Grid & Transformer Optimizer (Screen 1 Mockup) */
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* LEFT PANEL (35% - 4.5 cols) */}
-            <section className="lg:col-span-5 bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm space-y-6">
-              <div className="flex items-start justify-between border-b border-slate-100 pb-3">
-                <div>
-                  <h2 className="text-lg font-black text-slate-900 tracking-tight">
-                    Simulation &amp; Fleet Controls
-                  </h2>
-                  <p className="text-xs text-slate-500 font-medium">
-                    Configure transformer capacity, select a scenario and manage EV sessions.
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={resetSimulation}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-600 text-xs font-semibold transition-colors"
-                  title="Reset to default benchmark"
-                >
-                  <RotateCcw className="h-3.5 w-3.5" />
-                  <span>Reset</span>
-                </button>
-              </div>
+          /* P0: Smart Grid & Transformer Optimizer with Left Sidebar Navigation */
+          <div className="flex flex-col lg:flex-row gap-6 items-start">
+            {/* Left-Side Navigation Panel for the 5 P0 Pages */}
+            <P0SidebarNav />
 
-              {/* 1. Transformer Capacity Slider & Ring */}
-              <TransformerControlPanel />
-
-              {/* 2. Scenario Presets */}
-              <ScenarioSelector />
-
-              {/* 3. EV Fleet Sessions Table */}
-              <EVFleetManagerTable />
-            </section>
-
-            {/* RIGHT PANEL (65% - 7.5 cols) */}
-            <section className="lg:col-span-7 space-y-5">
-              {/* Top Banner Row */}
-              <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm">
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3 mb-4">
-                  <div>
-                    <h2 className="text-lg font-black text-slate-900 tracking-tight">
-                      Load Analysis &amp; Optimization Results
-                    </h2>
-                    <p className="text-xs text-slate-500 font-medium">
-                      Compare baseline vs. optimized load and see the impact on your transformer.
-                    </p>
-                  </div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-600">
-                    <Calendar className="h-3.5 w-3.5 text-slate-400" />
-                    <span>Mon, 23 Oct 2026</span>
-                  </div>
-                </div>
-
-                {/* 4 KPI Impact Summary Cards */}
-                <BeforeAfterMetricsCard />
-              </div>
-
-              {/* Central Dual-Curve Load Chart */}
-              <DualCurveLoadChart />
-
-              {/* 24-Hour Demand Tier Strip */}
-              <HourlyScheduleHeatmap />
-            </section>
+            {/* Active Sub-Page Content Area */}
+            <div className="flex-1 min-w-0 w-full">
+              {activeP0SubPage === 'PAGE_1_OPTIMIZER' && <Page1GridOptimizationDashboard />}
+              {activeP0SubPage === 'PAGE_2_TRANSFORMER' && <Page2TransformerAnalytics />}
+              {activeP0SubPage === 'PAGE_3_FLEET' && <Page3EVFleetScheduling />}
+              {activeP0SubPage === 'PAGE_4_TARIFF' && <Page4TariffEconomics />}
+              {activeP0SubPage === 'PAGE_5_DIAGNOSTICS' && <Page5FeasibilityDiagnostics />}
+            </div>
           </div>
         ) : (
           /* P1: P2P Community Charger Sharing (Screen 3 & 4 Mockup) */
@@ -106,7 +55,7 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white px-6 py-4 text-center text-xs text-slate-600">
+      <footer className="border-t border-slate-200 bg-white px-6 py-4 text-center text-xs text-slate-500">
         EVkal &middot; Smart EV Charging &amp; P2P Sharing Decision-Support System &middot; Hackathon Problem #053
       </footer>
 

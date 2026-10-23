@@ -19,6 +19,12 @@ const INITIAL_P2P_QUERY: LowBatterySearchQuery = {
 
 export type ScenarioPreset = 'EVENING_RUSH' | 'VALLEY_SHIFT' | 'INFEASIBLE_REQUEST';
 export type ActiveTab = 'LANDING' | 'P0_GRID' | 'P1_P2P';
+export type P0SubPage =
+  | 'PAGE_1_OPTIMIZER'
+  | 'PAGE_2_TRANSFORMER'
+  | 'PAGE_3_FLEET'
+  | 'PAGE_4_TARIFF'
+  | 'PAGE_5_DIAGNOSTICS';
 
 const INITIAL_BACKGROUND = backgroundLoadData as BackgroundLoadSlot[];
 const SCENARIOS = scenariosData as {
@@ -43,6 +49,7 @@ function cloneFleet(fleet: EVSessionInput[]): EVSessionInput[] {
 interface SimulationState {
   // Navigation & UI state
   activeTab: ActiveTab;
+  activeP0SubPage: P0SubPage;
   isModalOpen: boolean;
   selectedVehicleId: string | null;
 
@@ -68,6 +75,7 @@ interface SimulationState {
 
   // Actions
   setActiveTab: (tab: ActiveTab) => void;
+  setActiveP0SubPage: (page: P0SubPage) => void;
   setTransformerCapacity: (capacityKw: number) => void;
   setScenario: (scenario: ScenarioPreset) => void;
   toggleVehicleFlexibility: (vehicleId: string) => void;
@@ -98,6 +106,7 @@ const initialSolverOutput = runSmartChargingOptimisation(
 
 export const useSimulationStore = create<SimulationState>((set, get) => ({
   activeTab: 'LANDING',
+  activeP0SubPage: 'PAGE_1_OPTIMIZER',
   isModalOpen: false,
   selectedVehicleId: null,
 
@@ -119,6 +128,7 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
   isBookingModalOpen: false,
 
   setActiveTab: (tab) => set({ activeTab: tab }),
+  setActiveP0SubPage: (page) => set({ activeP0SubPage: page }),
 
   setTransformerCapacity: (capacityKw) => {
     const { evFleet, backgroundLoad, regionalProfile, transformerConfig } = get();

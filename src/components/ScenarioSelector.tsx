@@ -34,7 +34,7 @@ export function ScenarioSelector() {
         2. Scenario Selection
       </h3>
 
-      <div className="grid grid-cols-3 gap-2.5">
+      <div className="grid grid-cols-3 gap-2">
         {scenarios.map((sc) => {
           const Icon = sc.icon;
           const isActive = activeScenario === sc.id;
@@ -43,14 +43,14 @@ export function ScenarioSelector() {
               key={sc.id}
               type="button"
               onClick={() => setScenario(sc.id)}
-              className={`flex items-center gap-2.5 p-3 rounded-xl border text-left transition-all ${
+              className={`flex items-center gap-2 p-2.5 rounded-xl border text-left transition-all ${
                 isActive
                   ? 'bg-emerald-50/70 border-emerald-500 shadow-sm ring-1 ring-emerald-500/30'
                   : 'bg-white border-slate-200/90 hover:border-slate-300 hover:bg-slate-50/50'
               }`}
             >
               <div
-                className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${
+                className={`h-7 w-7 rounded-lg flex items-center justify-center shrink-0 ${
                   isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'
                 }`}
               >
@@ -60,7 +60,7 @@ export function ScenarioSelector() {
                 <span className="text-xs font-bold text-slate-800 block truncate leading-tight">
                   {sc.label}
                 </span>
-                <span className="text-[11px] font-medium text-slate-600 block leading-tight">
+                <span className="text-[10px] font-medium text-slate-500 block leading-tight">
                   {sc.sub}
                 </span>
               </div>
