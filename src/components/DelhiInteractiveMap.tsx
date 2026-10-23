@@ -7,6 +7,9 @@ import { haversineDistanceKm } from '../domain/p2pMarketplaceEngine';
 
 interface DelhiInteractiveMapProps {
   onSelectCharger?: (listing: ChargerListing) => void;
+  selectedConnector?: string;
+  selectedRadius?: number;
+  isSearchTriggered?: boolean;
 }
 
 const LISTING_IMAGES: Record<string, string> = {
@@ -24,7 +27,12 @@ const LANDMARKS = [
   { name: 'Pushp Vihar', lat: 28.5280, lon: 77.2200, icon: '📍' },
 ];
 
-export function DelhiInteractiveMap({ onSelectCharger }: DelhiInteractiveMapProps) {
+export function DelhiInteractiveMap({
+  onSelectCharger,
+  selectedConnector = 'TYPE_2',
+  selectedRadius = 5,
+  isSearchTriggered = false,
+}: DelhiInteractiveMapProps) {
   const { chargerListings, openBookingModal, p2pQuery } = useSimulationStore();
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -35,6 +43,7 @@ export function DelhiInteractiveMap({ onSelectCharger }: DelhiInteractiveMapProp
 
   const driverLat = p2pQuery.driverLat || 28.5355;
   const driverLon = p2pQuery.driverLon || 77.1735;
+  const activeRadiusKm = selectedRadius || p2pQuery.radiusKm || 5.0;
 
   // Initialize Leaflet Map
   useEffect(() => {
@@ -65,7 +74,7 @@ export function DelhiInteractiveMap({ onSelectCharger }: DelhiInteractiveMapProp
       .addTo(map);
 
     // Concentric Search Radar Circles
-    const radiusMeters = p2pQuery.radiusKm * 1000;
+    const radiusMeters = activeRadiusKm * 1000;
     const outerCircle = L.circle([driverLat, driverLon], {
       radius: radiusMeters,
       color: '#3B82F6',
@@ -114,6 +123,16 @@ export function DelhiInteractiveMap({ onSelectCharger }: DelhiInteractiveMapProp
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Run once on mount
 
+  // Fly/Fit map when search is triggered
+  useEffect(() => {
+    if (!mapRef.current || !isSearchTriggered) return;
+    const targetZoom = activeRadiusKm <= 3 ? 14 : activeRadiusKm <= 6 ? 13 : 12;
+    mapRef.current.flyTo([driverLat, driverLon], targetZoom, {
+      duration: 1.0,
+      easeLinearity: 0.25,
+    });
+  }, [isSearchTriggered, activeRadiusKm, driverLat, driverLon]);
+
   // Update User Center Marker whenever position or battery % changes
   useEffect(() => {
     if (!mapRef.current) return;
@@ -153,7 +172,7 @@ export function DelhiInteractiveMap({ onSelectCharger }: DelhiInteractiveMapProp
 
   // Update Radar Circles when Search Radius changes
   useEffect(() => {
-    const radiusMeters = p2pQuery.radiusKm * 1000;
+    const radiusMeters = activeRadiusKm * 1000;
     if (circleRef.current) {
       circleRef.current.setRadius(radiusMeters);
       circleRef.current.setLatLng([driverLat, driverLon]);
@@ -162,9 +181,9 @@ export function DelhiInteractiveMap({ onSelectCharger }: DelhiInteractiveMapProp
       innerCircleRef.current.setRadius(radiusMeters * 0.45);
       innerCircleRef.current.setLatLng([driverLat, driverLon]);
     }
-  }, [p2pQuery.radiusKm, driverLat, driverLon]);
+  }, [activeRadiusKm, driverLat, driverLon]);
 
-  // Render Charger Markers on Map
+  // Render Charger Markers on Map with Dynamic Compatibility Styling
   useEffect(() => {
     if (!mapRef.current || !markersLayerRef.current) return;
 
@@ -177,14 +196,28 @@ export function DelhiInteractiveMap({ onSelectCharger }: DelhiInteractiveMapProp
       const isRecommended = listing.id === 'HOST-DEL-002'; // Dr. Neha Sharma
       const imgSrc = LISTING_IMAGES[listing.id] || '/assets/images/shivharsh_villa.jpg';
 
+      // Compatibility check against query
+      const isConnectorMatch =
+        selectedConnector === 'ALL' ||
+        listing.connectorTypes.includes(selectedConnector as any);
+      const isWithinRadius = distance <= activeRadiusKm;
+      const isReachable = distance <= p2pQuery.estimatedRangeKm;
+      const isFullyCompatible = isConnectorMatch && isWithinRadius && isReachable;
+
       // Pin DivIcon with Pin + Info Pill
+      const pinBgColor = isFullyCompatible
+        ? isRecommended
+          ? 'bg-[#059669] ring-2 ring-emerald-300'
+          : 'bg-[#059669]'
+        : 'bg-slate-400 opacity-60';
+
       const pinHtml = `
-        <div class="relative group cursor-pointer" style="transform: translate(-50%, -100%);">
+        <div class="relative group cursor-pointer ${
+          isFullyCompatible ? 'opacity-100 z-30' : 'opacity-65 group-hover:opacity-100'
+        }" style="transform: translate(-50%, -100%);">
           <!-- Teardrop Pin -->
           <div class="flex items-center">
-            <div class="h-9 w-9 rounded-full ${
-              isRecommended ? 'bg-[#059669]' : 'bg-[#059669]'
-            } text-white flex items-center justify-center shadow-md border-2 border-white group-hover:scale-110 transition-transform">
+            <div class="h-9 w-9 rounded-full ${pinBgColor} text-white flex items-center justify-center shadow-md border-2 border-white group-hover:scale-110 transition-transform">
               <svg class="h-4 w-4 fill-white" viewBox="0 0 24 24">
                 <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
               </svg>
@@ -192,8 +225,15 @@ export function DelhiInteractiveMap({ onSelectCharger }: DelhiInteractiveMapProp
             
             <!-- Floating Info Pill -->
             <div class="ml-1.5 px-2.5 py-1 bg-white rounded-xl border border-slate-200/90 shadow-sm whitespace-nowrap text-left group-hover:shadow-md transition-shadow">
-              <div class="text-[11px] font-black text-slate-900 leading-tight">
-                ${distance.toFixed(1)} km
+              <div class="flex items-center gap-1">
+                <span class="text-[11px] font-black text-slate-900 leading-tight">
+                  ${distance.toFixed(1)} km
+                </span>
+                ${
+                  isFullyCompatible
+                    ? '<span class="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1 rounded">✓ Match</span>'
+                    : ''
+                }
               </div>
               <div class="text-[10px] font-bold text-slate-500 leading-tight">
                 ₹${listing.pricePerKwhInr}/kWh
@@ -211,7 +251,7 @@ export function DelhiInteractiveMap({ onSelectCharger }: DelhiInteractiveMapProp
 
       const marker = L.marker([lat, lon], {
         icon: chargerIcon,
-        zIndexOffset: isRecommended ? 800 : 500,
+        zIndexOffset: isFullyCompatible ? (isRecommended ? 900 : 700) : 300,
       });
 
       // Rich Interactive Popup
@@ -225,12 +265,19 @@ export function DelhiInteractiveMap({ onSelectCharger }: DelhiInteractiveMapProp
           </div>
 
           <div>
-            <h4 class="text-xs font-black text-slate-900">${listing.hostName}</h4>
+            <div class="flex items-center justify-between">
+              <h4 class="text-xs font-black text-slate-900">${listing.hostName}</h4>
+              ${
+                isFullyCompatible
+                  ? '<span class="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-1.5 py-0.2 rounded">Compatible</span>'
+                  : ''
+              }
+            </div>
             <p class="text-[11px] text-slate-500 font-medium">${listing.location.approximateLocality}</p>
           </div>
 
           <div class="flex items-center justify-between text-[11px] bg-slate-50 p-2 rounded-xl">
-            <span class="font-bold text-slate-700">Type 2 AC (${listing.maxPowerKw} kW)</span>
+            <span class="font-bold text-slate-700">${listing.connectorTypes.join(', ')} (${listing.maxPowerKw} kW)</span>
             <span class="font-black text-[#059669]">₹${listing.pricePerKwhInr.toFixed(2)}/kWh</span>
           </div>
 
@@ -265,7 +312,16 @@ export function DelhiInteractiveMap({ onSelectCharger }: DelhiInteractiveMapProp
         marker.addTo(markersLayerRef.current);
       }
     });
-  }, [chargerListings, driverLat, driverLon, onSelectCharger, openBookingModal]);
+  }, [
+    chargerListings,
+    driverLat,
+    driverLon,
+    activeRadiusKm,
+    selectedConnector,
+    p2pQuery.estimatedRangeKm,
+    onSelectCharger,
+    openBookingModal,
+  ]);
 
   const handleZoomIn = () => {
     mapRef.current?.zoomIn();
