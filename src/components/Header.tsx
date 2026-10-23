@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import {
-  Zap,
   Home,
   BarChart2,
   Users,
