@@ -2,10 +2,20 @@ import { create } from 'zustand';
 import type { TransformerConfig, BackgroundLoadSlot } from '../types/transformer';
 import type { EVSessionInput } from '../types/evSession';
 import type { HourlyRegionalProfile, RegionalGridStress, DataProvenance } from '../types/grid';
+import type { ChargerListing, LowBatterySearchQuery } from '../types/p2p';
 import { runSmartChargingOptimisation, type SolverOutput } from '../domain/schedulerEngine';
 import backgroundLoadData from '../data/residentialBackgroundLoad.json';
 import scenariosData from '../data/benchmarkScenarios.json';
 import syntheticGridData from '../data/syntheticGridProfile.json';
+
+const INITIAL_P2P_QUERY: LowBatterySearchQuery = {
+  driverLat: 28.5355,
+  driverLon: 77.1735,
+  radiusKm: 5.0,
+  vehicleBatteryPct: 7,
+  estimatedRangeKm: 12,
+  requiredConnector: 'TYPE_2',
+};
 
 export type ScenarioPreset = 'EVENING_RUSH' | 'VALLEY_SHIFT' | 'INFEASIBLE_REQUEST';
 export type ActiveTab = 'P0_GRID' | 'P1_P2P';
@@ -49,6 +59,13 @@ interface SimulationState {
   // Synchronous solver output
   solverOutput: SolverOutput;
 
+  // P2P Marketplace state
+  p2pQuery: LowBatterySearchQuery;
+  p2pSortBy: 'DISTANCE' | 'PRICE' | 'POWER';
+  selectedChargerForBooking: ChargerListing | null;
+  bookingStage: 'REVIEW' | 'TRANSMITTING' | 'ACCEPTED' | 'CHARGING' | 'COMPLETED';
+  isBookingModalOpen: boolean;
+
   // Actions
   setActiveTab: (tab: ActiveTab) => void;
   setTransformerCapacity: (capacityKw: number) => void;
@@ -59,6 +76,14 @@ interface SimulationState {
   openSessionModal: (vehicleId?: string) => void;
   closeSessionModal: () => void;
   resetSimulation: () => void;
+
+  // P2P Actions
+  setP2PQuery: (query: Partial<LowBatterySearchQuery>) => void;
+  setP2PSortBy: (sort: 'DISTANCE' | 'PRICE' | 'POWER') => void;
+  openBookingModal: (listing: ChargerListing) => void;
+  closeBookingModal: () => void;
+  setBookingStage: (stage: 'REVIEW' | 'TRANSMITTING' | 'ACCEPTED' | 'CHARGING' | 'COMPLETED') => void;
+  advanceBookingStage: () => void;
 }
 
 // Initial solver execution
@@ -85,6 +110,12 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
   isLive: true,
 
   solverOutput: initialSolverOutput,
+
+  p2pQuery: INITIAL_P2P_QUERY,
+  p2pSortBy: 'DISTANCE',
+  selectedChargerForBooking: null,
+  bookingStage: 'REVIEW',
+  isBookingModalOpen: false,
 
   setActiveTab: (tab) => set({ activeTab: tab }),
 
@@ -225,6 +256,52 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
       solverOutput,
       isModalOpen: false,
       selectedVehicleId: null,
+      p2pQuery: INITIAL_P2P_QUERY,
+      p2pSortBy: 'DISTANCE',
+      selectedChargerForBooking: null,
+      bookingStage: 'REVIEW',
+      isBookingModalOpen: false,
     });
+  },
+
+  setP2PQuery: (query) => {
+    set((state) => ({
+      p2pQuery: { ...state.p2pQuery, ...query },
+    }));
+  },
+
+  setP2PSortBy: (sort) => set({ p2pSortBy: sort }),
+
+  openBookingModal: (listing) => {
+    set({
+      selectedChargerForBooking: listing,
+      bookingStage: 'REVIEW',
+      isBookingModalOpen: true,
+    });
+  },
+
+  closeBookingModal: () => {
+    set({
+      isBookingModalOpen: false,
+      selectedChargerForBooking: null,
+      bookingStage: 'REVIEW',
+    });
+  },
+
+  setBookingStage: (stage) => set({ bookingStage: stage }),
+
+  advanceBookingStage: () => {
+    const { bookingStage } = get();
+    const sequence: ('REVIEW' | 'TRANSMITTING' | 'ACCEPTED' | 'CHARGING' | 'COMPLETED')[] = [
+      'REVIEW',
+      'TRANSMITTING',
+      'ACCEPTED',
+      'CHARGING',
+      'COMPLETED',
+    ];
+    const currentIndex = sequence.indexOf(bookingStage);
+    if (currentIndex < sequence.length - 1) {
+      set({ bookingStage: sequence[currentIndex + 1] });
+    }
   },
 }));
