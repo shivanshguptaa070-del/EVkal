@@ -11,6 +11,20 @@ import sampleChargerListings from '../data/sampleChargerListings.json';
 
 const INITIAL_CHARGERS = sampleChargerListings as ChargerListing[];
 
+export interface P2PFilterState {
+  fastOnly: boolean;
+  verifiedOnly: boolean;
+  coveredOnly: boolean;
+  availableNowOnly: boolean;
+}
+
+const INITIAL_P2P_FILTERS: P2PFilterState = {
+  fastOnly: false,
+  verifiedOnly: false,
+  coveredOnly: false,
+  availableNowOnly: false,
+};
+
 const INITIAL_P2P_QUERY: LowBatterySearchQuery = {
   driverLat: 28.5355,
   driverLon: 77.1735,
@@ -65,6 +79,7 @@ interface SimulationState {
   // P2P Marketplace state
   p2pQuery: LowBatterySearchQuery;
   p2pSortBy: 'DISTANCE' | 'PRICE' | 'POWER';
+  p2pFilters: P2PFilterState;
   chargerListings: ChargerListing[];
   isListChargerModalOpen: boolean;
   newlyAddedListingId: string | null;
@@ -86,6 +101,8 @@ interface SimulationState {
   // P2P Actions
   setP2PQuery: (query: Partial<LowBatterySearchQuery>) => void;
   setP2PSortBy: (sort: 'DISTANCE' | 'PRICE' | 'POWER') => void;
+  setP2PFilter: (key: keyof P2PFilterState, value: boolean) => void;
+  resetP2PFilters: () => void;
   openListChargerModal: () => void;
   closeListChargerModal: () => void;
   addChargerListing: (listing: ChargerListing) => void;
@@ -123,6 +140,7 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
 
   p2pQuery: INITIAL_P2P_QUERY,
   p2pSortBy: 'DISTANCE',
+  p2pFilters: INITIAL_P2P_FILTERS,
   chargerListings: INITIAL_CHARGERS,
   isListChargerModalOpen: false,
   newlyAddedListingId: null,
@@ -271,6 +289,7 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
       selectedVehicleId: null,
       p2pQuery: INITIAL_P2P_QUERY,
       p2pSortBy: 'DISTANCE',
+      p2pFilters: INITIAL_P2P_FILTERS,
       chargerListings: INITIAL_CHARGERS,
       isListChargerModalOpen: false,
       newlyAddedListingId: null,
@@ -287,6 +306,14 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
   },
 
   setP2PSortBy: (sort) => set({ p2pSortBy: sort }),
+
+  setP2PFilter: (key, value) => {
+    set((state) => ({
+      p2pFilters: { ...state.p2pFilters, [key]: value },
+    }));
+  },
+
+  resetP2PFilters: () => set({ p2pFilters: INITIAL_P2P_FILTERS }),
 
   openListChargerModal: () => set({ isListChargerModalOpen: true }),
   closeListChargerModal: () => set({ isListChargerModalOpen: false }),
