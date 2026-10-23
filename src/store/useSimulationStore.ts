@@ -1,0 +1,230 @@
+import { create } from 'zustand';
+import type { TransformerConfig, BackgroundLoadSlot } from '../types/transformer';
+import type { EVSessionInput } from '../types/evSession';
+import type { HourlyRegionalProfile, RegionalGridStress, DataProvenance } from '../types/grid';
+import { runSmartChargingOptimisation, type SolverOutput } from '../domain/schedulerEngine';
+import backgroundLoadData from '../data/residentialBackgroundLoad.json';
+import scenariosData from '../data/benchmarkScenarios.json';
+import syntheticGridData from '../data/syntheticGridProfile.json';
+
+export type ScenarioPreset = 'EVENING_RUSH' | 'VALLEY_SHIFT' | 'INFEASIBLE_REQUEST';
+export type ActiveTab = 'P0_GRID' | 'P1_P2P';
+
+const INITIAL_BACKGROUND = backgroundLoadData as BackgroundLoadSlot[];
+const SCENARIOS = scenariosData as {
+  eveningRush: EVSessionInput[];
+  infeasibleRequest: EVSessionInput;
+};
+const INITIAL_REGIONAL = syntheticGridData as HourlyRegionalProfile[];
+
+const INITIAL_CONFIG: TransformerConfig = {
+  id: 'TX-100-SECTOR-4',
+  name: 'Sector 4 Feeder Transformer',
+  ratedCapacityKw: 100.0,
+  safetyThresholdPct: 90.0,
+  connectedHomesCount: 25,
+};
+
+// Deep copy helper for scenario fleets
+function cloneFleet(fleet: EVSessionInput[]): EVSessionInput[] {
+  return JSON.parse(JSON.stringify(fleet));
+}
+
+interface SimulationState {
+  // Navigation & UI state
+  activeTab: ActiveTab;
+  isModalOpen: boolean;
+  selectedVehicleId: string | null;
+
+  // Domain simulation state
+  transformerConfig: TransformerConfig;
+  backgroundLoad: BackgroundLoadSlot[];
+  evFleet: EVSessionInput[];
+  activeScenario: ScenarioPreset;
+  regionalProfile: HourlyRegionalProfile[];
+  regionalStress: RegionalGridStress;
+  provenance: DataProvenance;
+  isLive: boolean;
+
+  // Synchronous solver output
+  solverOutput: SolverOutput;
+
+  // Actions
+  setActiveTab: (tab: ActiveTab) => void;
+  setTransformerCapacity: (capacityKw: number) => void;
+  setScenario: (scenario: ScenarioPreset) => void;
+  toggleVehicleFlexibility: (vehicleId: string) => void;
+  updateVehicleSession: (vehicle: EVSessionInput) => void;
+  addVehicleSession: (vehicle: EVSessionInput) => void;
+  openSessionModal: (vehicleId?: string) => void;
+  closeSessionModal: () => void;
+  resetSimulation: () => void;
+}
+
+// Initial solver execution
+const initialFleet = cloneFleet(SCENARIOS.eveningRush);
+const initialSolverOutput = runSmartChargingOptimisation(
+  initialFleet,
+  INITIAL_BACKGROUND,
+  INITIAL_CONFIG,
+  INITIAL_REGIONAL
+);
+
+export const useSimulationStore = create<SimulationState>((set, get) => ({
+  activeTab: 'P0_GRID',
+  isModalOpen: false,
+  selectedVehicleId: null,
+
+  transformerConfig: INITIAL_CONFIG,
+  backgroundLoad: INITIAL_BACKGROUND,
+  evFleet: initialFleet,
+  activeScenario: 'EVENING_RUSH',
+  regionalProfile: INITIAL_REGIONAL,
+  regionalStress: 'REGIONAL_NORMAL',
+  provenance: 'LIVE_API',
+  isLive: true,
+
+  solverOutput: initialSolverOutput,
+
+  setActiveTab: (tab) => set({ activeTab: tab }),
+
+  setTransformerCapacity: (capacityKw) => {
+    const { evFleet, backgroundLoad, regionalProfile, transformerConfig } = get();
+    const updatedConfig: TransformerConfig = {
+      ...transformerConfig,
+      ratedCapacityKw: capacityKw,
+    };
+    const solverOutput = runSmartChargingOptimisation(
+      evFleet,
+      backgroundLoad,
+      updatedConfig,
+      regionalProfile
+    );
+    set({
+      transformerConfig: updatedConfig,
+      solverOutput,
+    });
+  },
+
+  setScenario: (scenario) => {
+    const { backgroundLoad, regionalProfile, transformerConfig } = get();
+    let nextFleet: EVSessionInput[];
+
+    if (scenario === 'VALLEY_SHIFT') {
+      // Valley Shift: all flexible vehicles actively shifted
+      nextFleet = cloneFleet(SCENARIOS.eveningRush).map((ev) => ({
+        ...ev,
+        isFlexibilityOptIn: ev.id !== 'EV-02' && ev.id !== 'EV-07', // 5 flexible, 2 rigid
+      }));
+    } else if (scenario === 'INFEASIBLE_REQUEST') {
+      // Infeasible Request scenario: includes EV-FAIL
+      nextFleet = [...cloneFleet(SCENARIOS.eveningRush), cloneFleet([SCENARIOS.infeasibleRequest])[0]];
+    } else {
+      // Evening Rush: baseline uncoordinated
+      nextFleet = cloneFleet(SCENARIOS.eveningRush);
+    }
+
+    const solverOutput = runSmartChargingOptimisation(
+      nextFleet,
+      backgroundLoad,
+      transformerConfig,
+      regionalProfile
+    );
+
+    set({
+      activeScenario: scenario,
+      evFleet: nextFleet,
+      solverOutput,
+    });
+  },
+
+  toggleVehicleFlexibility: (vehicleId) => {
+    const { evFleet, backgroundLoad, regionalProfile, transformerConfig } = get();
+    const updatedFleet = evFleet.map((ev) =>
+      ev.id === vehicleId ? { ...ev, isFlexibilityOptIn: !ev.isFlexibilityOptIn } : ev
+    );
+
+    const solverOutput = runSmartChargingOptimisation(
+      updatedFleet,
+      backgroundLoad,
+      transformerConfig,
+      regionalProfile
+    );
+
+    set({
+      evFleet: updatedFleet,
+      solverOutput,
+    });
+  },
+
+  updateVehicleSession: (vehicle) => {
+    const { evFleet, backgroundLoad, regionalProfile, transformerConfig } = get();
+    const updatedFleet = evFleet.map((ev) => (ev.id === vehicle.id ? vehicle : ev));
+
+    const solverOutput = runSmartChargingOptimisation(
+      updatedFleet,
+      backgroundLoad,
+      transformerConfig,
+      regionalProfile
+    );
+
+    set({
+      evFleet: updatedFleet,
+      solverOutput,
+      isModalOpen: false,
+      selectedVehicleId: null,
+    });
+  },
+
+  addVehicleSession: (vehicle) => {
+    const { evFleet, backgroundLoad, regionalProfile, transformerConfig } = get();
+    const updatedFleet = [...evFleet, vehicle];
+
+    const solverOutput = runSmartChargingOptimisation(
+      updatedFleet,
+      backgroundLoad,
+      transformerConfig,
+      regionalProfile
+    );
+
+    set({
+      evFleet: updatedFleet,
+      solverOutput,
+      isModalOpen: false,
+      selectedVehicleId: null,
+    });
+  },
+
+  openSessionModal: (vehicleId) => {
+    set({
+      isModalOpen: true,
+      selectedVehicleId: vehicleId || null,
+    });
+  },
+
+  closeSessionModal: () => {
+    set({
+      isModalOpen: false,
+      selectedVehicleId: null,
+    });
+  },
+
+  resetSimulation: () => {
+    const defaultFleet = cloneFleet(SCENARIOS.eveningRush);
+    const solverOutput = runSmartChargingOptimisation(
+      defaultFleet,
+      INITIAL_BACKGROUND,
+      INITIAL_CONFIG,
+      INITIAL_REGIONAL
+    );
+
+    set({
+      transformerConfig: INITIAL_CONFIG,
+      evFleet: defaultFleet,
+      activeScenario: 'EVENING_RUSH',
+      solverOutput,
+      isModalOpen: false,
+      selectedVehicleId: null,
+    });
+  },
+}));
