@@ -6,11 +6,12 @@ import {
   Crown,
   Zap,
   ShieldCheck,
+  ArrowRight,
 } from 'lucide-react';
 import { useSimulationStore, type P2PSubView } from '../store/useSimulationStore';
 
 export function P2PSidebar() {
-  const { p2pSubView, setP2PSubView } = useSimulationStore();
+  const { p2pSubView, setP2PSubView, setActiveTab } = useSimulationStore();
 
   const isCurrent = (view: P2PSubView) => {
     if (view === 'FIND_CHARGERS' && (p2pSubView === 'FIND_CHARGERS' || p2pSubView === 'BROWSE')) {
@@ -74,6 +75,30 @@ export function P2PSidebar() {
           </div>
         </div>
       </div>
+
+      {/* Switch to Grid Management (P0) Button */}
+      <button
+        type="button"
+        id="p2p-switch-to-p0-grid"
+        onClick={() => setActiveTab('P0_GRID')}
+        className="w-full flex items-center justify-between p-2.5 rounded-2xl bg-slate-900 text-white hover:bg-slate-800 transition-all text-left shadow-xs cursor-pointer group"
+        title="Switch to Grid Dashboard (P0)"
+      >
+        <div className="flex items-center gap-2.5">
+          <div className="h-7 w-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center group-hover:scale-105 transition-transform">
+            <Zap className="h-4 w-4" />
+          </div>
+          <div>
+            <div className="text-[11px] font-bold text-white leading-tight">
+              Grid Dashboard (P0)
+            </div>
+            <div className="text-[10px] text-slate-400 leading-tight">
+              Feeder &amp; EV Fleet
+            </div>
+          </div>
+        </div>
+        <ArrowRight className="h-3.5 w-3.5 text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all" />
+      </button>
 
       {/* Navigation Links Group */}
       <nav className="space-y-1 flex flex-row lg:flex-col overflow-x-auto lg:overflow-x-visible pb-1 lg:pb-0">

@@ -99,7 +99,7 @@ const COMMUNITY_PINS: CommunityPin[] = [
 ];
 
 export function LandingHeroPage() {
-  const { setActiveTab, solverOutput, transformerConfig, openBookingModal } = useSimulationStore();
+  const { setActiveTab, setActiveP0SubPage, solverOutput, transformerConfig, openBookingModal } = useSimulationStore();
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   // Micro-telemetry live fluctuation simulation

@@ -45,6 +45,7 @@ import type {
 export type ScenarioPreset = 'EVENING_RUSH' | 'VALLEY_SHIFT' | 'INFEASIBLE_REQUEST';
 export type ActiveTab = 'LANDING' | 'P0_GRID' | 'P1_P2P' | 'PROFILE';
 export type P0SubPage =
+  | 'PAGE_0_OPTIMIZER'
   | 'PAGE_1_DASHBOARD'
   | 'PAGE_2_FLEET'
   | 'PAGE_3_TARIFF'
@@ -80,7 +81,6 @@ function cloneFleet(fleet: EVSessionInput[]): EVSessionInput[] {
   return JSON.parse(JSON.stringify(fleet));
 }
 
-<<<<<<< HEAD
 // Initial profile data matching the reference screen
 const INITIAL_USER_PROFILE: UserProfileData = {
   personal: {

@@ -1,5 +1,4 @@
 import {
-  Home,
   LayoutDashboard,
   Car,
   IndianRupee,
@@ -12,19 +11,12 @@ import {
 import { useSimulationStore, type P0SubPage } from '../store/useSimulationStore';
 
 interface NavItem {
-  id: string;
+  id: P0SubPage;
   title: string;
   icon: React.ComponentType<{ className?: string }>;
-  isLanding?: boolean;
 }
 
 const NAV_ITEMS: NavItem[] = [
-  {
-    id: 'LANDING',
-    title: 'Landing Page',
-    icon: Home,
-    isLanding: true,
-  },
   {
     id: 'PAGE_1_DASHBOARD',
     title: 'Dashboard',
@@ -111,10 +103,7 @@ export function P0SidebarNav() {
         <nav className="space-y-1.5">
           {NAV_ITEMS.map((item) => {
             const Icon = item.icon;
-            const isLanding = item.isLanding;
-            const isActive = isLanding
-              ? activeTab === 'LANDING'
-              : activeTab === 'P0_GRID' && activeP0SubPage === item.id;
+            const isActive = activeTab === 'P0_GRID' && activeP0SubPage === item.id;
 
             return (
               <button
@@ -122,12 +111,8 @@ export function P0SidebarNav() {
                 id={`sidebar-nav-${item.id.toLowerCase()}`}
                 type="button"
                 onClick={() => {
-                  if (isLanding) {
-                    setActiveTab('LANDING');
-                  } else {
-                    setActiveTab('P0_GRID');
-                    setActiveP0SubPage(item.id as P0SubPage);
-                  }
+                  setActiveTab('P0_GRID');
+                  setActiveP0SubPage(item.id);
                 }}
                 className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                   isActive
