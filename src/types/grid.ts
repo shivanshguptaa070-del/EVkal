@@ -1,6 +1,7 @@
 export type DataProvenance = 'LIVE_API' | 'SYNTHETIC_FALLBACK' | 'LOCAL_SIMULATION';
 
 export type RegionalGridStress = 'REGIONAL_LOW' | 'REGIONAL_NORMAL' | 'REGIONAL_HIGH' | 'REGIONAL_CRITICAL';
+export type GridStress = RegionalGridStress;
 
 export interface RegionalGridReading {
   timestamp: string;                  // ISO 8601 format
