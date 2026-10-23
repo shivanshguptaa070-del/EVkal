@@ -7,6 +7,9 @@ import { runSmartChargingOptimisation, type SolverOutput } from '../domain/sched
 import backgroundLoadData from '../data/residentialBackgroundLoad.json';
 import scenariosData from '../data/benchmarkScenarios.json';
 import syntheticGridData from '../data/syntheticGridProfile.json';
+import sampleChargerListings from '../data/sampleChargerListings.json';
+
+const INITIAL_CHARGERS = sampleChargerListings as ChargerListing[];
 
 const INITIAL_P2P_QUERY: LowBatterySearchQuery = {
   driverLat: 28.5355,
@@ -62,6 +65,9 @@ interface SimulationState {
   // P2P Marketplace state
   p2pQuery: LowBatterySearchQuery;
   p2pSortBy: 'DISTANCE' | 'PRICE' | 'POWER';
+  chargerListings: ChargerListing[];
+  isListChargerModalOpen: boolean;
+  newlyAddedListingId: string | null;
   selectedChargerForBooking: ChargerListing | null;
   bookingStage: 'REVIEW' | 'TRANSMITTING' | 'ACCEPTED' | 'CHARGING' | 'COMPLETED';
   isBookingModalOpen: boolean;
@@ -80,6 +86,9 @@ interface SimulationState {
   // P2P Actions
   setP2PQuery: (query: Partial<LowBatterySearchQuery>) => void;
   setP2PSortBy: (sort: 'DISTANCE' | 'PRICE' | 'POWER') => void;
+  openListChargerModal: () => void;
+  closeListChargerModal: () => void;
+  addChargerListing: (listing: ChargerListing) => void;
   openBookingModal: (listing: ChargerListing) => void;
   closeBookingModal: () => void;
   setBookingStage: (stage: 'REVIEW' | 'TRANSMITTING' | 'ACCEPTED' | 'CHARGING' | 'COMPLETED') => void;
@@ -114,6 +123,9 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
 
   p2pQuery: INITIAL_P2P_QUERY,
   p2pSortBy: 'DISTANCE',
+  chargerListings: INITIAL_CHARGERS,
+  isListChargerModalOpen: false,
+  newlyAddedListingId: null,
   selectedChargerForBooking: null,
   bookingStage: 'REVIEW',
   isBookingModalOpen: false,
@@ -259,6 +271,9 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
       selectedVehicleId: null,
       p2pQuery: INITIAL_P2P_QUERY,
       p2pSortBy: 'DISTANCE',
+      chargerListings: INITIAL_CHARGERS,
+      isListChargerModalOpen: false,
+      newlyAddedListingId: null,
       selectedChargerForBooking: null,
       bookingStage: 'REVIEW',
       isBookingModalOpen: false,
@@ -272,6 +287,17 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
   },
 
   setP2PSortBy: (sort) => set({ p2pSortBy: sort }),
+
+  openListChargerModal: () => set({ isListChargerModalOpen: true }),
+  closeListChargerModal: () => set({ isListChargerModalOpen: false }),
+
+  addChargerListing: (listing) => {
+    set((state) => ({
+      chargerListings: [listing, ...state.chargerListings],
+      newlyAddedListingId: listing.id,
+      isListChargerModalOpen: false,
+    }));
+  },
 
   openBookingModal: (listing) => {
     set({

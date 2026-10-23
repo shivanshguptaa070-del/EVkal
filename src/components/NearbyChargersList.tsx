@@ -1,23 +1,21 @@
 import { useMemo } from 'react';
-import { ChevronDown, SlidersHorizontal, AlertCircle } from 'lucide-react';
+import { ChevronDown, SlidersHorizontal, AlertCircle, PlusCircle } from 'lucide-react';
 import { useSimulationStore } from '../store/useSimulationStore';
 import { searchNearbyChargers } from '../domain/p2pMarketplaceEngine';
-import sampleChargerListings from '../data/sampleChargerListings.json';
-import type { ChargerListing } from '../types/p2p';
 import { NearbyChargerCard } from './NearbyChargerCard';
 
 export function NearbyChargersList() {
-  const { p2pQuery, p2pSortBy, setP2PSortBy } = useSimulationStore();
+  const { p2pQuery, p2pSortBy, setP2PSortBy, chargerListings, openListChargerModal } = useSimulationStore();
 
   // Run pure domain search
   const rawResults = useMemo(() => {
     return searchNearbyChargers(
-      sampleChargerListings as ChargerListing[],
+      chargerListings,
       p2pQuery,
       5,
       19
     );
-  }, [p2pQuery]);
+  }, [chargerListings, p2pQuery]);
 
   // Apply sorting
   const sortedResults = useMemo(() => {
@@ -54,23 +52,34 @@ export function NearbyChargersList() {
           </p>
         </div>
 
-        {/* Sort Dropdown */}
-        <div className="flex items-center gap-2">
-          <SlidersHorizontal className="h-3.5 w-3.5 text-slate-400" />
-          <span className="text-xs font-semibold text-slate-600">Sort by</span>
-          <div className="relative">
-            <select
-              value={p2pSortBy}
-              onChange={(e) =>
-                setP2PSortBy(e.target.value as 'DISTANCE' | 'PRICE' | 'POWER')
-              }
-              className="appearance-none pl-3 pr-8 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
-            >
-              <option value="DISTANCE">Distance (Nearest)</option>
-              <option value="PRICE">Price (Lowest)</option>
-              <option value="POWER">Power (Highest)</option>
-            </select>
-            <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 pointer-events-none" />
+        {/* Actions: Sort & Host Button */}
+        <div className="flex flex-wrap items-center gap-2.5">
+          <button
+            type="button"
+            onClick={openListChargerModal}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-sm shadow-emerald-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+          >
+            <PlusCircle className="h-3.5 w-3.5" />
+            <span>List Your Charger</span>
+          </button>
+
+          <div className="flex items-center gap-2">
+            <SlidersHorizontal className="h-3.5 w-3.5 text-slate-400" />
+            <span className="text-xs font-semibold text-slate-600">Sort by</span>
+            <div className="relative">
+              <select
+                value={p2pSortBy}
+                onChange={(e) =>
+                  setP2PSortBy(e.target.value as 'DISTANCE' | 'PRICE' | 'POWER')
+                }
+                className="appearance-none pl-3 pr-8 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+              >
+                <option value="DISTANCE">Distance (Nearest)</option>
+                <option value="PRICE">Price (Lowest)</option>
+                <option value="POWER">Power (Highest)</option>
+              </select>
+              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 pointer-events-none" />
+            </div>
           </div>
         </div>
       </div>
