@@ -6,13 +6,31 @@ import { DelhiInteractiveMap } from './DelhiInteractiveMap';
 import { P2PNearbyChargersList } from './P2PNearbyChargersList';
 import { BookingSimModal } from './BookingSimModal';
 import { ListChargerModal } from './ListChargerModal';
+import { ListCommunityChargerPage } from './ListCommunityChargerPage';
 import { useSimulationStore } from '../store/useSimulationStore';
 
 export function P2PChargerSharingTab() {
-  const { userProfile, openProfileView, setActiveProfileTab, openListChargerModal } = useSimulationStore();
+  const {
+    userProfile,
+    openProfileView,
+    setActiveProfileTab,
+    openListChargerModal,
+    p2pSubView,
+    setP2PSubView,
+  } = useSimulationStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedConnector, setSelectedConnector] = useState('TYPE_2');
   const [selectedRadius, setSelectedRadius] = useState(5);
+
+  // If in 'LIST_CHARGER' mode, render the full community charger listing page
+  if (p2pSubView === 'LIST_CHARGER') {
+    return (
+      <div className="animate-fade-in pb-10">
+        <ListCommunityChargerPage onBack={() => setP2PSubView('BROWSE')} />
+        <BookingSimModal />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-5 animate-fade-in pb-10 font-sans">

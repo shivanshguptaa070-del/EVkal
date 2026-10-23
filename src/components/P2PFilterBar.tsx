@@ -1,4 +1,4 @@
-import { Search, Zap, Compass, SlidersHorizontal, ChevronDown } from 'lucide-react';
+import { Search, Zap, Compass, SlidersHorizontal, ChevronDown, Plus } from 'lucide-react';
 import { useSimulationStore } from '../store/useSimulationStore';
 import type { ConnectorType } from '../types/p2p';
 
@@ -82,11 +82,22 @@ export function P2PFilterBar({
           <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 pointer-events-none" />
         </div>
 
+        {/* + List Charger Button */}
+        <button
+          type="button"
+          onClick={onToggleFilterModal}
+          className="inline-flex items-center gap-1.5 px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-[#059669] border border-emerald-200 rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer"
+          title="List your community charger"
+        >
+          <Plus className="h-3.5 w-3.5" />
+          <span>List Charger</span>
+        </button>
+
         {/* Filter Sliders Button */}
         <button
           type="button"
           onClick={onToggleFilterModal}
-          className="p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 shadow-sm transition-colors flex items-center justify-center"
+          className="p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 shadow-sm transition-colors flex items-center justify-center cursor-pointer"
           title="Filter preferences"
           aria-label="Filter preferences"
         >
