@@ -53,15 +53,15 @@ export function DelhiInteractiveMap({ onSelectCharger }: DelhiInteractiveMapProp
       attributionControl: false,
     });
 
-    // Beautiful CartoDB Voyager tiles matching clean light aesthetic
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-      subdomains: 'abcd',
+    // Free, open-source OpenStreetMap tiles (Zero API key required)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
+      subdomains: ['a', 'b', 'c'],
     }).addTo(map);
 
     // Attribution
     L.control.attribution({ position: 'bottomright', prefix: false })
-      .addAttribution('&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank">CARTO</a>')
+      .addAttribution('&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors')
       .addTo(map);
 
     // Concentric Search Radar Circles
