@@ -82,6 +82,7 @@ interface SimulationState {
   p2pFilters: P2PFilterState;
   chargerListings: ChargerListing[];
   isListChargerModalOpen: boolean;
+  p2pSubView: 'BROWSE' | 'LIST_CHARGER';
   newlyAddedListingId: string | null;
   selectedChargerForBooking: ChargerListing | null;
   bookingStage: 'REVIEW' | 'TRANSMITTING' | 'ACCEPTED' | 'CHARGING' | 'COMPLETED';
@@ -89,6 +90,7 @@ interface SimulationState {
 
   // Actions
   setActiveTab: (tab: ActiveTab) => void;
+  setP2PSubView: (view: 'BROWSE' | 'LIST_CHARGER') => void;
   setTransformerCapacity: (capacityKw: number) => void;
   setScenario: (scenario: ScenarioPreset) => void;
   toggleVehicleFlexibility: (vehicleId: string) => void;
@@ -143,6 +145,7 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
   p2pFilters: INITIAL_P2P_FILTERS,
   chargerListings: INITIAL_CHARGERS,
   isListChargerModalOpen: false,
+  p2pSubView: 'LIST_CHARGER',
   newlyAddedListingId: null,
   selectedChargerForBooking: null,
   bookingStage: 'REVIEW',
@@ -315,14 +318,16 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
 
   resetP2PFilters: () => set({ p2pFilters: INITIAL_P2P_FILTERS }),
 
-  openListChargerModal: () => set({ isListChargerModalOpen: true }),
-  closeListChargerModal: () => set({ isListChargerModalOpen: false }),
+  openListChargerModal: () => set({ isListChargerModalOpen: true, p2pSubView: 'LIST_CHARGER' }),
+  closeListChargerModal: () => set({ isListChargerModalOpen: false, p2pSubView: 'BROWSE' }),
+  setP2PSubView: (view) => set({ p2pSubView: view }),
 
   addChargerListing: (listing) => {
     set((state) => ({
       chargerListings: [listing, ...state.chargerListings],
       newlyAddedListingId: listing.id,
       isListChargerModalOpen: false,
+      p2pSubView: 'BROWSE',
     }));
   },
 
