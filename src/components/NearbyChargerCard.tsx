@@ -71,11 +71,6 @@ export function NearbyChargerCard({ result, isRecommended = false }: NearbyCharg
                     <span>Verified Resident</span>
                   </span>
                 )}
-                {listing.isDemoListing && (
-                  <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-wider">
-                    Demo Listing
-                  </span>
-                )}
               </div>
               <p className="text-xs text-slate-500 font-medium">Residential Charger</p>
             </div>
