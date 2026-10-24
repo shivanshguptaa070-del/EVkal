@@ -15,10 +15,8 @@ import {
   Play,
   Plus,
   Edit3,
-  ChevronDown,
   Key,
   Copy,
-  Radio,
 } from 'lucide-react';
 import { useSimulationStore, type HostIncomingRequest } from '../store/useSimulationStore';
 
@@ -60,9 +58,9 @@ export function HostDashboardPage() {
 
   // Privacy & Safety toggles
   const [hideExactAddress, setHideExactAddress] = useState(true);
-  const [allowNewRequests, setAllowNewRequests] = useState(true);
   const [autoExpirePin, setAutoExpirePin] = useState(true);
   const [copiedPin, setCopiedPin] = useState(false);
+  const [requestFilter, setRequestFilter] = useState<'ALL' | 'COMPATIBLE'>('ALL');
 
   // 7-Day Calendar Schedule
   const [schedule, setSchedule] = useState<DaySchedule[]>([
@@ -156,7 +154,6 @@ export function HostDashboardPage() {
 
   const requests = hostIncomingRequests;
   const pendingRequests = requests.filter((r) => r.status === 'PENDING');
-  const acceptedRequests = requests.filter((r) => r.status === 'ACCEPTED');
   const isChargingActive = bookingStage === 'CHARGING';
 
   return (
@@ -199,24 +196,12 @@ export function HostDashboardPage() {
           </p>
         </div>
 
-        {/* Quick Mode & Pause Actions */}
+        {/* Header Actions */}
         <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={() => {
-              setEditForm({ ...chargerDetails });
-              setIsEditModalOpen(true);
-            }}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-bold transition-colors cursor-pointer"
-          >
-            <Edit3 className="h-3.5 w-3.5 text-slate-500" />
-            <span>Edit Specs &amp; PIN</span>
-          </button>
-
-          <button
-            type="button"
             onClick={handlePauseListing}
-            className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer ${
+            className={`inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer ${
               !isHostListingPaused
                 ? 'bg-amber-50 border border-amber-200 text-amber-900 hover:bg-amber-100'
                 : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-500/20'
@@ -234,67 +219,6 @@ export function HostDashboardPage() {
               </>
             )}
           </button>
-        </div>
-      </div>
-
-      {/* 4-Stage Lifecycle Synchronization Banner */}
-      <div className="bg-slate-900 text-white rounded-3xl p-4 sm:p-5 shadow-md border border-slate-800">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
-          <div className="flex items-center gap-2">
-            <Radio className="h-4 w-4 text-emerald-400 animate-pulse" />
-            <span className="text-xs font-black tracking-wide uppercase text-slate-300">
-              4-Stage Lifecycle State Synchronization
-            </span>
-          </div>
-          <span className="text-[11px] font-mono text-emerald-400 font-bold">
-            Current Driver State: {bookingStage}
-          </span>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-3">
-          {[
-            {
-              num: 1,
-              name: '1. Review & Request',
-              desc: `${pendingRequests.length} Pending Driver Request(s)`,
-              active: bookingStage === 'REVIEW' || pendingRequests.length > 0,
-            },
-            {
-              num: 2,
-              name: '2. Host Unlocked',
-              desc: `Gate PIN #${chargerDetails.gatePin} Shared`,
-              active: bookingStage === 'ACCEPTED' || acceptedRequests.length > 0,
-            },
-            {
-              num: 3,
-              name: '3. Active Charging',
-              desc: isChargingActive ? 'Live Telemetry Telecasting' : 'Standby / Ready',
-              active: isChargingActive,
-            },
-            {
-              num: 4,
-              name: '4. Session Receipt',
-              desc: `₹${hostIllustrativeEarnings.toFixed(2)} Disbursed`,
-              active: bookingStage === 'COMPLETED' || hostIllustrativeEarnings > 0,
-            },
-          ].map((st) => (
-            <div
-              key={st.num}
-              className={`p-3 rounded-2xl border transition-all ${
-                st.active
-                  ? 'bg-slate-800/90 border-emerald-500/70 shadow-sm'
-                  : 'bg-slate-950/40 border-slate-800 opacity-60'
-              }`}
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-black text-slate-200">{st.name}</span>
-                {st.active && <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />}
-              </div>
-              <span className="text-[10px] text-slate-400 font-medium block mt-1 truncate">
-                {st.desc}
-              </span>
-            </div>
-          ))}
         </div>
       </div>
 
@@ -696,45 +620,6 @@ export function HostDashboardPage() {
                   />
                 </button>
               </div>
-
-              <div className="flex items-start justify-between gap-4 pt-3 border-t border-slate-100">
-                <div className="flex items-start gap-3">
-                  <div className="h-8 w-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 mt-0.5">
-                    <Users className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-slate-900 block">
-                      Accept incoming driver bookings
-                    </span>
-                    <span className="text-[11px] text-slate-500 block mt-0.5 leading-relaxed">
-                      Toggle to accept new requests or temporarily pause incoming notifications.
-                    </span>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    const next = !allowNewRequests;
-                    setAllowNewRequests(next);
-                    showToast(
-                      next
-                        ? 'Incoming requests enabled.'
-                        : 'Incoming requests paused. You will not receive new notifications.'
-                    );
-                  }}
-                  className={`w-11 h-6 flex items-center rounded-full p-1 transition-colors cursor-pointer shrink-0 ${
-                    allowNewRequests ? 'bg-emerald-600' : 'bg-slate-300'
-                  }`}
-                  aria-label="Toggle allow incoming requests"
-                >
-                  <div
-                    className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform ${
-                      allowNewRequests ? 'translate-x-5' : 'translate-x-0'
-                    }`}
-                  />
-                </button>
-              </div>
             </div>
           </div>
         </div>
@@ -743,7 +628,7 @@ export function HostDashboardPage() {
         <div className="lg:col-span-6 space-y-6">
           {/* Card: Incoming Driver Requests (Stage 1 &rarr; Stage 2) */}
           <div className="bg-white rounded-3xl border border-slate-200/90 p-5 sm:p-6 shadow-xs space-y-4">
-            <div className="flex items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <Users className="h-5 w-5 text-slate-700" />
                 <h2 className="text-base font-bold text-slate-900">
@@ -751,15 +636,42 @@ export function HostDashboardPage() {
                 </h2>
               </div>
 
-              <div className="inline-flex items-center gap-1 px-3 py-1 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 bg-white">
-                <span>Newest First</span>
-                <ChevronDown className="h-3 w-3 text-slate-400" />
+              {/* Functional filter pills */}
+              <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs">
+                <button
+                  type="button"
+                  onClick={() => setRequestFilter('ALL')}
+                  className={`px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+                    requestFilter === 'ALL'
+                      ? 'bg-white text-slate-900 shadow-2xs'
+                      : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  All ({pendingRequests.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRequestFilter('COMPATIBLE')}
+                  className={`px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+                    requestFilter === 'COMPATIBLE'
+                      ? 'bg-white text-emerald-800 shadow-2xs'
+                      : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  Compatible ({pendingRequests.filter((r) => r.isCompatible).length})
+                </button>
               </div>
             </div>
 
             {/* List of Requests */}
             <div className="space-y-4">
-              {requests.map((req) => {
+              {requests
+                .filter((r) => {
+                  if (r.status !== 'PENDING') return true;
+                  if (requestFilter === 'COMPATIBLE') return r.isCompatible;
+                  return true;
+                })
+                .map((req) => {
                 if (req.status !== 'PENDING') {
                   return (
                     <div
