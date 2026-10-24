@@ -11,6 +11,7 @@ import { HostEarningsPage } from './HostEarningsPage';
 import { HostDashboardPage } from './HostDashboardPage';
 import { MembershipPricingPage } from './MembershipPricingPage';
 import { useSimulationStore } from '../store/useSimulationStore';
+import { getUserInitials } from '../utils/userInitials';
 
 export function P2PChargerSharingTab() {
   const {
@@ -81,7 +82,7 @@ export function P2PChargerSharingTab() {
                       }}
                     />
                     <div className="h-full w-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center">
-                      ST
+                      {getUserInitials(userProfile?.personal?.fullName)}
                     </div>
                   </div>
                   <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-emerald-500 border-2 border-white" />

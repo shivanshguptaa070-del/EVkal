@@ -975,15 +975,18 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
 
   advanceBookingStage: () => {
     const { bookingStage } = get();
-    const sequence: ('REVIEW' | 'TRANSMITTING' | 'ACCEPTED' | 'CHARGING' | 'COMPLETED')[] = [
+    const sequence: ('REVIEW' | 'ACCEPTED' | 'CHARGING' | 'COMPLETED')[] = [
       'REVIEW',
-      'TRANSMITTING',
       'ACCEPTED',
       'CHARGING',
       'COMPLETED',
     ];
-    const currentIndex = sequence.indexOf(bookingStage);
-    if (currentIndex < sequence.length - 1) {
+    if ((bookingStage as string) === 'TRANSMITTING') {
+      set({ bookingStage: 'ACCEPTED' });
+      return;
+    }
+    const currentIndex = sequence.indexOf(bookingStage as any);
+    if (currentIndex >= 0 && currentIndex < sequence.length - 1) {
       set({ bookingStage: sequence[currentIndex + 1] });
     }
   },
@@ -1007,14 +1010,14 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
       requestedDate: 'Today, 24 Oct 2026',
       neededBy: 'Immediate / Urgent Slot',
       image: '/assets/images/nexon_ev.jpg',
-      status: 'PENDING',
+      status: 'ACCEPTED',
       calculatedEarnings: earnings,
       chargerHostName: selectedChargerForBooking?.hostName || 'Rajesh K.',
       isLiveDriverSession: true,
     };
 
     set((state) => ({
-      bookingStage: 'TRANSMITTING',
+      bookingStage: 'ACCEPTED',
       hostIncomingRequests: [
         liveRequest,
         ...state.hostIncomingRequests.filter((r) => !r.isLiveDriverSession),

@@ -148,20 +148,20 @@ export function P2PBookingsPage() {
             {/* Stage Progress Timeline Bar */}
             <div className="space-y-2">
               <div className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-                5-Stage Reservation State Machine:
+                4-Stage Reservation Lifecycle:
               </div>
-              <div className="grid grid-cols-5 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {[
-                  { stage: 'REVIEW', label: '1. Review' },
-                  { stage: 'TRANSMITTING', label: '2. Transmit' },
-                  { stage: 'ACCEPTED', label: '3. Accepted' },
-                  { stage: 'CHARGING', label: '4. Charging' },
-                  { stage: 'COMPLETED', label: '5. Receipt' },
+                  { stage: 'REVIEW', label: '1. Review & Request' },
+                  { stage: 'ACCEPTED', label: '2. Host Unlocked' },
+                  { stage: 'CHARGING', label: '3. Charging Active' },
+                  { stage: 'COMPLETED', label: '4. Session Receipt' },
                 ].map((s, idx) => {
-                  const stageList = ['REVIEW', 'TRANSMITTING', 'ACCEPTED', 'CHARGING', 'COMPLETED'];
-                  const currentIndex = stageList.indexOf(bookingStage);
+                  const stageList = ['REVIEW', 'ACCEPTED', 'CHARGING', 'COMPLETED'];
+                  const normalizedStage = (bookingStage as string) === 'TRANSMITTING' ? 'ACCEPTED' : bookingStage;
+                  const currentIndex = stageList.indexOf(normalizedStage);
                   const isDone = currentIndex >= idx;
-                  const isCurrent = bookingStage === s.stage;
+                  const isCurrent = normalizedStage === s.stage;
 
                   return (
                     <div

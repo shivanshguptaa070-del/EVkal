@@ -23,6 +23,7 @@ export function Page1GridDashboard() {
     isAdmin,
     adminId,
     activeScenario,
+    userProfile,
   } = useSimulationStore();
 
   const { baselineSlots, optimisedSlots, summary } = solverOutput;
@@ -49,7 +50,7 @@ export function Page1GridDashboard() {
           {/* Left Text & Actions */}
           <div className="lg:col-span-7 space-y-4">
             <span className="text-[11px] font-bold tracking-widest text-slate-400 uppercase font-mono block">
-              WELCOME BACK, SHIVHARSH
+              WELCOME BACK, {(userProfile?.personal?.fullName || 'DRIVER').trim().split(/\s+/)[0].toUpperCase()}
             </span>
 
             <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-black tracking-tight text-slate-900 leading-[1.15]">

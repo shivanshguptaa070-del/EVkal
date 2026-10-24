@@ -15,6 +15,7 @@ import {
   Clock,
 } from 'lucide-react';
 import { useSimulationStore } from '../store/useSimulationStore';
+import { getUserInitials } from '../utils/userInitials';
 
 export function TopBar() {
   const {
@@ -38,6 +39,8 @@ export function TopBar() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const userInitials = getUserInitials(userProfile?.personal?.fullName);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -217,7 +220,7 @@ export function TopBar() {
               title="Open User Profile Menu"
             >
               <div className="h-8.5 w-8.5 rounded-full bg-purple-600 group-hover:bg-purple-700 text-white font-bold text-xs flex items-center justify-center ring-2 ring-purple-400/40 shadow-xs transition-colors">
-                ST
+                {userInitials}
               </div>
               <ChevronDown
                 className={`h-3 w-3 text-slate-400 group-hover:text-slate-200 transition-transform ${
@@ -253,7 +256,7 @@ export function TopBar() {
                       }}
                     />
                     <div className="h-full w-full bg-purple-600 text-white font-bold text-sm flex items-center justify-center">
-                      ST
+                      {userInitials}
                     </div>
                   </div>
                   <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center text-white text-[8px]">

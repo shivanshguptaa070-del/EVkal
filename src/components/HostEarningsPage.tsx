@@ -25,6 +25,7 @@ import {
   ArrowLeft,
 } from 'lucide-react';
 import { useSimulationStore } from '../store/useSimulationStore';
+import { getUserInitials } from '../utils/userInitials';
 
 interface HostChargerItem {
   id: string;
@@ -156,7 +157,11 @@ export function HostEarningsPage() {
     loginHost,
     logoutHost,
     clearHostLoginError,
+    userProfile,
   } = useSimulationStore();
+
+  const hostDisplayName = userProfile?.personal?.fullName || 'Shivharsh Tiwari';
+  const hostInitials = getUserInitials(hostDisplayName);
 
   const [inputEmail, setInputEmail] = useState('');
   const [inputPassword, setInputPassword] = useState('');
@@ -372,11 +377,11 @@ export function HostEarningsPage() {
       <div className="p-3.5 sm:p-4 rounded-3xl bg-emerald-50/90 border border-emerald-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-2xl bg-[#059669] text-white flex items-center justify-center font-black text-sm shadow-xs">
-            ST
+            {hostInitials}
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-sm font-black text-slate-900">Shivharsh Tiwari</span>
+              <span className="text-sm font-black text-slate-900">{hostDisplayName}</span>
               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-200 text-emerald-950 text-[10px] font-extrabold">
                 <ShieldCheck className="h-3 w-3 text-emerald-700" />
                 <span>Verified Host</span>

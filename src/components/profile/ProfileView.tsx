@@ -21,6 +21,7 @@ import {
   Smartphone,
 } from 'lucide-react';
 import { useSimulationStore } from '../../store/useSimulationStore';
+import { getUserInitials } from '../../utils/userInitials';
 
 export function ProfileView() {
   const {
@@ -185,10 +186,7 @@ export function ProfileView() {
                 }}
               />
               <div className="h-full w-full bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white text-2xl font-black">
-                {userProfile.personal.fullName
-                  .split(' ')
-                  .map((n) => n[0])
-                  .join('')}
+                {getUserInitials(userProfile.personal.fullName)}
               </div>
             </div>
 

@@ -24,13 +24,13 @@ interface ListCommunityChargerPageProps {
 type PropertyType = 'HOME' | 'APARTMENT' | 'COMMERCIAL';
 
 export function ListCommunityChargerPage({ onBack }: ListCommunityChargerPageProps) {
-  const { addChargerListing, setP2PSubView } = useSimulationStore();
+  const { addChargerListing, setP2PSubView, userProfile } = useSimulationStore();
 
   // Wizard Step (1 to 5)
   const [currentStep, setCurrentStep] = useState<number>(1);
 
   // Form State (Default values matching user mockup)
-  const [displayName, setDisplayName] = useState('Shivharsh T.');
+  const [displayName, setDisplayName] = useState(userProfile?.personal?.fullName || 'Shivharsh T.');
   const [propertyType, setPropertyType] = useState<PropertyType>('HOME');
   const [neighborhood, setNeighborhood] = useState('Saket Block J, South Delhi');
   const [description, setDescription] = useState('Covered parking with easy access. Safe and secure.');

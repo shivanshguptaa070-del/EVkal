@@ -9,6 +9,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { useSimulationStore } from '../store/useSimulationStore';
+import { getUserInitials } from '../utils/userInitials';
 
 export function Header() {
   const {
@@ -20,6 +21,7 @@ export function Header() {
     openProfileView,
     setP2PSubView,
     isHostAuthenticated,
+    userProfile,
   } = useSimulationStore();
   const [currentTime, setCurrentTime] = useState<string>('19:00 IST');
 
@@ -222,7 +224,7 @@ export function Header() {
             }`}
             title={
               isHostAuthenticated
-                ? 'Logged in as Host: Shivharsh Tiwari (shivharshtiwari86017@gmail.com). Click to view profile.'
+                ? `Logged in as Host: ${userProfile?.personal?.fullName || 'Host'} (${userProfile?.personal?.email}). Click to view profile.`
                 : 'Public Guest session. Click to access Host Dashboard.'
             }
           >
@@ -233,9 +235,9 @@ export function Header() {
                   : 'bg-slate-200 text-slate-700'
               }`}
             >
-              {isHostAuthenticated ? 'ST' : 'EV'}
+              {isHostAuthenticated ? getUserInitials(userProfile?.personal?.fullName) : 'EV'}
             </div>
-            <span>{isHostAuthenticated ? 'Shivharsh T. (Host)' : 'Guest Driver'}</span>
+            <span>{isHostAuthenticated ? `${userProfile?.personal?.fullName || 'Host'} (Host)` : 'Guest Driver'}</span>
             {!isHostAuthenticated ? (
               <span className="text-[10px] text-emerald-700 font-extrabold bg-emerald-100 px-1.5 py-0.5 rounded-md border border-emerald-200">
                 Host Login

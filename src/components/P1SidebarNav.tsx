@@ -12,6 +12,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { useSimulationStore, type P1SubPage } from '../store/useSimulationStore';
+import { getUserInitials } from '../utils/userInitials';
 
 interface P2PNavItem {
   id: P1SubPage;
@@ -202,7 +203,7 @@ export function P1SidebarNav() {
                 }}
               />
               <div className="h-full w-full bg-emerald-600 text-white text-[10px] font-bold flex items-center justify-center">
-                ST
+                {getUserInitials(userProfile?.personal?.fullName)}
               </div>
             </div>
             <div className="min-w-0">

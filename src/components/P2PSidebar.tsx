@@ -11,9 +11,10 @@ import {
   Lock,
 } from 'lucide-react';
 import { useSimulationStore, type P2PSubView } from '../store/useSimulationStore';
+import { getUserInitials } from '../utils/userInitials';
 
 export function P2PSidebar() {
-  const { p2pSubView, setP2PSubView, setActiveTab, isHostAuthenticated } = useSimulationStore();
+  const { p2pSubView, setP2PSubView, setActiveTab, isHostAuthenticated, userProfile } = useSimulationStore();
 
   const isCurrent = (view: P2PSubView) => {
     if (view === 'FIND_CHARGERS' && (p2pSubView === 'FIND_CHARGERS' || p2pSubView === 'BROWSE')) {
@@ -77,11 +78,11 @@ export function P2PSidebar() {
               isHostAuthenticated ? 'bg-[#059669] text-white' : 'bg-slate-200 text-slate-700'
             }`}
           >
-            {isHostAuthenticated ? 'ST' : 'EV'}
+            {isHostAuthenticated ? getUserInitials(userProfile?.personal?.fullName) : 'EV'}
           </div>
           <div className="leading-tight overflow-hidden">
             <div className="text-xs font-black text-slate-900 truncate">
-              {isHostAuthenticated ? 'Shivharsh T.' : 'Guest Driver'}
+              {isHostAuthenticated ? (userProfile?.personal?.fullName || 'Host') : 'Guest Driver'}
             </div>
             <div
               className={`flex items-center gap-1 text-[10px] font-bold mt-0.5 truncate ${
