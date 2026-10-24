@@ -240,40 +240,7 @@ export function AuthPage() {
         </button>
       </div>
 
-      <div className="absolute top-4 sm:top-6 right-4 sm:right-6 z-20 flex items-center gap-2">
-        <button
-          type="button"
-          onClick={() => setIsVerifyModalOpen(true)}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/80 hover:bg-slate-900 text-blue-300 hover:text-blue-200 border border-blue-500/40 backdrop-blur-md text-xs font-semibold shadow-lg transition-all cursor-pointer"
-          title="Verify live Supabase database connection and authentication"
-        >
-          <Database className="h-3.5 w-3.5 text-blue-400" />
-          <span className="hidden xs:inline">Verify Database</span>
-          <span className="xs:hidden">DB Check</span>
-        </button>
 
-        {isOfficial ? (
-          <button
-            type="button"
-            onClick={handleAdminDemo}
-            className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-purple-500/20 hover:bg-purple-500/30 text-purple-200 border border-purple-400/40 backdrop-blur-md text-xs font-bold shadow-lg transition-all cursor-pointer"
-            title="Authenticate with DISCOM Feeder Admin Demo"
-          >
-            <ShieldCheck className="h-3.5 w-3.5 text-purple-300" />
-            <span>⚡ 1-Click Official Admin Login</span>
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={handleDriverDemo}
-            className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 backdrop-blur-md text-xs font-bold shadow-lg transition-all cursor-pointer"
-            title="Authenticate as Standard EV Driver / Host"
-          >
-            <Sparkles className="h-3.5 w-3.5 text-emerald-400" />
-            <span>⚡ 1-Click Driver Demo Login</span>
-          </button>
-        )}
-      </div>
 
       {/* ─────────────────────────────────────────────────────────────
           3. MAIN FLOATING AUTH CARD
