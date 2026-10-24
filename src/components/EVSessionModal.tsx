@@ -369,7 +369,7 @@ export function EVSessionModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-fadeIn">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-fadeIn">
       <EVSessionForm
         key={selectedVehicleId || 'new'}
         initialVehicle={selectedVehicle}

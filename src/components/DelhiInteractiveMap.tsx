@@ -358,7 +358,7 @@ export function DelhiInteractiveMap({
   };
 
   return (
-    <div className="relative w-full h-[580px] bg-[#EDF3EE] rounded-3xl overflow-hidden border border-slate-200/90 shadow-sm select-none">
+    <div className="relative isolate z-0 w-full h-[580px] bg-[#EDF3EE] rounded-3xl overflow-hidden border border-slate-200/90 shadow-sm select-none">
       {/* Leaflet Map Div Container */}
       <div ref={mapContainerRef} className="w-full h-full z-0" />
 

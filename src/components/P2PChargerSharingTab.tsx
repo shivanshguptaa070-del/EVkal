@@ -10,7 +10,6 @@ import { MyBookingsPage } from './MyBookingsPage';
 import { HostEarningsPage } from './HostEarningsPage';
 import { HostDashboardPage } from './HostDashboardPage';
 import { MembershipPricingPage } from './MembershipPricingPage';
-import { BookingSimModal } from './BookingSimModal';
 import { useSimulationStore } from '../store/useSimulationStore';
 
 export function P2PChargerSharingTab() {
@@ -207,9 +206,6 @@ export function P2PChargerSharingTab() {
           <MembershipPricingPage />
         )}
       </div>
-
-      {/* Interactive Modals */}
-      <BookingSimModal />
     </div>
   );
 }

@@ -24,6 +24,7 @@ export function BookingSimModal() {
     bookingStage,
     setBookingStage,
     advanceBookingStage,
+    submitDriverBookingRequest,
     closeBookingModal,
     p2pQuery,
     setActiveTab,
@@ -80,7 +81,7 @@ export function BookingSimModal() {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/60 backdrop-blur-sm overflow-y-auto animate-fade-in"
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-slate-950/60 backdrop-blur-sm overflow-y-auto animate-fade-in"
       role="dialog"
       aria-modal="true"
       aria-labelledby="booking-modal-title"
@@ -279,8 +280,8 @@ export function BookingSimModal() {
                 </button>
                 <button
                   type="button"
-                  onClick={advanceBookingStage}
-                  className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-md flex items-center gap-2"
+                  onClick={submitDriverBookingRequest}
+                  className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-md flex items-center gap-2 cursor-pointer"
                 >
                   <span>Submit Slot Request</span>
                   <ArrowRight className="h-4 w-4" />
@@ -298,13 +299,13 @@ export function BookingSimModal() {
                 </div>
                 <div className="max-w-md mx-auto space-y-2">
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-100 text-rose-800 text-xs font-bold">
-                    <span>Host Busy</span>
+                    <span>Host Unavailable</span>
                   </div>
                   <h3 className="text-lg font-black text-slate-900">
                     Request Declined by {listing.hostName}
                   </h3>
                   <p className="text-xs text-slate-600 leading-relaxed">
-                    The host is currently unable to accept your charging slot (Host charger is occupied or personal vehicle is currently charging). Please pick another nearby community charger.
+                    The host is currently unable to accept your charging slot (personal vehicle charging or occupied bay). Please choose another verified neighborhood charger.
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
@@ -345,10 +346,10 @@ export function BookingSimModal() {
                     <span>Awaiting Host Approval</span>
                   </div>
                   <h3 className="text-lg font-black text-slate-900">
-                    Waiting for {listing.hostName} to Allow Request
+                    Request Transmitted to {listing.hostName}
                   </h3>
                   <p className="text-xs text-slate-600 leading-relaxed">
-                    Your request has been dispatched to the host. For privacy and security, the exact garage address and gate access PIN will remain strictly locked until <strong className="text-slate-800">{listing.hostName}</strong> reviews and allows your session.
+                    Your request has been dispatched directly to <strong className="text-slate-800">{listing.hostName}&apos;s Host Dashboard</strong>. For your safety and anti-loitering compliance, exact street address and gate access credentials remain encrypted until the host reviews and confirms your session.
                   </p>
                 </div>
 
@@ -383,54 +384,40 @@ export function BookingSimModal() {
                   </div>
                 </div>
 
-                {/* Host Decision Action Card (Simulation for Judges & 2-Sided Peer Testing) */}
-                <div className="max-w-md mx-auto p-4 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 text-white shadow-xl space-y-3 text-left border border-slate-700">
+                {/* Host Dashboard Link for Testing / Evaluation */}
+                <div className="max-w-md mx-auto p-4 rounded-2xl bg-slate-900 text-white shadow-xl space-y-3 text-left border border-slate-800">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
-                      <span className="text-[11px] font-black uppercase tracking-wider text-emerald-400">
-                        Host Control (Awaiting Host Action)
+                      <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="text-[11px] font-bold text-slate-200">
+                        Notification Sent to Host Dashboard
                       </span>
                     </div>
-                    <span className="text-[10px] text-slate-400">Simulate Host</span>
+                    <span className="text-[10px] bg-slate-800 px-2 py-0.5 rounded text-slate-400 font-semibold">
+                      Host Action Needed
+                    </span>
                   </div>
                   <p className="text-xs text-slate-300 leading-relaxed">
-                    The session will not advance until <strong className="text-white">{listing.hostName}</strong> approves. Decide as host:
+                    This request is now waiting for decision in <strong className="text-emerald-400">{listing.hostName}&apos;s Incoming Requests</strong> on the Host Dashboard.
                   </p>
-
-                  <div className="flex flex-wrap items-center gap-2 pt-1">
-                    {/* Allow Request button */}
-                    <button
-                      type="button"
-                      onClick={() => advanceBookingStage()}
-                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold shadow-md hover:shadow-emerald-500/25 transition-all cursor-pointer"
-                    >
-                      <CheckCircle2 className="h-4 w-4" />
-                      <span>✓ Allow Request (Host Accepts)</span>
-                    </button>
-
-                    {/* Decline Request button */}
-                    <button
-                      type="button"
-                      onClick={() => setIsHostDeclined(true)}
-                      className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-rose-300 border border-slate-700 text-xs font-bold transition-all cursor-pointer"
-                    >
-                      <X className="h-4 w-4" />
-                      <span>Decline</span>
-                    </button>
-                  </div>
-
-                  <div className="pt-1 text-center">
+                  <div className="pt-1 flex flex-col sm:flex-row gap-2">
                     <button
                       type="button"
                       onClick={() => {
-                        closeBookingModal();
                         setActiveTab('HOST_DASHBOARD');
                         setP2PSubView('HOST_DASHBOARD');
                       }}
-                      className="text-[11px] text-slate-400 hover:text-emerald-400 underline cursor-pointer transition-colors"
+                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold transition-all shadow-md cursor-pointer"
                     >
-                      Or switch to Host Dashboard to review &amp; accept requests &rarr;
+                      <span>🏠 Switch to Host Dashboard to Review &amp; Accept</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={closeBookingModal}
+                      className="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-colors cursor-pointer"
+                    >
+                      Close Modal
                     </button>
                   </div>
                 </div>

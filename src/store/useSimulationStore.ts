@@ -285,6 +285,112 @@ export type P2PSubView =
   | 'HOST_EARNINGS'
   | 'MEMBERSHIP';
 
+export interface HostIncomingRequest {
+  id: string;
+  vehicleName: string;
+  driverName: string;
+  isCompatible: boolean;
+  incompatibleReason?: string;
+  timeAgo: string;
+  energyNeeded: string;
+  requestedDate: string;
+  neededBy: string;
+  image: string;
+  status: 'PENDING' | 'ACCEPTED' | 'DECLINED';
+  calculatedEarnings: number;
+  chargerHostName: string;
+  isLiveDriverSession?: boolean;
+}
+
+export const INITIAL_HOST_REQUESTS: HostIncomingRequest[] = [
+  {
+    id: 'req-1',
+    vehicleName: 'Tata Nexon EV Max',
+    driverName: 'Vikram Malhotra',
+    isCompatible: true,
+    timeAgo: '12 mins ago',
+    energyNeeded: '28.35 kWh',
+    requestedDate: 'Today, 24 Oct 2026',
+    neededBy: '07:00 IST',
+    image: '/assets/images/nexon_ev.jpg',
+    status: 'PENDING',
+    calculatedEarnings: 340.20,
+    chargerHostName: 'Rajesh K.',
+  },
+  {
+    id: 'req-2',
+    vehicleName: 'BYD Atto 3 Superior',
+    driverName: 'Rohan Mehra',
+    isCompatible: false,
+    incompatibleReason:
+      'This vehicle may require a CCS2 DC fast-gun connector, which is not supported by your AC Wallbox (Type 2).',
+    timeAgo: '1 hour ago',
+    energyNeeded: '40.00 kWh',
+    requestedDate: 'Today, 24 Oct 2026',
+    neededBy: 'Any time',
+    image: '/assets/images/byd_atto3_ev.jpg',
+    status: 'PENDING',
+    calculatedEarnings: 480.00,
+    chargerHostName: 'Rajesh K.',
+  },
+  {
+    id: 'req-3',
+    vehicleName: 'MG ZS EV Excite',
+    driverName: 'Sunita Rao',
+    isCompatible: true,
+    timeAgo: '3 hours ago',
+    energyNeeded: '32.50 kWh',
+    requestedDate: 'Fri, 24 Oct 2026',
+    neededBy: '14:30 IST',
+    image: '/assets/images/mg_zs_ev.jpg',
+    status: 'PENDING',
+    calculatedEarnings: 390.00,
+    chargerHostName: 'Rajesh K.',
+  },
+  {
+    id: 'req-4',
+    vehicleName: 'Hyundai Ioniq 5 AWD',
+    driverName: 'Ananya Sharma',
+    isCompatible: true,
+    timeAgo: '5 hours ago',
+    energyNeeded: '45.00 kWh',
+    requestedDate: 'Sat, 25 Oct 2026',
+    neededBy: '18:00 IST',
+    image: '/assets/images/ioniq5_ev.jpg',
+    status: 'ACCEPTED',
+    calculatedEarnings: 540.00,
+    chargerHostName: 'Rajesh K.',
+  },
+  {
+    id: 'req-5',
+    vehicleName: 'Mahindra XUV400 EL Pro',
+    driverName: 'Pradeep Joshi',
+    isCompatible: true,
+    timeAgo: 'Yesterday',
+    energyNeeded: '24.50 kWh',
+    requestedDate: 'Sun, 26 Oct 2026',
+    neededBy: '09:00 IST',
+    image: '/assets/images/xuv400_ev.jpg',
+    status: 'PENDING',
+    calculatedEarnings: 294.00,
+    chargerHostName: 'Rajesh K.',
+  },
+  {
+    id: 'req-6',
+    vehicleName: 'Tata Tiago EV Tech Lux',
+    driverName: 'Kavita Das',
+    isCompatible: true,
+    timeAgo: 'Yesterday',
+    energyNeeded: '19.20 kWh',
+    requestedDate: 'Mon, 27 Oct 2026',
+    neededBy: '11:00 IST',
+    image: '/assets/images/tiago_ev.jpg',
+    status: 'PENDING',
+    calculatedEarnings: 230.40,
+    chargerHostName: 'Rajesh K.',
+  },
+];
+
 interface SimulationState {
   // Navigation & UI state
   activeTab: ActiveTab;
@@ -378,8 +484,17 @@ interface SimulationState {
   closeBookingModal: () => void;
   setBookingStage: (stage: 'REVIEW' | 'TRANSMITTING' | 'ACCEPTED' | 'CHARGING' | 'COMPLETED') => void;
   advanceBookingStage: () => void;
+  submitDriverBookingRequest: () => void;
   toggleNetworkFallback: () => void;
   runSolver: () => void;
+
+  // Host Dashboard State & Actions
+  hostIncomingRequests: HostIncomingRequest[];
+  hostIllustrativeEarnings: number;
+  isHostListingPaused: boolean;
+  acceptHostIncomingRequest: (requestId: string) => void;
+  declineHostIncomingRequest: (requestId: string) => void;
+  setIsHostListingPaused: (paused: boolean) => void;
 }
 
 // Initial solver execution
@@ -428,6 +543,11 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
   selectedChargerForBooking: null,
   bookingStage: 'REVIEW',
   isBookingModalOpen: false,
+
+  // Host Dashboard Initial State
+  hostIncomingRequests: INITIAL_HOST_REQUESTS,
+  hostIllustrativeEarnings: 3420.00,
+  isHostListingPaused: false,
 
   // Admin Role & ID state
   isAdmin: false, // Default is standard user. Admin access is strictly granted upon Official DISCOM login
@@ -848,6 +968,72 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
       set({ bookingStage: sequence[currentIndex + 1] });
     }
   },
+
+  submitDriverBookingRequest: () => {
+    const { p2pQuery, selectedChargerForBooking, userProfile } = get();
+    const neededKwh = p2pQuery.vehicleBatteryPct
+      ? Number((60 * (1 - p2pQuery.vehicleBatteryPct / 100)).toFixed(1))
+      : 28.35;
+    const pricePerKwh = selectedChargerForBooking?.pricePerKwhInr || 11.50;
+    const earnings = Number((neededKwh * pricePerKwh).toFixed(2));
+    const vehicleModel = userProfile.vehicles[0]?.model || 'Tata Nexon EV Max';
+
+    const liveRequest: HostIncomingRequest = {
+      id: `req-live-${Date.now()}`,
+      vehicleName: `${vehicleModel} (You / Connected Driver)`,
+      driverName: userProfile.personal.fullName || 'Shivharsh Tripathi (You)',
+      isCompatible: true,
+      timeAgo: 'Just now',
+      energyNeeded: `${neededKwh} kWh`,
+      requestedDate: 'Today, 24 Oct 2026',
+      neededBy: 'Immediate / Urgent Slot',
+      image: '/assets/images/nexon_ev.jpg',
+      status: 'PENDING',
+      calculatedEarnings: earnings,
+      chargerHostName: selectedChargerForBooking?.hostName || 'Rajesh K.',
+      isLiveDriverSession: true,
+    };
+
+    set((state) => ({
+      bookingStage: 'TRANSMITTING',
+      hostIncomingRequests: [
+        liveRequest,
+        ...state.hostIncomingRequests.filter((r) => !r.isLiveDriverSession),
+      ],
+    }));
+  },
+
+  acceptHostIncomingRequest: (requestId: string) => {
+    const { hostIncomingRequests, hostIllustrativeEarnings, bookingStage } = get();
+    const target = hostIncomingRequests.find((r) => r.id === requestId);
+    if (!target) return;
+
+    const nextEarnings = Number((hostIllustrativeEarnings + target.calculatedEarnings).toFixed(2));
+    const nextRequests = hostIncomingRequests.map((r) =>
+      r.id === requestId ? { ...r, status: 'ACCEPTED' as const } : r
+    );
+
+    // If accepting live driver session or if bookingStage is currently TRANSMITTING, advance driver to ACCEPTED
+    const shouldAdvanceDriver = target.isLiveDriverSession || bookingStage === 'TRANSMITTING';
+
+    set({
+      hostIncomingRequests: nextRequests,
+      hostIllustrativeEarnings: nextEarnings,
+      ...(shouldAdvanceDriver ? { bookingStage: 'ACCEPTED' } : {}),
+    });
+  },
+
+  declineHostIncomingRequest: (requestId: string) => {
+    const { hostIncomingRequests } = get();
+    const nextRequests = hostIncomingRequests.map((r) =>
+      r.id === requestId ? { ...r, status: 'DECLINED' as const } : r
+    );
+    set({
+      hostIncomingRequests: nextRequests,
+    });
+  },
+
+  setIsHostListingPaused: (paused: boolean) => set({ isHostListingPaused: paused }),
 
   toggleNetworkFallback: () => {
     const { isLive } = get();
