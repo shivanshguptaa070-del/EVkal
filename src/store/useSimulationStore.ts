@@ -544,12 +544,12 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
 
   loginUser: (email, name, role = 'DRIVER') => {
     const isOfficialAdmin = role === 'ADMIN';
-    const { previousTab } = get();
-    const fallbackTab = !previousTab || previousTab === 'AUTH' ? 'P0_GRID' : previousTab;
+    // Always navigate directly to the Grid & Feeder Dashboard upon login!
+    // Never redirect back to LANDING or AUTH.
     set((state) => ({
       isAuthenticated: true,
       isAdmin: isOfficialAdmin,
-      activeTab: fallbackTab,
+      activeTab: 'P0_GRID',
       activeP0SubPage: isOfficialAdmin ? 'PAGE_0_OPTIMIZER' : 'PAGE_1_DASHBOARD',
       userProfile: {
         ...state.userProfile,
