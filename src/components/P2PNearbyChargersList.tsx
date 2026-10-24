@@ -25,10 +25,26 @@ interface P2PNearbyChargersListProps {
 }
 
 const LISTING_IMAGES: Record<string, string> = {
-  'HOST-DEL-002': '/assets/images/dr_neha_villa.jpg', // Dr. Neha Sharma
-  'HOST-DEL-001': '/assets/images/garage_rajesh.jpg',  // Rajesh K.
-  'HOST-DEL-003': '/assets/images/arjun_garage.jpg',  // Arjun Bhasin
-  'HOST-DEL-005': '/assets/images/vipin_home.jpg',    // Vipin Singhal
+  'HOST-DEL-001': '/assets/images/garage_rajesh.jpg',  // Rajesh K. (Vasant Kunj)
+  'HOST-DEL-002': '/assets/images/dr_neha_villa.jpg', // Dr. Neha Sharma (Hauz Khas)
+  'HOST-DEL-003': '/assets/images/arjun_garage.jpg',  // Arjun Bhasin (Saket)
+  'HOST-DEL-004': '/assets/images/dashboard_hero_ev.jpg', // GreenRide (Chanakyapuri)
+  'HOST-DEL-005': '/assets/images/vipin_home.jpg',    // Vipin Singhal (Malviya Nagar)
+  'HOST-DEL-006': '/assets/images/shivharsh_villa.jpg', // Suresh Goel (Mehrauli)
+  'HOST-DEL-007': '/assets/images/garage_rajesh.jpg', // Vikramaditya Mehta (Connaught Place)
+  'HOST-DEL-008': '/assets/images/dr_neha_villa.jpg', // Sunita Rao (Dwarka)
+  'HOST-DEL-009': '/assets/images/arjun_garage.jpg',  // Amit Malhotra (Rohini)
+  'HOST-DEL-010': '/assets/images/vipin_home.jpg',    // Priya Taneja (Greater Kailash II)
+  'HOST-DEL-011': '/assets/images/shivharsh_villa.jpg', // Raghav Singhania (Lajpat Nagar)
+  'HOST-DEL-012': '/assets/images/garage_rajesh.jpg', // Harpreet Singh (Karol Bagh)
+  'HOST-DEL-013': '/assets/images/dr_neha_villa.jpg', // Deepa Nair (Janakpuri)
+  'HOST-DEL-014': '/assets/images/dashboard_hero_ev.jpg', // Aerocity EV Gateway
+  'HOST-DEL-015': '/assets/images/arjun_garage.jpg',  // Alok Verma (Mayur Vihar)
+  'HOST-DEL-016': '/assets/images/vipin_home.jpg',    // Shivani Bansal (Noida)
+  'HOST-DEL-017': '/assets/images/dashboard_hero_ev.jpg', // Kabir Oberoi (Cyber City Gurugram)
+  'HOST-DEL-018': '/assets/images/shivharsh_villa.jpg', // Rakesh Aggarwal (Indirapuram)
+  'HOST-DEL-019': '/assets/images/dr_neha_villa.jpg', // Ananya Kapoor (Nehru Place)
+  'HOST-DEL-020': '/assets/images/garage_rajesh.jpg', // Rohit Choudhary (South Extension)
 };
 
 const CONNECTOR_LABELS: Record<string, string> = {
@@ -56,14 +72,18 @@ export function P2PNearbyChargersList({
 
   // Filter listings based on query, connector, and radius
   const filteredListings = useMemo(() => {
+    const queryClean = searchQuery.trim().toLowerCase();
+
     return chargerListings.filter((item) => {
-      // 1. Text search match
-      if (
-        searchQuery &&
-        !item.hostName.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        !item.location.approximateLocality.toLowerCase().includes(searchQuery.toLowerCase())
-      ) {
-        return false;
+      // 1. Text search match across locality, address, and host name
+      if (queryClean) {
+        const matchesLocality = item.location.approximateLocality.toLowerCase().includes(queryClean);
+        const matchesAddress = item.location.exactAddress ? item.location.exactAddress.toLowerCase().includes(queryClean) : false;
+        const matchesHost = item.hostName.toLowerCase().includes(queryClean);
+
+        if (!matchesLocality && !matchesAddress && !matchesHost) {
+          return false;
+        }
       }
 
       // 2. Connector match
@@ -75,14 +95,18 @@ export function P2PNearbyChargersList({
       }
 
       // 3. Proximity / Radius filter
-      const distance = haversineDistanceKm(
-        driverLat,
-        driverLon,
-        item.location.latitude,
-        item.location.longitude
-      );
-      if (distance > selectedRadius) {
-        return false;
+      // When a user specifically searches for an area (e.g. "Connaught Place", "Dwarka", "Noida"),
+      // allow results from that area across Delhi NCR without being blocked by current GPS proximity
+      if (!queryClean) {
+        const distance = haversineDistanceKm(
+          driverLat,
+          driverLon,
+          item.location.latitude,
+          item.location.longitude
+        );
+        if (distance > selectedRadius) {
+          return false;
+        }
       }
 
       return true;
