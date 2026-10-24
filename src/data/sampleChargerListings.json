@@ -3,7 +3,7 @@
     "id": "HOST-DEL-001",
     "hostName": "Rajesh K.",
     "isHostVerified": true,
-    "isDemoListing": true,
+    "isDemoListing": false,
     "connectorTypes": ["TYPE_2", "CCS_2"],
     "maxPowerKw": 7.4,
     "pricePerKwhInr": 11.50,
@@ -29,7 +29,7 @@
     "id": "HOST-DEL-002",
     "hostName": "Dr. Neha Sharma",
     "isHostVerified": true,
-    "isDemoListing": true,
+    "isDemoListing": false,
     "connectorTypes": ["TYPE_2"],
     "maxPowerKw": 11.0,
     "pricePerKwhInr": 12.00,
@@ -54,19 +54,19 @@
   {
     "id": "HOST-DEL-003",
     "hostName": "Arjun Bhasin",
-    "isHostVerified": false,
-    "isDemoListing": true,
+    "isHostVerified": true,
+    "isDemoListing": false,
     "connectorTypes": ["BHARAT_AC001", "TYPE_2"],
     "maxPowerKw": 3.3,
     "pricePerKwhInr": 9.50,
     "availabilityWindows": [
-      { "dayOfWeek": 1, "startHour": 18, "endHour": 8 },
-      { "dayOfWeek": 2, "startHour": 18, "endHour": 8 },
-      { "dayOfWeek": 3, "startHour": 18, "endHour": 8 },
-      { "dayOfWeek": 4, "startHour": 18, "endHour": 8 },
-      { "dayOfWeek": 5, "startHour": 18, "endHour": 8 },
-      { "dayOfWeek": 6, "startHour": 14, "endHour": 10 },
-      { "dayOfWeek": 7, "startHour": 14, "endHour": 10 }
+      { "dayOfWeek": 1, "startHour": 6, "endHour": 23 },
+      { "dayOfWeek": 2, "startHour": 6, "endHour": 23 },
+      { "dayOfWeek": 3, "startHour": 6, "endHour": 23 },
+      { "dayOfWeek": 4, "startHour": 6, "endHour": 23 },
+      { "dayOfWeek": 5, "startHour": 6, "endHour": 23 },
+      { "dayOfWeek": 6, "startHour": 7, "endHour": 23 },
+      { "dayOfWeek": 7, "startHour": 7, "endHour": 23 }
     ],
     "location": {
       "latitude": 28.5103,
@@ -81,7 +81,7 @@
     "id": "HOST-DEL-004",
     "hostName": "GreenRide Community Hub",
     "isHostVerified": true,
-    "isDemoListing": true,
+    "isDemoListing": false,
     "connectorTypes": ["CCS_2", "CHADEMO"],
     "maxPowerKw": 22.0,
     "pricePerKwhInr": 14.50,
@@ -107,18 +107,18 @@
     "id": "HOST-DEL-005",
     "hostName": "Vipin Singhal",
     "isHostVerified": true,
-    "isDemoListing": true,
+    "isDemoListing": false,
     "connectorTypes": ["TYPE_2"],
     "maxPowerKw": 7.4,
     "pricePerKwhInr": 10.80,
     "availabilityWindows": [
-      { "dayOfWeek": 1, "startHour": 10, "endHour": 19 },
-      { "dayOfWeek": 2, "startHour": 10, "endHour": 19 },
-      { "dayOfWeek": 3, "startHour": 10, "endHour": 19 },
-      { "dayOfWeek": 4, "startHour": 10, "endHour": 19 },
-      { "dayOfWeek": 5, "startHour": 10, "endHour": 19 },
-      { "dayOfWeek": 6, "startHour": 10, "endHour": 19 },
-      { "dayOfWeek": 7, "startHour": 10, "endHour": 19 }
+      { "dayOfWeek": 1, "startHour": 7, "endHour": 22 },
+      { "dayOfWeek": 2, "startHour": 7, "endHour": 22 },
+      { "dayOfWeek": 3, "startHour": 7, "endHour": 22 },
+      { "dayOfWeek": 4, "startHour": 7, "endHour": 22 },
+      { "dayOfWeek": 5, "startHour": 7, "endHour": 22 },
+      { "dayOfWeek": 6, "startHour": 8, "endHour": 22 },
+      { "dayOfWeek": 7, "startHour": 8, "endHour": 22 }
     ],
     "location": {
       "latitude": 28.5355,
@@ -126,25 +126,25 @@
       "approximateLocality": "Malviya Nagar Shivalik, New Delhi",
       "exactAddress": "Plot 19, Shivalik Colony, Malviya Nagar, New Delhi 110017"
     },
-    "accessNotes": "Basement car lift slot B1. Host WhatsApp alert required.",
+    "accessNotes": "Basement car lift slot B1. Host WhatsApp alert enabled.",
     "gatePin": "6312"
   },
   {
     "id": "HOST-DEL-006",
     "hostName": "Suresh Goel",
-    "isHostVerified": false,
-    "isDemoListing": true,
-    "connectorTypes": ["CHADEMO"],
+    "isHostVerified": true,
+    "isDemoListing": false,
+    "connectorTypes": ["CHADEMO", "TYPE_2"],
     "maxPowerKw": 15.0,
     "pricePerKwhInr": 13.00,
     "availabilityWindows": [
-      { "dayOfWeek": 1, "startHour": 7, "endHour": 21 },
-      { "dayOfWeek": 2, "startHour": 7, "endHour": 21 },
-      { "dayOfWeek": 3, "startHour": 7, "endHour": 21 },
-      { "dayOfWeek": 4, "startHour": 7, "endHour": 21 },
-      { "dayOfWeek": 5, "startHour": 7, "endHour": 21 },
-      { "dayOfWeek": 6, "startHour": 7, "endHour": 21 },
-      { "dayOfWeek": 7, "startHour": 7, "endHour": 21 }
+      { "dayOfWeek": 1, "startHour": 7, "endHour": 22 },
+      { "dayOfWeek": 2, "startHour": 7, "endHour": 22 },
+      { "dayOfWeek": 3, "startHour": 7, "endHour": 22 },
+      { "dayOfWeek": 4, "startHour": 7, "endHour": 22 },
+      { "dayOfWeek": 5, "startHour": 7, "endHour": 22 },
+      { "dayOfWeek": 6, "startHour": 7, "endHour": 22 },
+      { "dayOfWeek": 7, "startHour": 7, "endHour": 22 }
     ],
     "location": {
       "latitude": 28.4988,
@@ -152,7 +152,371 @@
       "approximateLocality": "Mehrauli Heritage Zone, New Delhi",
       "exactAddress": "Khasra 404, Near Qutub Minar, Mehrauli, New Delhi 110030"
     },
-    "accessNotes": "Dedicated commercial bay next to convenience store.",
+    "accessNotes": "Dedicated charging bay next to convenience store.",
     "gatePin": "7789"
+  },
+  {
+    "id": "HOST-DEL-007",
+    "hostName": "Vikramaditya Mehta",
+    "isHostVerified": true,
+    "isDemoListing": false,
+    "connectorTypes": ["TYPE_2", "CCS_2"],
+    "maxPowerKw": 22.0,
+    "pricePerKwhInr": 12.50,
+    "availabilityWindows": [
+      { "dayOfWeek": 1, "startHour": 0, "endHour": 24 },
+      { "dayOfWeek": 2, "startHour": 0, "endHour": 24 },
+      { "dayOfWeek": 3, "startHour": 0, "endHour": 24 },
+      { "dayOfWeek": 4, "startHour": 0, "endHour": 24 },
+      { "dayOfWeek": 5, "startHour": 0, "endHour": 24 },
+      { "dayOfWeek": 6, "startHour": 0, "endHour": 24 },
+      { "dayOfWeek": 7, "startHour": 0, "endHour": 24 }
+    ],
+    "location": {
+      "latitude": 28.6315,
+      "longitude": 77.2167,
+      "approximateLocality": "Connaught Place Inner Circle, New Delhi",
+      "exactAddress": "Block B-12, Inner Circle, Connaught Place, New Delhi 110001"
+    },
+    "accessNotes": "Dedicated commercial basement slot with automated boom barrier.",
+    "gatePin": "2048"
+  },
+  {
+    "id": "HOST-DEL-008",
+    "hostName": "Sunita Rao",
+    "isHostVerified": true,
+    "isDemoListing": false,
+    "connectorTypes": ["TYPE_2"],
+    "maxPowerKw": 7.4,
+    "pricePerKwhInr": 10.50,
+    "availabilityWindows": [
+      { "dayOfWeek": 1, "startHour": 7, "endHour": 23 },
+      { "dayOfWeek": 2, "startHour": 7, "endHour": 23 },
+      { "dayOfWeek": 3, "startHour": 7, "endHour": 23 },
+      { "dayOfWeek": 4, "startHour": 7, "endHour": 23 },
+      { "dayOfWeek": 5, "startHour": 7, "endHour": 23 },
+      { "dayOfWeek": 6, "startHour": 7, "endHour": 23 },
+      { "dayOfWeek": 7, "startHour": 7, "endHour": 23 }
+    ],
+    "location": {
+      "latitude": 28.5823,
+      "longitude": 77.0500,
+      "approximateLocality": "Dwarka Sector 10, New Delhi",
+      "exactAddress": "Apt 4B, Harmony Heights, Sector 10, Dwarka, New Delhi 110075"
+    },
+    "accessNotes": "Society visitor parking bay #4. Security desk has RFID pass.",
+    "gatePin": "5124"
+  },
+  {
+    "id": "HOST-DEL-009",
+    "hostName": "Amit Malhotra",
+    "isHostVerified": true,
+    "isDemoListing": false,
+    "connectorTypes": ["TYPE_2", "CCS_2"],
+    "maxPowerKw": 11.0,
+    "pricePerKwhInr": 11.20,
+    "availabilityWindows": [
+      { "dayOfWeek": 1, "startHour": 8, "endHour": 22 },
+      { "dayOfWeek": 2, "startHour": 8, "endHour": 22 },
+      { "dayOfWeek": 3, "startHour": 8, "endHour": 22 },
+      { "dayOfWeek": 4, "startHour": 8, "endHour": 22 },
+      { "dayOfWeek": 5, "startHour": 8, "endHour": 22 },
+      { "dayOfWeek": 6, "startHour": 8, "endHour": 22 },
+      { "dayOfWeek": 7, "startHour": 8, "endHour": 22 }
+    ],
+    "location": {
+      "latitude": 28.7166,
+      "longitude": 77.1245,
+      "approximateLocality": "Rohini Sector 13, North Delhi",
+      "exactAddress": "Pocket 4, Sector 13, Rohini, New Delhi 110085"
+    },
+    "accessNotes": "Driveway portico with dedicated 11 kW AC charger. Smooth wide ramp.",
+    "gatePin": "3340"
+  },
+  {
+    "id": "HOST-DEL-010",
+    "hostName": "Priya Taneja",
+    "isHostVerified": true,
+    "isDemoListing": false,
+    "connectorTypes": ["TYPE_2"],
+    "maxPowerKw": 7.4,
+    "pricePerKwhInr": 11.00,
+    "availabilityWindows": [
+      { "dayOfWeek": 1, "startHour": 8, "endHour": 23 },
+      { "dayOfWeek": 2, "startHour": 8, "endHour": 23 },
+      { "dayOfWeek": 3, "startHour": 8, "endHour": 23 },
+      { "dayOfWeek": 4, "startHour": 8, "endHour": 23 },
+      { "dayOfWeek": 5, "startHour": 8, "endHour": 23 },
+      { "dayOfWeek": 6, "startHour": 8, "endHour": 23 },
+      { "dayOfWeek": 7, "startHour": 8, "endHour": 23 }
+    ],
+    "location": {
+      "latitude": 28.5350,
+      "longitude": 77.2410,
+      "approximateLocality": "Greater Kailash II (GK-2), New Delhi",
+      "exactAddress": "M-48 Market Perimeter, Greater Kailash II, New Delhi 110048"
+    },
+    "accessNotes": "Covered stilt parking slot with high-visibility green bollard.",
+    "gatePin": "8911"
+  },
+  {
+    "id": "HOST-DEL-011",
+    "hostName": "Raghav Singhania",
+    "isHostVerified": true,
+    "isDemoListing": false,
+    "connectorTypes": ["BHARAT_AC001", "TYPE_2"],
+    "maxPowerKw": 7.4,
+    "pricePerKwhInr": 10.20,
+    "availabilityWindows": [
+      { "dayOfWeek": 1, "startHour": 7, "endHour": 22 },
+      { "dayOfWeek": 2, "startHour": 7, "endHour": 22 },
+      { "dayOfWeek": 3, "startHour": 7, "endHour": 22 },
+      { "dayOfWeek": 4, "startHour": 7, "endHour": 22 },
+      { "dayOfWeek": 5, "startHour": 7, "endHour": 22 },
+      { "dayOfWeek": 6, "startHour": 8, "endHour": 22 },
+      { "dayOfWeek": 7, "startHour": 8, "endHour": 22 }
+    ],
+    "location": {
+      "latitude": 28.5695,
+      "longitude": 77.2435,
+      "approximateLocality": "Lajpat Nagar IV, South Delhi",
+      "exactAddress": "D-22 Dayanand Colony, Lajpat Nagar IV, New Delhi 110024"
+    },
+    "accessNotes": "Ground floor driveway next to grocery store.",
+    "gatePin": "4190"
+  },
+  {
+    "id": "HOST-DEL-012",
+    "hostName": "Harpreet Singh",
+    "isHostVerified": true,
+    "isDemoListing": false,
+    "connectorTypes": ["TYPE_2", "CCS_2"],
+    "maxPowerKw": 11.0,
+    "pricePerKwhInr": 12.00,
+    "availabilityWindows": [
+      { "dayOfWeek": 1, "startHour": 6, "endHour": 23 },
+      { "dayOfWeek": 2, "startHour": 6, "endHour": 23 },
+      { "dayOfWeek": 3, "startHour": 6, "endHour": 23 },
+      { "dayOfWeek": 4, "startHour": 6, "endHour": 23 },
+      { "dayOfWeek": 5, "startHour": 6, "endHour": 23 },
+      { "dayOfWeek": 6, "startHour": 6, "endHour": 23 },
+      { "dayOfWeek": 7, "startHour": 6, "endHour": 23 }
+    ],
+    "location": {
+      "latitude": 28.6465,
+      "longitude": 77.1905,
+      "approximateLocality": "Karol Bagh Pusa Road, Central Delhi",
+      "exactAddress": "18A/4 Pusa Road, Near Metro Pillar 128, Karol Bagh, New Delhi 110005"
+    },
+    "accessNotes": "Open front driveway with solar canopy overhead.",
+    "gatePin": "7201"
+  },
+  {
+    "id": "HOST-DEL-013",
+    "hostName": "Deepa Nair",
+    "isHostVerified": true,
+    "isDemoListing": false,
+    "connectorTypes": ["TYPE_2"],
+    "maxPowerKw": 7.4,
+    "pricePerKwhInr": 10.40,
+    "availabilityWindows": [
+      { "dayOfWeek": 1, "startHour": 8, "endHour": 22 },
+      { "dayOfWeek": 2, "startHour": 8, "endHour": 22 },
+      { "dayOfWeek": 3, "startHour": 8, "endHour": 22 },
+      { "dayOfWeek": 4, "startHour": 8, "endHour": 22 },
+      { "dayOfWeek": 5, "startHour": 8, "endHour": 22 },
+      { "dayOfWeek": 6, "startHour": 8, "endHour": 22 },
+      { "dayOfWeek": 7, "startHour": 8, "endHour": 22 }
+    ],
+    "location": {
+      "latitude": 28.6295,
+      "longitude": 77.0815,
+      "approximateLocality": "Janakpuri District Centre, West Delhi",
+      "exactAddress": "Block B1, Plot 14, Janakpuri, New Delhi 110058"
+    },
+    "accessNotes": "Easy entry via main colony gate, slot clearly marked with green paint.",
+    "gatePin": "1042"
+  },
+  {
+    "id": "HOST-DEL-014",
+    "hostName": "Aerocity EV Gateway",
+    "isHostVerified": true,
+    "isDemoListing": false,
+    "connectorTypes": ["CCS_2", "TYPE_2"],
+    "maxPowerKw": 22.0,
+    "pricePerKwhInr": 13.80,
+    "availabilityWindows": [
+      { "dayOfWeek": 1, "startHour": 0, "endHour": 24 },
+      { "dayOfWeek": 2, "startHour": 0, "endHour": 24 },
+      { "dayOfWeek": 3, "startHour": 0, "endHour": 24 },
+      { "dayOfWeek": 4, "startHour": 0, "endHour": 24 },
+      { "dayOfWeek": 5, "startHour": 0, "endHour": 24 },
+      { "dayOfWeek": 6, "startHour": 0, "endHour": 24 },
+      { "dayOfWeek": 7, "startHour": 0, "endHour": 24 }
+    ],
+    "location": {
+      "latitude": 28.5520,
+      "longitude": 77.1215,
+      "approximateLocality": "Aerocity Hospitality District, New Delhi",
+      "exactAddress": "Asset 9, Hospitality District, IGI Airport, Aerocity, New Delhi 110037"
+    },
+    "accessNotes": "24/7 commercial fast-charger with dedicated valet parking assist.",
+    "gatePin": "9900"
+  },
+  {
+    "id": "HOST-DEL-015",
+    "hostName": "Alok Verma",
+    "isHostVerified": true,
+    "isDemoListing": false,
+    "connectorTypes": ["TYPE_2", "BHARAT_AC001"],
+    "maxPowerKw": 7.4,
+    "pricePerKwhInr": 9.80,
+    "availabilityWindows": [
+      { "dayOfWeek": 1, "startHour": 7, "endHour": 23 },
+      { "dayOfWeek": 2, "startHour": 7, "endHour": 23 },
+      { "dayOfWeek": 3, "startHour": 7, "endHour": 23 },
+      { "dayOfWeek": 4, "startHour": 7, "endHour": 23 },
+      { "dayOfWeek": 5, "startHour": 7, "endHour": 23 },
+      { "dayOfWeek": 6, "startHour": 7, "endHour": 23 },
+      { "dayOfWeek": 7, "startHour": 7, "endHour": 23 }
+    ],
+    "location": {
+      "latitude": 28.6080,
+      "longitude": 77.2950,
+      "approximateLocality": "Mayur Vihar Phase 1, East Delhi",
+      "exactAddress": "Pocket 1, Near Samachar Apartments, Mayur Vihar Phase 1, Delhi 110091"
+    },
+    "accessNotes": "Resident driveway with fast Type 2 gun and secure digital access.",
+    "gatePin": "4810"
+  },
+  {
+    "id": "HOST-DEL-016",
+    "hostName": "Shivani Bansal",
+    "isHostVerified": true,
+    "isDemoListing": false,
+    "connectorTypes": ["TYPE_2", "CCS_2"],
+    "maxPowerKw": 11.0,
+    "pricePerKwhInr": 11.50,
+    "availabilityWindows": [
+      { "dayOfWeek": 1, "startHour": 6, "endHour": 23 },
+      { "dayOfWeek": 2, "startHour": 6, "endHour": 23 },
+      { "dayOfWeek": 3, "startHour": 6, "endHour": 23 },
+      { "dayOfWeek": 4, "startHour": 6, "endHour": 23 },
+      { "dayOfWeek": 5, "startHour": 6, "endHour": 23 },
+      { "dayOfWeek": 6, "startHour": 6, "endHour": 23 },
+      { "dayOfWeek": 7, "startHour": 6, "endHour": 23 }
+    ],
+    "location": {
+      "latitude": 28.6280,
+      "longitude": 77.3650,
+      "approximateLocality": "Sector 62 IT Park, Noida",
+      "exactAddress": "Tower C, Stellar Park, Sector 62, Noida, Uttar Pradesh 201309"
+    },
+    "accessNotes": "Corporate campus visitor bay with 24/7 automated security barrier.",
+    "gatePin": "6620"
+  },
+  {
+    "id": "HOST-DEL-017",
+    "hostName": "Kabir Oberoi",
+    "isHostVerified": true,
+    "isDemoListing": false,
+    "connectorTypes": ["CCS_2", "TYPE_2"],
+    "maxPowerKw": 22.0,
+    "pricePerKwhInr": 13.50,
+    "availabilityWindows": [
+      { "dayOfWeek": 1, "startHour": 0, "endHour": 24 },
+      { "dayOfWeek": 2, "startHour": 0, "endHour": 24 },
+      { "dayOfWeek": 3, "startHour": 0, "endHour": 24 },
+      { "dayOfWeek": 4, "startHour": 0, "endHour": 24 },
+      { "dayOfWeek": 5, "startHour": 0, "endHour": 24 },
+      { "dayOfWeek": 6, "startHour": 0, "endHour": 24 },
+      { "dayOfWeek": 7, "startHour": 0, "endHour": 24 }
+    ],
+    "location": {
+      "latitude": 28.4950,
+      "longitude": 77.0895,
+      "approximateLocality": "DLF Cyber City Phase 2, Gurugram",
+      "exactAddress": "Building 10B, DLF Cyber City, Phase 2, Gurugram, Haryana 122002"
+    },
+    "accessNotes": "Fast DC dual-gun unit on surface level parking lot with café access.",
+    "gatePin": "8840"
+  },
+  {
+    "id": "HOST-DEL-018",
+    "hostName": "Rakesh Aggarwal",
+    "isHostVerified": true,
+    "isDemoListing": false,
+    "connectorTypes": ["TYPE_2"],
+    "maxPowerKw": 7.4,
+    "pricePerKwhInr": 10.00,
+    "availabilityWindows": [
+      { "dayOfWeek": 1, "startHour": 7, "endHour": 22 },
+      { "dayOfWeek": 2, "startHour": 7, "endHour": 22 },
+      { "dayOfWeek": 3, "startHour": 7, "endHour": 22 },
+      { "dayOfWeek": 4, "startHour": 7, "endHour": 22 },
+      { "dayOfWeek": 5, "startHour": 7, "endHour": 22 },
+      { "dayOfWeek": 6, "startHour": 8, "endHour": 22 },
+      { "dayOfWeek": 7, "startHour": 8, "endHour": 22 }
+    ],
+    "location": {
+      "latitude": 28.6430,
+      "longitude": 77.3710,
+      "approximateLocality": "Indirapuram Vaibhav Khand, Ghaziabad",
+      "exactAddress": "Plot 78, Vaibhav Khand 1, Indirapuram, Ghaziabad 201014"
+    },
+    "accessNotes": "Wide shaded portico directly facing community garden.",
+    "gatePin": "3219"
+  },
+  {
+    "id": "HOST-DEL-019",
+    "hostName": "Ananya Kapoor",
+    "isHostVerified": true,
+    "isDemoListing": false,
+    "connectorTypes": ["TYPE_2", "CCS_2"],
+    "maxPowerKw": 11.0,
+    "pricePerKwhInr": 11.80,
+    "availabilityWindows": [
+      { "dayOfWeek": 1, "startHour": 7, "endHour": 23 },
+      { "dayOfWeek": 2, "startHour": 7, "endHour": 23 },
+      { "dayOfWeek": 3, "startHour": 7, "endHour": 23 },
+      { "dayOfWeek": 4, "startHour": 7, "endHour": 23 },
+      { "dayOfWeek": 5, "startHour": 7, "endHour": 23 },
+      { "dayOfWeek": 6, "startHour": 7, "endHour": 23 },
+      { "dayOfWeek": 7, "startHour": 7, "endHour": 23 }
+    ],
+    "location": {
+      "latitude": 28.5490,
+      "longitude": 77.2520,
+      "approximateLocality": "Nehru Place Commercial Hub, South Delhi",
+      "exactAddress": "Paras Cinema Complex Road, Nehru Place, New Delhi 110019"
+    },
+    "accessNotes": "Dedicated spot in commercial arcade with CCTV and 24-hour guard.",
+    "gatePin": "5714"
+  },
+  {
+    "id": "HOST-DEL-020",
+    "hostName": "Rohit Choudhary",
+    "isHostVerified": true,
+    "isDemoListing": false,
+    "connectorTypes": ["TYPE_2"],
+    "maxPowerKw": 7.4,
+    "pricePerKwhInr": 10.90,
+    "availabilityWindows": [
+      { "dayOfWeek": 1, "startHour": 8, "endHour": 23 },
+      { "dayOfWeek": 2, "startHour": 8, "endHour": 23 },
+      { "dayOfWeek": 3, "startHour": 8, "endHour": 23 },
+      { "dayOfWeek": 4, "startHour": 8, "endHour": 23 },
+      { "dayOfWeek": 5, "startHour": 8, "endHour": 23 },
+      { "dayOfWeek": 6, "startHour": 8, "endHour": 23 },
+      { "dayOfWeek": 7, "startHour": 8, "endHour": 23 }
+    ],
+    "location": {
+      "latitude": 28.5670,
+      "longitude": 77.2190,
+      "approximateLocality": "South Extension Part 2, New Delhi",
+      "exactAddress": "G-15, Main Market Lane, South Extension II, New Delhi 110049"
+    },
+    "accessNotes": "Front parking pad with direct street access and auto-unlocked gate.",
+    "gatePin": "6482"
   }
 ]
