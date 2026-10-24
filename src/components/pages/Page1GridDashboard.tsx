@@ -10,6 +10,7 @@ import {
   Lightbulb,
   Car,
   Sprout,
+  ShieldCheck,
 } from 'lucide-react';
 import { useSimulationStore } from '../../store/useSimulationStore';
 
@@ -19,6 +20,8 @@ export function Page1GridDashboard() {
     transformerConfig,
     setActiveP0SubPage,
     openSessionModal,
+    isAdmin,
+    adminId,
   } = useSimulationStore();
 
   const { baselineSlots, summary } = solverOutput;
@@ -389,6 +392,39 @@ export function Page1GridDashboard() {
             <ChevronRight className="h-4 w-4 text-slate-300 group-hover:text-slate-600 shrink-0 ml-1 transition-colors" />
           </button>
         </div>
+
+        {/* Admin Feeder Control Banner (Only visible when logged in with Admin ID) */}
+        {isAdmin && (
+          <div className="mt-4 p-5 rounded-2xl bg-gradient-to-r from-[#170E30] to-[#0D1527] text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-md border border-purple-500/30 animate-fade-in">
+            <div className="flex items-center gap-3.5">
+              <div className="h-11 w-11 rounded-2xl bg-purple-500/20 border border-purple-400/40 text-purple-300 flex items-center justify-center shrink-0 shadow-inner">
+                <Zap className="h-5 w-5 text-purple-400 fill-purple-400/30" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-black uppercase tracking-wider bg-purple-500/30 text-purple-200 px-2 py-0.5 rounded-full border border-purple-400/30 flex items-center gap-1">
+                    <ShieldCheck className="h-3 w-3 text-purple-300" />
+                    Admin Mode Active
+                  </span>
+                  <span className="text-xs text-purple-300 font-mono font-bold">ID: {adminId}</span>
+                </div>
+                <h4 className="text-sm font-black text-white mt-1">Full Grid &amp; Transformer Optimizer Suite</h4>
+                <p className="text-xs text-slate-300 max-w-xl leading-relaxed mt-0.5">
+                  Launch the complete simulation workspace: configure rated transformer capacity &amp; safety thresholds, compare Evening Rush / Valley Shift scenarios, and inspect hourly load curves.
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              id="admin-launch-optimizer-btn"
+              onClick={() => setActiveP0SubPage('PAGE_0_OPTIMIZER')}
+              className="px-5 py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-purple-900/40 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-2 shrink-0 cursor-pointer"
+            >
+              <span>Launch Grid Optimizer</span>
+              <ArrowRight className="h-4 w-4 stroke-[2.5]" />
+            </button>
+          </div>
+        )}
       </section>
     </div>
   );

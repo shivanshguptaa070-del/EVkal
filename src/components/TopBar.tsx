@@ -11,6 +11,7 @@ import {
   Zap,
   Check,
   ArrowRight,
+  LogOut,
 } from 'lucide-react';
 import { useSimulationStore } from '../store/useSimulationStore';
 
@@ -23,6 +24,11 @@ export function TopBar() {
     setActiveProfileTab,
     userProfile,
     activeTab,
+    isAdmin,
+    adminId,
+    setActiveP0SubPage,
+    openAuthView,
+    logoutUser,
   } = useSimulationStore();
 
   const [showNotifications, setShowNotifications] = useState(false);
@@ -92,6 +98,25 @@ export function TopBar() {
           <MapPin className="h-3.5 w-3.5 text-emerald-600" />
           <span>P2P Charger Sharing</span>
         </button>
+
+        {/* Admin ID / Grid Optimizer Pill (Only for Admin) */}
+        {isAdmin && (
+          <button
+            type="button"
+            onClick={() => {
+              setActiveTab('P0_GRID');
+              setActiveP0SubPage('PAGE_0_OPTIMIZER');
+            }}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-purple-50 border border-purple-200/90 text-xs font-bold text-purple-800 shadow-2xs hover:bg-purple-100 transition-all cursor-pointer"
+            title="Launch Admin Grid Optimizer"
+          >
+            <ShieldCheck className="h-3.5 w-3.5 text-purple-600" />
+            <span>Admin: {adminId}</span>
+            <span className="px-1.5 py-0.2 rounded-full bg-purple-200 text-purple-900 text-[9px] font-black tracking-wide">
+              OPTIMIZER
+            </span>
+          </button>
+        )}
       </div>
 
       {/* Right: Date Picker, Notification Bell, User Avatar Dropdown */}
@@ -288,6 +313,26 @@ export function TopBar() {
                 </button>
               </div>
 
+              {/* If Admin, show Official Clearance Status */}
+              {isAdmin && (
+                <div className="py-2 px-3 my-2 rounded-xl bg-purple-50 border border-purple-200/80 flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-2">
+                    <ShieldCheck className="h-4 w-4 text-purple-600 shrink-0" />
+                    <div>
+                      <div className="font-bold text-slate-900 text-[11px] leading-tight">
+                        DISCOM Official Clearance
+                      </div>
+                      <div className="text-[10px] text-purple-700/80 font-mono leading-tight">
+                        {adminId} (Full Grid Access)
+                      </div>
+                    </div>
+                  </div>
+                  <span className="px-2 py-0.5 rounded-full bg-purple-600 text-white text-[9px] font-black uppercase">
+                    Admin
+                  </span>
+                </div>
+              )}
+
               {/* Mode Switchers */}
               <div className="pt-2 text-[11px] space-y-1">
                 <button
@@ -309,6 +354,56 @@ export function TopBar() {
                   className="w-full text-left px-3 py-1.5 rounded-lg hover:bg-slate-50 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
                 >
                   Go to <strong>P1 Community Sharing</strong>
+                </button>
+              </div>
+
+              {/* Sign In / Sign Out / Role Switch Action */}
+              <div className="pt-2 border-t border-slate-100 space-y-1">
+                {!isAdmin ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowUserDropdown(false);
+                      openAuthView('OFFICIAL');
+                    }}
+                    className="w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-purple-700 hover:bg-purple-50 text-[11px] font-bold transition-colors cursor-pointer"
+                  >
+                    <span className="flex items-center gap-1.5">
+                      <ShieldCheck className="h-3.5 w-3.5" />
+                      <span>DISCOM Official Login</span>
+                    </span>
+                    <span className="text-[9px] text-purple-700 bg-purple-100 px-1.5 py-0.5 rounded font-black">Admin</span>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowUserDropdown(false);
+                      openAuthView('SIGN_IN');
+                    }}
+                    className="w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-emerald-700 hover:bg-emerald-50 text-[11px] font-bold transition-colors cursor-pointer"
+                  >
+                    <span className="flex items-center gap-1.5">
+                      <Zap className="h-3.5 w-3.5" />
+                      <span>Switch to Driver/Host Login</span>
+                    </span>
+                    <span className="text-[9px] text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded font-black">User</span>
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowUserDropdown(false);
+                    logoutUser();
+                  }}
+                  className="w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-rose-600 hover:bg-rose-50 text-[11px] font-bold transition-colors cursor-pointer"
+                >
+                  <span className="flex items-center gap-1.5">
+                    <LogOut className="h-3.5 w-3.5" />
+                    <span>Sign Out</span>
+                  </span>
+                  <span className="text-[10px] text-rose-500 bg-rose-100/70 px-1.5 py-0.5 rounded-sm">Exit</span>
                 </button>
               </div>
             </div>

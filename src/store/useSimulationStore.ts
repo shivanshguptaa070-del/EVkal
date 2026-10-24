@@ -43,7 +43,8 @@ import type {
 } from '../types/profile';
 
 export type ScenarioPreset = 'EVENING_RUSH' | 'VALLEY_SHIFT' | 'INFEASIBLE_REQUEST';
-export type ActiveTab = 'LANDING' | 'P0_GRID' | 'P1_P2P' | 'PROFILE';
+export type ActiveTab = 'LANDING' | 'P0_GRID' | 'P1_P2P' | 'PROFILE' | 'AUTH';
+export type AuthMode = 'SIGN_IN' | 'SIGN_UP' | 'OFFICIAL';
 export type P0SubPage =
   | 'PAGE_0_OPTIMIZER'
   | 'PAGE_1_DASHBOARD'
@@ -321,6 +322,12 @@ interface SimulationState {
   bookingStage: 'REVIEW' | 'TRANSMITTING' | 'ACCEPTED' | 'CHARGING' | 'COMPLETED';
   isBookingModalOpen: boolean;
 
+  // Admin Role & ID (controls access to Admin Grid Optimizer)
+  isAdmin: boolean;
+  adminId: string;
+  setAdminRole: (isAdmin: boolean) => void;
+  toggleAdminRole: () => void;
+
   // Actions
   setActiveTab: (tab: ActiveTab) => void;
   setActiveP0SubPage: (page: P0SubPage) => void;
@@ -343,6 +350,16 @@ interface SimulationState {
   toggleUserVehicleFlexibility: (vehicleId: string) => void;
   openProfileView: () => void;
   navigateBackFromProfile: () => void;
+
+  // Authentication State
+  isAuthenticated: boolean;
+  authMode: AuthMode;
+  setAuthMode: (mode: AuthMode) => void;
+  openAuthView: (mode?: AuthMode) => void;
+  navigateBackFromAuth: () => void;
+  loginUser: (email?: string, name?: string, role?: 'DRIVER' | 'HOST' | 'ADMIN') => void;
+  loginAsAdmin: (adminId?: string, officialEmail?: string) => void;
+  logoutUser: () => void;
 
   // P2P Actions
   setP2PQuery: (query: Partial<LowBatterySearchQuery>) => void;
@@ -380,6 +397,10 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
   userProfile: INITIAL_USER_PROFILE,
   activeProfileTab: 'PERSONAL',
 
+  // Authentication state
+  isAuthenticated: true,
+  authMode: 'SIGN_IN',
+
   transformerConfig: INITIAL_CONFIG,
   backgroundLoad: INITIAL_BACKGROUND,
   evFleet: initialFleet,
@@ -402,6 +423,20 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
   selectedChargerForBooking: null,
   bookingStage: 'REVIEW',
   isBookingModalOpen: false,
+
+  // Admin Role & ID state
+  isAdmin: false, // Default is standard user. Admin access is strictly granted upon Official DISCOM login
+  adminId: 'ADM-NOI-DISCOM-01',
+  setAdminRole: (isAdmin) => set({ isAdmin }),
+  toggleAdminRole: () =>
+    set((state) => {
+      const nextAdmin = !state.isAdmin;
+      const nextSubPage =
+        !nextAdmin && state.activeP0SubPage === 'PAGE_0_OPTIMIZER'
+          ? 'PAGE_1_DASHBOARD'
+          : state.activeP0SubPage;
+      return { isAdmin: nextAdmin, activeP0SubPage: nextSubPage };
+    }),
 
   setActiveTab: (tab) => set({ activeTab: tab }),
   setActiveP0SubPage: (page) => set({ activeP0SubPage: page }),
@@ -477,6 +512,78 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
     set({
       activeTab: fallbackTab,
       activeP0SubPage: fallbackTab === 'P0_GRID' ? 'PAGE_1_DASHBOARD' : 'PAGE_1_DASHBOARD',
+    });
+  },
+
+  setAuthMode: (mode) => set({ authMode: mode }),
+
+  openAuthView: (mode = 'SIGN_IN') => {
+    const { activeTab } = get();
+    if (activeTab !== 'AUTH') {
+      set({
+        previousTab: activeTab,
+        activeTab: 'AUTH',
+        authMode: mode,
+      });
+    } else {
+      set({ authMode: mode });
+    }
+  },
+
+  navigateBackFromAuth: () => {
+    const { previousTab } = get();
+    const fallbackTab = previousTab === 'AUTH' ? 'LANDING' : previousTab || 'LANDING';
+    set({
+      activeTab: fallbackTab,
+    });
+  },
+
+  loginUser: (email, name, role = 'DRIVER') => {
+    const isOfficialAdmin = role === 'ADMIN';
+    const { previousTab } = get();
+    const fallbackTab = !previousTab || previousTab === 'AUTH' ? 'P0_GRID' : previousTab;
+    set((state) => ({
+      isAuthenticated: true,
+      isAdmin: isOfficialAdmin,
+      activeTab: fallbackTab,
+      activeP0SubPage: isOfficialAdmin ? 'PAGE_0_OPTIMIZER' : 'PAGE_1_DASHBOARD',
+      userProfile: {
+        ...state.userProfile,
+        personal: {
+          ...state.userProfile.personal,
+          email: email || state.userProfile.personal.email,
+          fullName: name || state.userProfile.personal.fullName,
+          accountType: isOfficialAdmin ? 'DISCOM Grid Admin' : 'Individual',
+        },
+      },
+    }));
+  },
+
+  loginAsAdmin: (adminId = 'ADM-NOI-DISCOM-01', officialEmail = 'admin@uppcl-grid.gov.in') => {
+    set((state) => ({
+      isAuthenticated: true,
+      isAdmin: true,
+      adminId,
+      activeTab: 'P0_GRID',
+      activeP0SubPage: 'PAGE_0_OPTIMIZER',
+      userProfile: {
+        ...state.userProfile,
+        personal: {
+          ...state.userProfile.personal,
+          fullName: 'DISCOM Chief Feeder Engineer',
+          email: officialEmail,
+          accountType: 'DISCOM Grid Admin',
+        },
+      },
+    }));
+  },
+
+  logoutUser: () => {
+    set({
+      isAuthenticated: false,
+      isAdmin: false,
+      activeTab: 'AUTH',
+      authMode: 'SIGN_IN',
     });
   },
 

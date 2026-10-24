@@ -9,7 +9,7 @@ export interface PersonalDetails {
   mobileNumber: string;
   isMobileVerified: boolean;
   alternateNumber: string;
-  accountType: 'Individual' | 'Commercial Fleet' | 'Host & Driver';
+  accountType: 'Individual' | 'Commercial Fleet' | 'Host & Driver' | 'DISCOM Grid Admin';
   bio: string;
   avatarUrl: string;
 }

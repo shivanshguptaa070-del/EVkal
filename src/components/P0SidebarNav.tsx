@@ -7,6 +7,7 @@ import {
   Sprout,
   Compass,
   ArrowRight,
+  Zap,
 } from 'lucide-react';
 import { useSimulationStore, type P0SubPage } from '../store/useSimulationStore';
 
@@ -14,6 +15,8 @@ interface NavItem {
   id: P0SubPage;
   title: string;
   icon: React.ComponentType<{ className?: string }>;
+  adminOnly?: boolean;
+  badge?: string;
 }
 
 const NAV_ITEMS: NavItem[] = [
@@ -21,6 +24,13 @@ const NAV_ITEMS: NavItem[] = [
     id: 'PAGE_1_DASHBOARD',
     title: 'Dashboard',
     icon: LayoutDashboard,
+  },
+  {
+    id: 'PAGE_0_OPTIMIZER',
+    title: 'Grid Optimizer',
+    icon: Zap,
+    adminOnly: true,
+    badge: 'Admin',
   },
   {
     id: 'PAGE_2_FLEET',
@@ -45,7 +55,13 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 export function P0SidebarNav() {
-  const { activeP0SubPage, setActiveP0SubPage, setActiveTab, activeTab } = useSimulationStore();
+  const {
+    activeP0SubPage,
+    setActiveP0SubPage,
+    setActiveTab,
+    activeTab,
+    isAdmin,
+  } = useSimulationStore();
 
   return (
     <aside className="w-60 xl:w-64 shrink-0 bg-[#07131F] text-slate-300 flex flex-col justify-between p-5 border-r border-slate-800/80 sticky top-0 h-screen z-40">
@@ -101,9 +117,10 @@ export function P0SidebarNav() {
 
         {/* Navigation Items */}
         <nav className="space-y-1.5">
-          {NAV_ITEMS.map((item) => {
+          {NAV_ITEMS.filter((item) => !item.adminOnly || isAdmin).map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === 'P0_GRID' && activeP0SubPage === item.id;
+            const isAdminItem = item.adminOnly;
 
             return (
               <button
@@ -114,14 +131,38 @@ export function P0SidebarNav() {
                   setActiveTab('P0_GRID');
                   setActiveP0SubPage(item.id);
                 }}
-                className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                   isActive
-                    ? 'bg-[#00A86B] text-white shadow-lg shadow-emerald-600/30 font-bold'
+                    ? isAdminItem
+                      ? 'bg-purple-700 text-white shadow-lg shadow-purple-600/30 font-bold'
+                      : 'bg-[#00A86B] text-white shadow-lg shadow-emerald-600/30 font-bold'
                     : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
                 }`}
               >
-                <Icon className={`h-4 w-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
-                <span className="tracking-wide text-[13px]">{item.title}</span>
+                <div className="flex items-center gap-3.5">
+                  <Icon
+                    className={`h-4 w-4 ${
+                      isActive
+                        ? 'text-white'
+                        : isAdminItem
+                        ? 'text-purple-400'
+                        : 'text-slate-400'
+                    }`}
+                  />
+                  <span className="tracking-wide text-[13px]">{item.title}</span>
+                </div>
+
+                {item.badge && (
+                  <span
+                    className={`px-1.5 py-0.5 rounded text-[9px] font-extrabold uppercase tracking-wider ${
+                      isActive
+                        ? 'bg-white/20 text-white'
+                        : 'bg-purple-900/60 text-purple-300 border border-purple-500/40'
+                    }`}
+                  >
+                    {item.badge}
+                  </span>
+                )}
               </button>
             );
           })}

@@ -99,7 +99,7 @@ const COMMUNITY_PINS: CommunityPin[] = [
 ];
 
 export function LandingHeroPage() {
-  const { setActiveTab, setActiveP0SubPage, solverOutput, transformerConfig, openBookingModal } = useSimulationStore();
+  const { setActiveTab, setActiveP0SubPage, solverOutput, transformerConfig, openBookingModal, openAuthView } = useSimulationStore();
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   // Micro-telemetry live fluctuation simulation
@@ -255,6 +255,14 @@ export function LandingHeroPage() {
               title="Toggle theme appearance"
             >
               {isDarkMode ? <Sun className="h-4 w-4 text-amber-300" /> : <Moon className="h-4 w-4 text-cyan-300" />}
+            </button>
+
+            {/* "Sign In" Button */}
+            <button
+              onClick={() => openAuthView('SIGN_IN')}
+              className="text-xs sm:text-sm font-bold text-slate-300 hover:text-white px-3.5 py-2 rounded-full border border-slate-700/70 hover:border-emerald-500/50 hover:bg-slate-800/80 transition-all cursor-pointer"
+            >
+              Sign In
             </button>
 
             {/* "Get Started →" CTA Pill Button */}
@@ -676,17 +684,6 @@ export function LandingHeroPage() {
                   className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-emerald-700 hover:text-emerald-800 transition-colors group cursor-pointer"
                 >
                   <span>Explore Grid Dashboard</span>
-                  <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform stroke-[2.5]" />
-                </button>
-                <span className="text-slate-300">•</span>
-                <button
-                  onClick={() => {
-                    setActiveP0SubPage('PAGE_0_OPTIMIZER');
-                    setActiveTab('P0_GRID');
-                  }}
-                  className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-800 hover:text-emerald-600 transition-colors group cursor-pointer"
-                >
-                  <span>Launch Full Optimizer</span>
                   <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform stroke-[2.5]" />
                 </button>
               </div>

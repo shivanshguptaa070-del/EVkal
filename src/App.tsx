@@ -1,6 +1,8 @@
+import { Lock } from 'lucide-react';
 import { TopBar } from './components/TopBar';
 import { P0SidebarNav } from './components/P0SidebarNav';
 import { Page1GridDashboard } from './components/pages/Page1GridDashboard';
+import { Page1GridOptimizationDashboard } from './components/pages/Page1GridOptimizationDashboard';
 import { Page2EVFleet } from './components/pages/Page2EVFleet';
 import { Page3DynamicTariff } from './components/pages/Page3DynamicTariff';
 import { Page4Scheduler } from './components/pages/Page4Scheduler';
@@ -11,13 +13,24 @@ import { EVSessionModal } from './components/EVSessionModal';
 import { BookingSimModal } from './components/BookingSimModal';
 import { ListChargerModal } from './components/ListChargerModal';
 import { ProfileView } from './components/profile/ProfileView';
+import { AuthPage } from './components/auth/AuthPage';
 import { useSimulationStore } from './store/useSimulationStore';
 
 export default function App() {
   const {
     activeTab,
     activeP0SubPage,
+    isAdmin,
+    openAuthView,
   } = useSimulationStore();
+
+  if (activeTab === 'AUTH') {
+    return (
+      <div className="min-h-screen bg-[#0B0F17] flex flex-col font-sans selection:bg-emerald-500/20 selection:text-emerald-400">
+        <AuthPage />
+      </div>
+    );
+  }
 
   if (activeTab === 'LANDING') {
     return (
@@ -60,6 +73,29 @@ export default function App() {
               /* P0: Grid & Feeder Management Sub-Pages */
               <>
                 {activeP0SubPage === 'PAGE_1_DASHBOARD' && <Page1GridDashboard />}
+                {activeP0SubPage === 'PAGE_0_OPTIMIZER' && (
+                  isAdmin ? (
+                    <Page1GridOptimizationDashboard />
+                  ) : (
+                    <div className="p-8 text-center bg-white rounded-3xl border border-slate-200/90 max-w-lg mx-auto my-12 space-y-4 shadow-sm animate-fade-in">
+                      <div className="h-12 w-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto">
+                        <Lock className="h-6 w-6" />
+                      </div>
+                      <h3 className="text-lg font-bold text-slate-900">Admin Authentication Required</h3>
+                      <p className="text-xs text-slate-500 leading-relaxed">
+                        The Grid &amp; Transformer Optimizer is restricted to authorized DISCOM Feeder Administrators.
+                      </p>
+                      <div className="pt-2">
+                        <button
+                          onClick={() => openAuthView('OFFICIAL')}
+                          className="px-6 py-2.5 bg-purple-700 hover:bg-purple-800 text-white rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer"
+                        >
+                          Sign In with Official DISCOM Access
+                        </button>
+                      </div>
+                    </div>
+                  )
+                )}
                 {activeP0SubPage === 'PAGE_2_FLEET' && <Page2EVFleet />}
                 {activeP0SubPage === 'PAGE_3_TARIFF' && <Page3DynamicTariff />}
                 {activeP0SubPage === 'PAGE_4_SCHEDULER' && <Page4Scheduler />}
