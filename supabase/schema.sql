@@ -122,7 +122,7 @@ ALTER TABLE public.ev_charging_sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.p2p_charger_listings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.p2p_bookings ENABLE ROW LEVEL SECURITY;
 
--- Profiles: Anyone authenticated can read profiles; users can update own profile
+-- Profiles: Anyone authenticated can read profiles; users can update/insert own profile
 CREATE POLICY "Public profiles are viewable by authenticated users"
     ON public.profiles FOR SELECT
     TO authenticated
@@ -133,6 +133,10 @@ CREATE POLICY "Users can update own profile"
     TO authenticated
     USING ((SELECT auth.uid()) = id)
     WITH CHECK ((SELECT auth.uid()) = id);
+
+CREATE POLICY "Users and system can insert profile"
+    ON public.profiles FOR INSERT
+    WITH CHECK (true);
 
 -- Sessions: Users see and create their own sessions; Admins see all
 CREATE POLICY "Users can view own charging sessions"
@@ -182,7 +186,11 @@ CREATE POLICY "Drivers can insert bookings"
 -- AUTOMATIC PROFILE CREATION TRIGGER ON SIGNUP
 -- ====================================================================
 CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS trigger AS $$
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
 BEGIN
     INSERT INTO public.profiles (
         id,
@@ -203,10 +211,14 @@ BEGIN
         COALESCE(new.raw_user_meta_data->>'account_type', 'Individual'),
         COALESCE(new.raw_user_meta_data->>'city', 'New Delhi'),
         'Delhi NCR'
-    );
+    )
+    ON CONFLICT (id) DO NOTHING;
     RETURN new;
+EXCEPTION
+    WHEN OTHERS THEN
+        RETURN new;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
 -- Drop trigger if exists and recreate
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
