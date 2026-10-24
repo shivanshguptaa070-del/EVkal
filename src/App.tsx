@@ -9,6 +9,7 @@ import { Page4Scheduler } from './components/pages/Page4Scheduler';
 import { Page5Results } from './components/pages/Page5Results';
 import { LandingHeroPage } from './components/LandingHeroPage';
 import { P2PChargerSharingTab } from './components/P2PChargerSharingTab';
+import { HostDashboardPage } from './components/HostDashboardPage';
 import { EVSessionModal } from './components/EVSessionModal';
 import { BookingSimModal } from './components/BookingSimModal';
 import { ListChargerModal } from './components/ListChargerModal';
@@ -52,26 +53,30 @@ export default function App() {
 
   // P2P vs P0 Left Panel condition:
   // When activeTab is 'P1_P2P', P0SidebarNav is hidden because P2P has its own independent left panel (P2PSidebar)
+  // When activeTab is 'HOST_DASHBOARD', P0SidebarNav is hidden to render full-width Host Dashboard
   // When activeTab is 'P0_GRID' or 'PROFILE', P0SidebarNav is displayed on the left
   const isP2P = activeTab === 'P1_P2P';
+  const isHost = activeTab === 'HOST_DASHBOARD';
 
   return (
     <div className="min-h-screen bg-[#F4F7FB] text-slate-900 flex flex-col font-sans selection:bg-emerald-500/20 selection:text-emerald-700">
+      {/* Top Bar with Logo, Navigation Pills (Grid, P2P, Host), Live API status, Clock, Avatar */}
+      <TopBar />
+
       <div className="flex-1 w-full flex flex-col lg:flex-row">
         {/* Left Sidebar Navigation:
             - When on P0 Grid or Profile: Render P0SidebarNav
-            - When on P1 P2P: P0SidebarNav is removed so P2P uses its own separate left panel!
+            - When on P1 P2P or Host Dashboard: P0SidebarNav is removed
         */}
-        {!isP2P && <P0SidebarNav />}
+        {!isP2P && !isHost && <P0SidebarNav />}
 
         {/* Main Application Area */}
         <div className="flex-1 min-w-0 flex flex-col px-3 sm:px-5 lg:px-6 py-4 sm:py-5">
-          {/* Top Bar with Grid status, P2P pill, Date, Notifications, Avatar */}
-          <TopBar />
-
           {/* Sub-Page Content */}
           <main className="w-full flex-1">
-            {activeTab === 'PROFILE' || activeP0SubPage === 'PAGE_6_PROFILE' ? (
+            {isHost ? (
+              <HostDashboardPage />
+            ) : activeTab === 'PROFILE' || activeP0SubPage === 'PAGE_6_PROFILE' ? (
               <ProfileView />
             ) : isP2P ? (
               /* P1: P2P Community Charger Sharing (With its own independent left panel and function pages) */

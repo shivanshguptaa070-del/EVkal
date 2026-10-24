@@ -43,7 +43,7 @@ import type {
 } from '../types/profile';
 
 export type ScenarioPreset = 'EVENING_RUSH' | 'VALLEY_SHIFT' | 'INFEASIBLE_REQUEST';
-export type ActiveTab = 'LANDING' | 'P0_GRID' | 'P1_P2P' | 'PROFILE' | 'AUTH';
+export type ActiveTab = 'LANDING' | 'P0_GRID' | 'P1_P2P' | 'HOST_DASHBOARD' | 'PROFILE' | 'AUTH';
 export type AuthMode = 'SIGN_IN' | 'SIGN_UP' | 'OFFICIAL';
 export type P0SubPage =
   | 'PAGE_0_OPTIMIZER'
@@ -279,6 +279,7 @@ const INITIAL_USER_PROFILE: UserProfileData = {
 export type P2PSubView =
   | 'BROWSE'
   | 'FIND_CHARGERS'
+  | 'HOST_DASHBOARD'
   | 'LIST_CHARGER'
   | 'MY_BOOKINGS'
   | 'HOST_EARNINGS'

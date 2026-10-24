@@ -8,6 +8,7 @@ import { P2PNearbyChargersList } from './P2PNearbyChargersList';
 import { ListCommunityChargerPage } from './ListCommunityChargerPage';
 import { MyBookingsPage } from './MyBookingsPage';
 import { HostEarningsPage } from './HostEarningsPage';
+import { HostDashboardPage } from './HostDashboardPage';
 import { MembershipPricingPage } from './MembershipPricingPage';
 import { BookingSimModal } from './BookingSimModal';
 import { useSimulationStore } from '../store/useSimulationStore';
@@ -118,11 +119,11 @@ export function P2PChargerSharingTab() {
 
                 <button
                   type="button"
-                  onClick={() => setP2PSubView('HOST_EARNINGS')}
+                  onClick={() => setP2PSubView('HOST_DASHBOARD')}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 text-xs font-semibold transition-colors cursor-pointer"
                 >
                   <Zap className="h-3.5 w-3.5 text-emerald-600" />
-                  <span>My Charger &amp; Earnings</span>
+                  <span>Host Dashboard</span>
                 </button>
 
                 <button
@@ -181,22 +182,27 @@ export function P2PChargerSharingTab() {
           </div>
         )}
 
-        {/* VIEW 2: List Your Community Charger Wizard */}
+        {/* VIEW 2: Host Dashboard */}
+        {p2pSubView === 'HOST_DASHBOARD' && (
+          <HostDashboardPage />
+        )}
+
+        {/* VIEW 3: List Your Community Charger Wizard */}
         {p2pSubView === 'LIST_CHARGER' && (
           <ListCommunityChargerPage onBack={() => setP2PSubView('FIND_CHARGERS')} />
         )}
 
-        {/* VIEW 3: My Bookings */}
+        {/* VIEW 4: My Bookings */}
         {p2pSubView === 'MY_BOOKINGS' && (
           <MyBookingsPage />
         )}
 
-        {/* VIEW 4: Host Earnings */}
+        {/* VIEW 5: Host Earnings */}
         {p2pSubView === 'HOST_EARNINGS' && (
           <HostEarningsPage />
         )}
 
-        {/* VIEW 5: Membership & Pricing */}
+        {/* VIEW 6: Membership & Pricing */}
         {p2pSubView === 'MEMBERSHIP' && (
           <MembershipPricingPage />
         )}

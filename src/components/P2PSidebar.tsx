@@ -7,6 +7,7 @@ import {
   Zap,
   ShieldCheck,
   ArrowRight,
+  Home,
 } from 'lucide-react';
 import { useSimulationStore, type P2PSubView } from '../store/useSimulationStore';
 
@@ -27,6 +28,13 @@ export function P2PSidebar() {
       sublabel: 'Map & Proximity Radar',
       icon: Compass,
       badge: null,
+    },
+    {
+      id: 'HOST_DASHBOARD' as P2PSubView,
+      label: 'Host Dashboard',
+      sublabel: 'Charger & Requests',
+      icon: Home,
+      badge: '2 New',
     },
     {
       id: 'LIST_CHARGER' as P2PSubView,
