@@ -10,7 +10,6 @@ import {
   ArrowLeft,
   User,
   CheckCircle2,
-  Sparkles,
   Loader2,
   Building2,
   Cpu,
@@ -182,32 +181,6 @@ export function AuthPage() {
         loginAsAdmin(officialAdminId, officialEmail);
       }, 500);
     }, 700);
-  };
-
-  // Quick Demo for Standard Driver
-  const handleDriverDemo = () => {
-    setEmail('shivharshrai24@example.com');
-    setPassword('ChargeShare2026!');
-    setFullName('Shivharsh Rai');
-    setIsLoading(true);
-    setFeedbackMsg('Logging in as Standard EV Driver / Host! Redirecting to Dashboard...');
-    setTimeout(() => {
-      setIsLoading(false);
-      loginUser('shivharshrai24@example.com', 'Shivharsh Rai', 'DRIVER');
-    }, 450);
-  };
-
-  // Quick Demo for Official DISCOM Admin
-  const handleAdminDemo = () => {
-    setOfficialAdminId('ADM-NOI-DISCOM-01');
-    setOfficialEmail('admin@uppcl-grid.gov.in');
-    setStationCode('TX-100-SECTOR-4');
-    setIsLoading(true);
-    setFeedbackMsg('Logging in as Official DISCOM Admin! Redirecting to Grid Optimizer Dashboard...');
-    setTimeout(() => {
-      setIsLoading(false);
-      loginAsAdmin('ADM-NOI-DISCOM-01', 'admin@uppcl-grid.gov.in');
-    }, 500);
   };
 
   return (
