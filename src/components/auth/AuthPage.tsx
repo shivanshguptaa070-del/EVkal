@@ -73,7 +73,7 @@ export function AuthPage() {
             return;
           }
 
-          setFeedbackMsg(`✓ Signed in via Supabase! (${data.user?.email})`);
+          setFeedbackMsg(`✓ Signed in via Supabase! (${data.user?.email}) - Redirecting to Dashboard...`);
           setTimeout(() => {
             loginUser(data.user?.email || email, data.user?.user_metadata?.full_name || fullName, 'DRIVER');
           }, 500);
@@ -97,7 +97,7 @@ export function AuthPage() {
             return;
           }
 
-          setFeedbackMsg(`✓ Registered successfully in Supabase! (${data.user?.email})`);
+          setFeedbackMsg(`✓ Registered successfully in Supabase! Redirecting to Dashboard...`);
           setTimeout(() => {
             loginUser(data.user?.email || email, fullName, 'DRIVER');
           }, 500);
@@ -111,7 +111,7 @@ export function AuthPage() {
     // Graceful Simulation Fallback
     setTimeout(() => {
       setIsLoading(false);
-      setFeedbackMsg(isSignIn ? 'Signed in as EV Driver / Host!' : 'Account registered successfully!');
+      setFeedbackMsg(isSignIn ? 'Signed in as EV Driver / Host! Redirecting to Dashboard...' : 'Account registered successfully! Redirecting to Dashboard...');
       setTimeout(() => {
         loginUser(email, isSignIn ? userProfile.personal.fullName : fullName, 'DRIVER');
       }, 500);
@@ -144,6 +144,7 @@ export function AuthPage() {
 
     setTimeout(() => {
       setIsLoading(false);
+      setFeedbackMsg('Signed in with Google! Redirecting to Dashboard...');
       loginUser('shivharsh.google@evkal.org', 'Shivharsh Rai', 'DRIVER');
     }, 700);
   };
@@ -163,7 +164,7 @@ export function AuthPage() {
         });
 
         if (!error && data.user) {
-          setFeedbackMsg(`✓ Official DISCOM clearance verified via Supabase! (${data.user.email})`);
+          setFeedbackMsg(`✓ Official DISCOM clearance verified! Redirecting to Grid Optimizer Dashboard...`);
           setTimeout(() => {
             loginAsAdmin(officialAdminId, data.user.email || officialEmail);
           }, 500);
@@ -176,7 +177,7 @@ export function AuthPage() {
 
     setTimeout(() => {
       setIsLoading(false);
-      setFeedbackMsg('Official DISCOM clearance verified! Unlocking Grid Optimizer...');
+      setFeedbackMsg('Official DISCOM clearance verified! Redirecting to Grid Optimizer Dashboard...');
       setTimeout(() => {
         loginAsAdmin(officialAdminId, officialEmail);
       }, 500);
@@ -189,7 +190,7 @@ export function AuthPage() {
     setPassword('ChargeShare2026!');
     setFullName('Shivharsh Rai');
     setIsLoading(true);
-    setFeedbackMsg('Logging in as Standard EV Driver / Host (Normal Access)...');
+    setFeedbackMsg('Logging in as Standard EV Driver / Host! Redirecting to Dashboard...');
     setTimeout(() => {
       setIsLoading(false);
       loginUser('shivharshrai24@example.com', 'Shivharsh Rai', 'DRIVER');
@@ -202,7 +203,7 @@ export function AuthPage() {
     setOfficialEmail('admin@uppcl-grid.gov.in');
     setStationCode('TX-100-SECTOR-4');
     setIsLoading(true);
-    setFeedbackMsg('Logging in as Official DISCOM Admin (Grid Optimizer Unlocked)...');
+    setFeedbackMsg('Logging in as Official DISCOM Admin! Redirecting to Grid Optimizer Dashboard...');
     setTimeout(() => {
       setIsLoading(false);
       loginAsAdmin('ADM-NOI-DISCOM-01', 'admin@uppcl-grid.gov.in');
