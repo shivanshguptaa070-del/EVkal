@@ -257,17 +257,9 @@ export function LandingHeroPage() {
               {isDarkMode ? <Sun className="h-4 w-4 text-amber-300" /> : <Moon className="h-4 w-4 text-cyan-300" />}
             </button>
 
-            {/* "Sign In" Button */}
-            <button
-              onClick={() => openAuthView('SIGN_IN')}
-              className="text-xs sm:text-sm font-bold text-slate-300 hover:text-white px-3.5 py-2 rounded-full border border-slate-700/70 hover:border-emerald-500/50 hover:bg-slate-800/80 transition-all cursor-pointer"
-            >
-              Sign In
-            </button>
-
             {/* "Get Started →" CTA Pill Button */}
             <button
-              onClick={() => openAuthView('SIGN_UP')}
+              onClick={() => openAuthView('SIGN_IN')}
               className="bg-[#00E599] hover:bg-[#00c984] text-slate-950 font-black px-5 py-2 rounded-full shadow-[0_0_20px_rgba(0,229,153,0.35)] hover:shadow-[0_0_30px_rgba(0,229,153,0.6)] hover:-translate-y-0.5 active:translate-y-0 transition-all text-xs sm:text-sm flex items-center gap-1.5 group cursor-pointer"
             >
               <span>Get Started</span>
