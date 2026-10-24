@@ -7,11 +7,12 @@ import {
   Zap,
   ShieldCheck,
   ArrowRight,
+  Lock,
 } from 'lucide-react';
 import { useSimulationStore, type P2PSubView } from '../store/useSimulationStore';
 
 export function P2PSidebar() {
-  const { p2pSubView, setP2PSubView, setActiveTab } = useSimulationStore();
+  const { p2pSubView, setP2PSubView, setActiveTab, isHostAuthenticated } = useSimulationStore();
 
   const isCurrent = (view: P2PSubView) => {
     if (view === 'FIND_CHARGERS' && (p2pSubView === 'FIND_CHARGERS' || p2pSubView === 'BROWSE')) {
@@ -44,10 +45,10 @@ export function P2PSidebar() {
     },
     {
       id: 'HOST_EARNINGS' as P2PSubView,
-      label: 'Host Earnings',
-      sublabel: '₹4,662 this month',
-      icon: Wallet,
-      badge: '+12%',
+      label: 'Host Dashboard',
+      sublabel: isHostAuthenticated ? '₹4,662 this month' : 'Host Login Required',
+      icon: isHostAuthenticated ? Wallet : Lock,
+      badge: isHostAuthenticated ? '+12%' : 'Locked',
     },
     {
       id: 'MEMBERSHIP' as P2PSubView,
@@ -61,19 +62,46 @@ export function P2PSidebar() {
   return (
     <aside className="w-full lg:w-60 shrink-0 bg-white rounded-3xl border border-slate-200/90 p-3.5 shadow-sm space-y-4 select-none">
       {/* Top Profile / Platform Status Mini Card */}
-      <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100 flex items-center gap-3">
-        <div className="h-9 w-9 rounded-xl bg-[#059669] text-white flex items-center justify-center font-black text-xs shadow-xs">
-          ST
-        </div>
-        <div className="leading-tight overflow-hidden">
-          <div className="text-xs font-black text-slate-900 truncate">
-            Shivharsh T.
+      <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2.5 overflow-hidden">
+          <div
+            className={`h-9 w-9 rounded-xl flex items-center justify-center font-black text-xs shadow-xs shrink-0 ${
+              isHostAuthenticated ? 'bg-[#059669] text-white' : 'bg-slate-200 text-slate-700'
+            }`}
+          >
+            {isHostAuthenticated ? 'ST' : 'EV'}
           </div>
-          <div className="flex items-center gap-1 text-[10px] text-emerald-700 font-bold mt-0.5">
-            <ShieldCheck className="h-3 w-3" />
-            <span>Community Host</span>
+          <div className="leading-tight overflow-hidden">
+            <div className="text-xs font-black text-slate-900 truncate">
+              {isHostAuthenticated ? 'Shivharsh T.' : 'Guest Driver'}
+            </div>
+            <div
+              className={`flex items-center gap-1 text-[10px] font-bold mt-0.5 truncate ${
+                isHostAuthenticated ? 'text-emerald-700' : 'text-slate-400'
+              }`}
+            >
+              {isHostAuthenticated ? (
+                <>
+                  <ShieldCheck className="h-3 w-3 shrink-0" />
+                  <span>Verified Host</span>
+                </>
+              ) : (
+                <span>Public Driver</span>
+              )}
+            </div>
           </div>
         </div>
+
+        {!isHostAuthenticated && (
+          <button
+            type="button"
+            onClick={() => setP2PSubView('HOST_EARNINGS')}
+            className="px-2 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-lg text-[10px] font-bold transition-colors cursor-pointer shrink-0"
+            title="Login as Host"
+          >
+            Host Login
+          </button>
+        )}
       </div>
 
       {/* Switch to Grid Management (P0) Button */}
