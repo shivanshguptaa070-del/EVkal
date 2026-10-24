@@ -13,18 +13,38 @@ interface DelhiInteractiveMapProps {
 }
 
 const LISTING_IMAGES: Record<string, string> = {
-  'HOST-DEL-002': '/assets/images/dr_neha_villa.jpg', // Dr. Neha Sharma
-  'HOST-DEL-001': '/assets/images/garage_rajesh.jpg',  // Rajesh K.
-  'HOST-DEL-003': '/assets/images/arjun_garage.jpg',  // Arjun Bhasin
-  'HOST-DEL-005': '/assets/images/vipin_home.jpg',    // Vipin Singhal
+  'HOST-DEL-001': '/assets/images/garage_rajesh.jpg',  // Rajesh K. (Vasant Kunj)
+  'HOST-DEL-002': '/assets/images/dr_neha_villa.jpg', // Dr. Neha Sharma (Hauz Khas)
+  'HOST-DEL-003': '/assets/images/arjun_garage.jpg',  // Arjun Bhasin (Saket)
+  'HOST-DEL-004': '/assets/images/dashboard_hero_ev.jpg', // GreenRide (Chanakyapuri)
+  'HOST-DEL-005': '/assets/images/vipin_home.jpg',    // Vipin Singhal (Malviya Nagar)
+  'HOST-DEL-006': '/assets/images/shivharsh_villa.jpg', // Suresh Goel (Mehrauli)
+  'HOST-DEL-007': '/assets/images/garage_rajesh.jpg', // Vikramaditya Mehta (Connaught Place)
+  'HOST-DEL-008': '/assets/images/dr_neha_villa.jpg', // Sunita Rao (Dwarka)
+  'HOST-DEL-009': '/assets/images/arjun_garage.jpg',  // Amit Malhotra (Rohini)
+  'HOST-DEL-010': '/assets/images/vipin_home.jpg',    // Priya Taneja (Greater Kailash II)
+  'HOST-DEL-011': '/assets/images/shivharsh_villa.jpg', // Raghav Singhania (Lajpat Nagar)
+  'HOST-DEL-012': '/assets/images/garage_rajesh.jpg', // Harpreet Singh (Karol Bagh)
+  'HOST-DEL-013': '/assets/images/dr_neha_villa.jpg', // Deepa Nair (Janakpuri)
+  'HOST-DEL-014': '/assets/images/dashboard_hero_ev.jpg', // Aerocity EV Gateway
+  'HOST-DEL-015': '/assets/images/arjun_garage.jpg',  // Alok Verma (Mayur Vihar)
+  'HOST-DEL-016': '/assets/images/vipin_home.jpg',    // Shivani Bansal (Noida)
+  'HOST-DEL-017': '/assets/images/dashboard_hero_ev.jpg', // Kabir Oberoi (Cyber City Gurugram)
+  'HOST-DEL-018': '/assets/images/shivharsh_villa.jpg', // Rakesh Aggarwal (Indirapuram)
+  'HOST-DEL-019': '/assets/images/dr_neha_villa.jpg', // Ananya Kapoor (Nehru Place)
+  'HOST-DEL-020': '/assets/images/garage_rajesh.jpg', // Rohit Choudhary (South Extension)
 };
 
 const LANDMARKS = [
+  { name: 'Connaught Place', lat: 28.6315, lon: 77.2167, icon: '🏛️' },
   { name: 'Qutub Minar', lat: 28.5245, lon: 77.1855, icon: '🏛️' },
-  { name: 'Mehrauli', lat: 28.5170, lon: 77.1780, icon: '📍' },
   { name: 'Saket Metro', lat: 28.5210, lon: 77.2010, icon: '🚇' },
   { name: 'Malviya Nagar', lat: 28.5390, lon: 77.2070, icon: '📍' },
-  { name: 'Pushp Vihar', lat: 28.5280, lon: 77.2200, icon: '📍' },
+  { name: 'Greater Kailash', lat: 28.5350, lon: 77.2410, icon: '📍' },
+  { name: 'Dwarka Sec 10', lat: 28.5823, lon: 77.0500, icon: '🚇' },
+  { name: 'Rohini Sec 13', lat: 28.7166, lon: 77.1245, icon: '📍' },
+  { name: 'Noida Sec 62', lat: 28.6280, lon: 77.3650, icon: '🏢' },
+  { name: 'Cyber City GGN', lat: 28.4950, lon: 77.0895, icon: '⚡' },
 ];
 
 export function DelhiInteractiveMap({

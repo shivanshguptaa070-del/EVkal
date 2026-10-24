@@ -44,7 +44,7 @@ export function P2PFilterBar({
           type="text"
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          placeholder="Search nearby chargers..."
+          placeholder="Search by area or locality (e.g. Connaught Place, Dwarka, Saket, Noida)..."
           className="w-full pl-10 pr-4 py-2.5 bg-transparent rounded-xl text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
         />
       </div>
