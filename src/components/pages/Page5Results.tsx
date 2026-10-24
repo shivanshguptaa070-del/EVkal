@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   BarChart3,
   Zap,
@@ -42,69 +42,202 @@ export function Page5Results() {
   const currentScenarioName =
     scenarios.find((s) => s.id === activeScenario)?.name ?? 'Evening Rush (Baseline)';
 
-  // Per-vehicle impact table rows matching screenshot 5
-  const vehicleImpactRows = [
-    {
-      id: 1,
-      model: 'Tata Nexon EV',
-      energy: 22.0,
-      costImmediate: '₹246.00',
-      costOptimized: '₹73.70',
-      savings: '-70.0%',
-      status: 'Optimized',
-      isFeasible: true,
-    },
-    {
-      id: 2,
-      model: 'Hyundai Ioniq 5',
-      energy: 38.0,
-      costImmediate: '₹348.00',
-      costOptimized: '₹126.40',
-      savings: '-63.7%',
-      status: 'Optimized',
-      isFeasible: true,
-    },
-    {
-      id: 3,
-      model: 'Tata Tiago EV',
-      energy: 18.0,
-      costImmediate: '₹162.00',
-      costOptimized: '₹60.30',
-      savings: '-62.8%',
-      status: 'Optimized',
-      isFeasible: true,
-    },
-    {
-      id: 4,
-      model: 'MG ZS EV',
-      energy: 32.0,
-      costImmediate: '₹358.00',
-      costOptimized: '₹104.20',
-      savings: '-70.9%',
-      status: 'Optimized',
-      isFeasible: true,
-    },
-    {
-      id: 5,
-      model: 'Mahindra XUV400',
-      energy: 28.0,
-      costImmediate: '₹313.00',
-      costOptimized: '₹89.60',
-      savings: '-71.4%',
-      status: 'Optimized',
-      isFeasible: true,
-    },
-    {
-      id: 6,
-      model: 'BYD Atto 3',
-      energy: 21.0,
-      costImmediate: '₹393.00',
-      costOptimized: '₹393.00',
-      savings: '0.0%',
-      status: 'Infeasible',
-      isFeasible: false,
-    },
-  ];
+  // Per-vehicle impact table rows reactive to activeScenario
+  const vehicleImpactRows = useMemo(() => {
+    if (activeScenario === 'EVENING_RUSH') {
+      return [
+        {
+          id: 1,
+          model: 'Tata Nexon EV',
+          energy: 22.0,
+          costImmediate: '₹246.00',
+          costOptimized: '₹246.00',
+          savings: '0.0%',
+          status: 'Baseline (Uncoordinated)',
+          isFeasible: true,
+        },
+        {
+          id: 2,
+          model: 'Hyundai Ioniq 5',
+          energy: 38.0,
+          costImmediate: '₹348.00',
+          costOptimized: '₹348.00',
+          savings: '0.0%',
+          status: 'Baseline (Uncoordinated)',
+          isFeasible: true,
+        },
+        {
+          id: 3,
+          model: 'Tata Tiago EV',
+          energy: 18.0,
+          costImmediate: '₹162.00',
+          costOptimized: '₹162.00',
+          savings: '0.0%',
+          status: 'Baseline (Uncoordinated)',
+          isFeasible: true,
+        },
+        {
+          id: 4,
+          model: 'MG ZS EV',
+          energy: 32.0,
+          costImmediate: '₹358.00',
+          costOptimized: '₹358.00',
+          savings: '0.0%',
+          status: 'Baseline (Uncoordinated)',
+          isFeasible: true,
+        },
+        {
+          id: 5,
+          model: 'Mahindra XUV400',
+          energy: 28.0,
+          costImmediate: '₹313.00',
+          costOptimized: '₹313.00',
+          savings: '0.0%',
+          status: 'Baseline (Uncoordinated)',
+          isFeasible: true,
+        },
+        {
+          id: 6,
+          model: 'BYD Atto 3',
+          energy: 21.0,
+          costImmediate: '₹235.00',
+          costOptimized: '₹235.00',
+          savings: '0.0%',
+          status: 'Baseline (Uncoordinated)',
+          isFeasible: true,
+        },
+      ];
+    }
+
+    if (activeScenario === 'INFEASIBLE_REQUEST') {
+      return [
+        {
+          id: 1,
+          model: 'Tata Nexon EV',
+          energy: 22.0,
+          costImmediate: '₹246.00',
+          costOptimized: '₹73.70',
+          savings: '-70.0%',
+          status: 'Optimized',
+          isFeasible: true,
+        },
+        {
+          id: 2,
+          model: 'Hyundai Ioniq 5',
+          energy: 38.0,
+          costImmediate: '₹348.00',
+          costOptimized: '₹126.40',
+          savings: '-63.7%',
+          status: 'Optimized',
+          isFeasible: true,
+        },
+        {
+          id: 3,
+          model: 'Tata Tiago EV',
+          energy: 18.0,
+          costImmediate: '₹162.00',
+          costOptimized: '₹60.30',
+          savings: '-62.8%',
+          status: 'Optimized',
+          isFeasible: true,
+        },
+        {
+          id: 4,
+          model: 'MG ZS EV',
+          energy: 32.0,
+          costImmediate: '₹358.00',
+          costOptimized: '₹104.20',
+          savings: '-70.9%',
+          status: 'Optimized',
+          isFeasible: true,
+        },
+        {
+          id: 5,
+          model: 'Mahindra XUV400',
+          energy: 28.0,
+          costImmediate: '₹313.00',
+          costOptimized: '₹89.60',
+          savings: '-71.4%',
+          status: 'Optimized',
+          isFeasible: true,
+        },
+        {
+          id: 6,
+          model: 'EV-FAIL (Stress Fast Charge)',
+          energy: 45.0,
+          costImmediate: '₹630.00',
+          costOptimized: '₹630.00',
+          savings: '0.0%',
+          status: 'Infeasible (Capacity Exceeded)',
+          isFeasible: false,
+        },
+      ];
+    }
+
+    // Default: VALLEY_SHIFT (Optimized)
+    return [
+      {
+        id: 1,
+        model: 'Tata Nexon EV',
+        energy: 22.0,
+        costImmediate: '₹246.00',
+        costOptimized: '₹73.70',
+        savings: '-70.0%',
+        status: 'Optimized',
+        isFeasible: true,
+      },
+      {
+        id: 2,
+        model: 'Hyundai Ioniq 5',
+        energy: 38.0,
+        costImmediate: '₹348.00',
+        costOptimized: '₹126.40',
+        savings: '-63.7%',
+        status: 'Optimized',
+        isFeasible: true,
+      },
+      {
+        id: 3,
+        model: 'Tata Tiago EV',
+        energy: 18.0,
+        costImmediate: '₹162.00',
+        costOptimized: '₹60.30',
+        savings: '-62.8%',
+        status: 'Optimized',
+        isFeasible: true,
+      },
+      {
+        id: 4,
+        model: 'MG ZS EV',
+        energy: 32.0,
+        costImmediate: '₹358.00',
+        costOptimized: '₹104.20',
+        savings: '-70.9%',
+        status: 'Optimized',
+        isFeasible: true,
+      },
+      {
+        id: 5,
+        model: 'Mahindra XUV400',
+        energy: 28.0,
+        costImmediate: '₹313.00',
+        costOptimized: '₹89.60',
+        savings: '-71.4%',
+        status: 'Optimized',
+        isFeasible: true,
+      },
+      {
+        id: 6,
+        model: 'BYD Atto 3',
+        energy: 21.0,
+        costImmediate: '₹235.00',
+        costOptimized: '₹70.50',
+        savings: '-70.0%',
+        status: 'Optimized',
+        isFeasible: true,
+      },
+    ];
+  }, [activeScenario]);
 
   // CSV Report Generator
   const downloadCsvReport = () => {
@@ -202,21 +335,36 @@ export function Page5Results() {
         {/* 1. Peak Grid Load */}
         <div className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col justify-between">
           <div className="flex items-start justify-between gap-3 mb-2">
-            <div className="h-10 w-10 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-500">
-              <Zap className="h-5 w-5 fill-rose-500/20" />
+            <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${
+              activeScenario === 'VALLEY_SHIFT' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-500'
+            }`}>
+              <Zap className="h-5 w-5 fill-current/20" />
             </div>
             <span className="text-xs font-bold text-slate-400">Peak Grid Load</span>
           </div>
           <div>
             <div className="text-2xl font-black text-slate-900 tracking-tight font-tabular">
-              {summary.optimisedPeakKw.toFixed(1)} <span className="text-sm font-semibold font-sans text-slate-500">kW</span>
+              {activeScenario === 'EVENING_RUSH'
+                ? summary.baselinePeakKw.toFixed(1)
+                : summary.optimisedPeakKw.toFixed(1)}{' '}
+              <span className="text-sm font-semibold font-sans text-slate-500">kW</span>
             </div>
             <div className="mt-2 flex items-center gap-2">
-              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 font-tabular">
-                ↓ {summary.peakReductionPct.toFixed(1)}%
+              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold font-tabular ${
+                activeScenario === 'EVENING_RUSH'
+                  ? 'bg-rose-100 text-rose-700'
+                  : activeScenario === 'INFEASIBLE_REQUEST'
+                  ? 'bg-amber-100 text-amber-800'
+                  : 'bg-emerald-100 text-emerald-800'
+              }`}>
+                {activeScenario === 'EVENING_RUSH'
+                  ? 'Baseline Peak'
+                  : `↓ ${summary.peakReductionPct.toFixed(1)}%`}
               </span>
               <span className="text-xs text-slate-400 font-medium truncate">
-                vs {summary.baselinePeakKw.toFixed(1)} kW (Baseline)
+                {activeScenario === 'EVENING_RUSH'
+                  ? '122 kW uncoordinated load'
+                  : `vs ${summary.baselinePeakKw.toFixed(1)} kW (Baseline)`}
               </span>
             </div>
           </div>
@@ -228,18 +376,30 @@ export function Page5Results() {
             <div className="h-10 w-10 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600">
               <IndianRupee className="h-5 w-5" />
             </div>
-            <span className="text-xs font-bold text-slate-400">Total Charging Cost &gt;</span>
+            <span className="text-xs font-bold text-slate-400">Total Charging Cost</span>
           </div>
           <div>
             <div className="text-2xl font-black text-slate-900 tracking-tight font-tabular">
-              ₹1,048.20
+              {activeScenario === 'EVENING_RUSH'
+                ? '₹2,615.39'
+                : activeScenario === 'INFEASIBLE_REQUEST'
+                ? '₹2,234.99'
+                : '₹863.24'}
             </div>
             <div className="mt-2 flex items-center gap-2">
-              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 font-tabular">
-                ↓ 60.2%
+              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold font-tabular ${
+                activeScenario === 'EVENING_RUSH'
+                  ? 'bg-slate-100 text-slate-700'
+                  : 'bg-emerald-100 text-emerald-800'
+              }`}>
+                {activeScenario === 'EVENING_RUSH'
+                  ? '0.0% Baseline'
+                  : activeScenario === 'INFEASIBLE_REQUEST'
+                  ? '↓ 14.5%'
+                  : '↓ 67.0%'}
               </span>
               <span className="text-xs text-slate-400 font-medium truncate">
-                vs Immediate Charging
+                {activeScenario === 'EVENING_RUSH' ? 'Peak pricing tariff' : 'vs Immediate Charging'}
               </span>
             </div>
           </div>
@@ -251,18 +411,31 @@ export function Page5Results() {
             <div className="h-10 w-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600">
               <Leaf className="h-5 w-5" />
             </div>
-            <span className="text-xs font-bold text-slate-400">CO₂ Emissions (Est.) &gt;</span>
+            <span className="text-xs font-bold text-slate-400">CO₂ Emissions (Est.)</span>
           </div>
           <div>
             <div className="text-2xl font-black text-slate-900 tracking-tight font-tabular">
-              -28.4 <span className="text-sm font-semibold font-sans text-slate-500">kg</span>
+              {activeScenario === 'EVENING_RUSH'
+                ? '41.8'
+                : activeScenario === 'INFEASIBLE_REQUEST'
+                ? '36.2'
+                : '-28.4'}{' '}
+              <span className="text-sm font-semibold font-sans text-slate-500">kg</span>
             </div>
             <div className="mt-2 flex items-center gap-2">
-              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 font-tabular">
-                ↓ 32.0%
+              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold font-tabular ${
+                activeScenario === 'EVENING_RUSH'
+                  ? 'bg-rose-100 text-rose-700'
+                  : 'bg-emerald-100 text-emerald-800'
+              }`}>
+                {activeScenario === 'EVENING_RUSH'
+                  ? 'Coal Peaker Mix'
+                  : activeScenario === 'INFEASIBLE_REQUEST'
+                  ? '↓ 13.4%'
+                  : '↓ 32.0%'}
               </span>
               <span className="text-xs text-slate-400 font-medium truncate">
-                Using grid emission factor
+                {activeScenario === 'VALLEY_SHIFT' ? 'Green solar/wind absorbed' : 'Grid emission factor'}
               </span>
             </div>
           </div>
@@ -271,21 +444,36 @@ export function Page5Results() {
         {/* 4. Overload Hours */}
         <div className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col justify-between">
           <div className="flex items-start justify-between gap-3 mb-2">
-            <div className="h-10 w-10 rounded-xl bg-sky-50 border border-sky-100 flex items-center justify-center text-sky-600">
+            <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${
+              activeScenario === 'VALLEY_SHIFT' ? 'bg-sky-50 text-sky-600' : 'bg-rose-50 text-rose-600'
+            }`}>
               <Clock className="h-5 w-5" />
             </div>
             <span className="text-xs font-bold text-slate-400">Overload Hours</span>
           </div>
           <div>
             <div className="text-2xl font-black text-slate-900 tracking-tight font-tabular">
-              0 <span className="text-sm font-semibold font-sans text-slate-500">hours</span>
+              {activeScenario === 'EVENING_RUSH'
+                ? '3.0'
+                : activeScenario === 'INFEASIBLE_REQUEST'
+                ? '4.5'
+                : '0'}{' '}
+              <span className="text-sm font-semibold font-sans text-slate-500">hours</span>
             </div>
             <div className="mt-2 flex items-center gap-2">
-              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 font-tabular">
-                ↓ 100%
+              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold font-tabular ${
+                activeScenario === 'VALLEY_SHIFT'
+                  ? 'bg-emerald-100 text-emerald-800'
+                  : 'bg-rose-100 text-rose-700'
+              }`}>
+                {activeScenario === 'VALLEY_SHIFT'
+                  ? '↓ 100%'
+                  : activeScenario === 'INFEASIBLE_REQUEST'
+                  ? 'Critical Overload'
+                  : 'Baseline Overload'}
               </span>
               <span className="text-xs text-slate-400 font-medium truncate">
-                vs 3.0 hours (Baseline)
+                {activeScenario === 'VALLEY_SHIFT' ? 'vs 3.0 hours (Baseline)' : 'Exceeds 100 kW feeder limit'}
               </span>
             </div>
           </div>

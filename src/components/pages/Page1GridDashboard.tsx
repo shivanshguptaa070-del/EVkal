@@ -22,15 +22,18 @@ export function Page1GridDashboard() {
     openSessionModal,
     isAdmin,
     adminId,
+    activeScenario,
   } = useSimulationStore();
 
-  const { baselineSlots, summary } = solverOutput;
+  const { baselineSlots, optimisedSlots, summary } = solverOutput;
   const capacity = transformerConfig.ratedCapacityKw;
 
   // Real-time slot 19 data (or peak load slot)
-  const currentSlot = baselineSlots[19] ?? baselineSlots[0];
+  const activeSlots = activeScenario === 'EVENING_RUSH' ? baselineSlots : optimisedSlots;
+  const currentSlot = activeSlots[19] ?? activeSlots[0];
   const currentLoadKw = currentSlot.totalLoadKw;
-  const currentRate = 11.20;
+  const currentRate =
+    activeScenario === 'EVENING_RUSH' ? 11.20 : activeScenario === 'INFEASIBLE_REQUEST' ? 14.80 : 4.20;
   const utilizationPct = (currentLoadKw / capacity) * 100;
 
   // Max scale for the status bar (160 kW)
