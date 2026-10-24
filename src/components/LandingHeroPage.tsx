@@ -223,23 +223,12 @@ export function LandingHeroPage() {
 
           {/* Right Action Elements */}
           <div className="flex items-center gap-3">
-            {/* Direct Sign In and Dashboard Actions */}
+            {/* "Get Started →" CTA Pill Button */}
             <button
               onClick={() => openAuthView('SIGN_IN')}
-              className="px-3.5 py-1.5 text-xs font-bold text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-full transition-colors cursor-pointer"
-              title="Sign In / Register with EVkal or Official DISCOM"
-            >
-              Sign In
-            </button>
-
-            <button
-              onClick={() => {
-                setActiveP0SubPage('PAGE_1_DASHBOARD');
-                setActiveTab('P0_GRID');
-              }}
               className="bg-[#00E599] hover:bg-[#00c984] text-slate-950 font-black px-5 py-2 rounded-full shadow-[0_0_20px_rgba(0,229,153,0.35)] hover:shadow-[0_0_30px_rgba(0,229,153,0.6)] hover:-translate-y-0.5 active:translate-y-0 transition-all text-xs sm:text-sm flex items-center gap-1.5 group cursor-pointer"
             >
-              <span>Dashboard</span>
+              <span>Get Started</span>
               <ArrowRight className="h-4 w-4 stroke-[2.5] group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
