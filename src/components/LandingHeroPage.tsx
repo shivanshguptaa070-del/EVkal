@@ -10,8 +10,6 @@ import {
   Leaf,
   ShieldCheck,
   IndianRupee,
-  Sun,
-  Moon,
   Radio,
   Play,
   Pause,
@@ -100,7 +98,6 @@ const COMMUNITY_PINS: CommunityPin[] = [
 
 export function LandingHeroPage() {
   const { setActiveTab, setActiveP0SubPage, solverOutput, transformerConfig, openBookingModal, openAuthView } = useSimulationStore();
-  const [isDarkMode, setIsDarkMode] = useState(true);
 
   // Micro-telemetry live fluctuation simulation
   const [telemetryJitter, setTelemetryJitter] = useState(0);
@@ -166,9 +163,7 @@ export function LandingHeroPage() {
 
   return (
     <div
-      className={`w-full flex flex-col ${
-        isDarkMode ? 'bg-[#0B0F17] text-slate-100' : 'bg-slate-900 text-slate-100'
-      } overflow-x-hidden font-sans transition-colors duration-500`}
+      className="w-full flex flex-col bg-[#0B0F17] text-slate-100 overflow-x-hidden font-sans transition-colors duration-500"
     >
       {/* ─────────────────────────────────────────────────────────────
           1. TOP NAVIGATION BAR (Fixed Glassmorphic Header)
@@ -228,41 +223,23 @@ export function LandingHeroPage() {
 
           {/* Right Action Elements */}
           <div className="flex items-center gap-3">
-            {/* Quick Switcher for Simulation Dashboards */}
-            <div className="hidden lg:flex items-center gap-1 p-1 rounded-full bg-slate-900/90 border border-slate-800 text-xs font-semibold shadow-inner">
-              <button
-                onClick={() => setActiveTab('P0_GRID')}
-                className="px-3 py-1.5 rounded-full hover:bg-slate-800 text-slate-300 hover:text-white transition-all flex items-center gap-1.5 group"
-                title="Open Smart Grid & Transformer Optimizer"
-              >
-                <Zap className="h-3 w-3 text-emerald-400 group-hover:scale-110 transition-transform" />
-                <span>P0 Grid</span>
-              </button>
-              <button
-                onClick={() => setActiveTab('P1_P2P')}
-                className="px-3 py-1.5 rounded-full hover:bg-slate-800 text-slate-300 hover:text-white transition-all flex items-center gap-1.5 group"
-                title="Open P2P Community Charger Sharing"
-              >
-                <MapPin className="h-3 w-3 text-blue-400 group-hover:scale-110 transition-transform" />
-                <span>P1 P2P</span>
-              </button>
-            </div>
-
-            {/* Dark / Mood Toggle */}
-            <button
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              className="h-9 w-9 rounded-full bg-slate-900/90 border border-slate-700/60 text-slate-300 hover:text-white flex items-center justify-center transition-all hover:border-emerald-500/40 shadow-sm"
-              title="Toggle theme appearance"
-            >
-              {isDarkMode ? <Sun className="h-4 w-4 text-amber-300" /> : <Moon className="h-4 w-4 text-cyan-300" />}
-            </button>
-
-            {/* "Get Started →" CTA Pill Button */}
+            {/* Direct Sign In and Dashboard Actions */}
             <button
               onClick={() => openAuthView('SIGN_IN')}
+              className="px-3.5 py-1.5 text-xs font-bold text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-full transition-colors cursor-pointer"
+              title="Sign In / Register with EVkal or Official DISCOM"
+            >
+              Sign In
+            </button>
+
+            <button
+              onClick={() => {
+                setActiveP0SubPage('PAGE_1_DASHBOARD');
+                setActiveTab('P0_GRID');
+              }}
               className="bg-[#00E599] hover:bg-[#00c984] text-slate-950 font-black px-5 py-2 rounded-full shadow-[0_0_20px_rgba(0,229,153,0.35)] hover:shadow-[0_0_30px_rgba(0,229,153,0.6)] hover:-translate-y-0.5 active:translate-y-0 transition-all text-xs sm:text-sm flex items-center gap-1.5 group cursor-pointer"
             >
-              <span>Get Started</span>
+              <span>Dashboard</span>
               <ArrowRight className="h-4 w-4 stroke-[2.5] group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
