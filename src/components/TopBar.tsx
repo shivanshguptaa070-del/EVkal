@@ -12,6 +12,7 @@ import {
   Check,
   ArrowRight,
   LogOut,
+  Database,
 } from 'lucide-react';
 import { useSimulationStore } from '../store/useSimulationStore';
 
@@ -29,6 +30,7 @@ export function TopBar() {
     setActiveP0SubPage,
     openAuthView,
     logoutUser,
+    openDatabaseModal,
   } = useSimulationStore();
 
   const [showNotifications, setShowNotifications] = useState(false);
@@ -309,6 +311,23 @@ export function TopBar() {
                   </div>
                   <span className="text-[11px] font-bold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded-full">
                     {userProfile.stats.bookingsCount}
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowUserDropdown(false);
+                    openDatabaseModal();
+                  }}
+                  className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-blue-50 text-slate-700 hover:text-blue-900 font-medium transition-colors cursor-pointer text-left"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Database className="h-3.5 w-3.5 text-blue-600" />
+                    <span>Verify Supabase DB</span>
+                  </div>
+                  <span className="text-[10px] font-bold text-blue-700 bg-blue-100/70 px-1.5 py-0.5 rounded-full border border-blue-200">
+                    PostgreSQL
                   </span>
                 </button>
               </div>

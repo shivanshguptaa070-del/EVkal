@@ -360,6 +360,10 @@ interface SimulationState {
   loginUser: (email?: string, name?: string, role?: 'DRIVER' | 'HOST' | 'ADMIN') => void;
   loginAsAdmin: (adminId?: string, officialEmail?: string) => void;
   logoutUser: () => void;
+  // Database Verification Modal
+  isDatabaseModalOpen: boolean;
+  openDatabaseModal: () => void;
+  closeDatabaseModal: () => void;
 
   // P2P Actions
   setP2PQuery: (query: Partial<LowBatterySearchQuery>) => void;
@@ -579,6 +583,13 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
   },
 
   logoutUser: () => {
+    try {
+      import('../lib/supabase').then(({ supabase }) => {
+        supabase.auth.signOut().catch(() => {});
+      });
+    } catch {
+      // ignore
+    }
     set({
       isAuthenticated: false,
       isAdmin: false,
@@ -586,6 +597,11 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
       authMode: 'SIGN_IN',
     });
   },
+
+  // Supabase Database Verification Modal state
+  isDatabaseModalOpen: false,
+  openDatabaseModal: () => set({ isDatabaseModalOpen: true }),
+  closeDatabaseModal: () => set({ isDatabaseModalOpen: false }),
 
 
   setTransformerCapacity: (capacityKw) => {

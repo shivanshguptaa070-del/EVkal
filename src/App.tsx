@@ -14,6 +14,7 @@ import { BookingSimModal } from './components/BookingSimModal';
 import { ListChargerModal } from './components/ListChargerModal';
 import { ProfileView } from './components/profile/ProfileView';
 import { AuthPage } from './components/auth/AuthPage';
+import { SupabaseVerificationModal } from './components/auth/SupabaseVerificationModal';
 import { useSimulationStore } from './store/useSimulationStore';
 
 export default function App() {
@@ -22,6 +23,8 @@ export default function App() {
     activeP0SubPage,
     isAdmin,
     openAuthView,
+    isDatabaseModalOpen,
+    closeDatabaseModal,
   } = useSimulationStore();
 
   if (activeTab === 'AUTH') {
@@ -39,6 +42,10 @@ export default function App() {
         <EVSessionModal />
         <BookingSimModal />
         <ListChargerModal />
+        <SupabaseVerificationModal
+          isOpen={isDatabaseModalOpen}
+          onClose={closeDatabaseModal}
+        />
       </div>
     );
   }
@@ -119,6 +126,12 @@ export default function App() {
 
       {/* Interactive List Charger Modal (P1) */}
       <ListChargerModal />
+
+      {/* Supabase Database & Auth Diagnostics Modal */}
+      <SupabaseVerificationModal
+        isOpen={isDatabaseModalOpen}
+        onClose={closeDatabaseModal}
+      />
     </div>
   );
 }

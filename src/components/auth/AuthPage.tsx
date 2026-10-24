@@ -15,8 +15,11 @@ import {
   Building2,
   Cpu,
   BadgeAlert,
+  Database,
 } from 'lucide-react';
 import { useSimulationStore } from '../../store/useSimulationStore';
+import { supabase, getActiveSupabaseConfig } from '../../lib/supabase';
+import { SupabaseVerificationModal } from './SupabaseVerificationModal';
 
 export function AuthPage() {
   const {
@@ -41,33 +44,104 @@ export function AuthPage() {
   const [officialEmail, setOfficialEmail] = useState('admin@uppcl-grid.gov.in');
   const [officialPasskey, setOfficialPasskey] = useState('••••••••••••');
   const [stationCode, setStationCode] = useState('TX-100-SECTOR-4');
+  const isSignIn = authMode === 'SIGN_IN';
+  const isOfficial = authMode === 'OFFICIAL';
 
   const [isLoading, setIsLoading] = useState(false);
   const [feedbackMsg, setFeedbackMsg] = useState<string | null>(null);
-
-  const isOfficial = authMode === 'OFFICIAL';
-  const isSignIn = authMode === 'SIGN_IN';
+  const [isVerifyModalOpen, setIsVerifyModalOpen] = useState(false);
 
   // Standard User Submit (EV Driver / Host -> isAdmin = false)
-  const handleStandardSubmit = (e: React.FormEvent) => {
+  const handleStandardSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setFeedbackMsg(null);
 
+    const config = getActiveSupabaseConfig();
+
+    if (config.isConfigured) {
+      try {
+        if (isSignIn) {
+          const { data, error } = await supabase.auth.signInWithPassword({
+            email: email.trim(),
+            password: password,
+          });
+
+          if (error) {
+            setIsLoading(false);
+            setFeedbackMsg(`Authentication Error: ${error.message}`);
+            return;
+          }
+
+          setFeedbackMsg(`✓ Signed in via Supabase! (${data.user?.email})`);
+          setTimeout(() => {
+            loginUser(data.user?.email || email, data.user?.user_metadata?.full_name || fullName, 'DRIVER');
+          }, 500);
+          return;
+        } else {
+          // Sign Up
+          const { data, error } = await supabase.auth.signUp({
+            email: email.trim(),
+            password: password,
+            options: {
+              data: {
+                full_name: fullName.trim(),
+                account_type: userRole === 'HOST' ? 'Host & Driver' : 'Individual',
+              },
+            },
+          });
+
+          if (error) {
+            setIsLoading(false);
+            setFeedbackMsg(`Sign Up Error: ${error.message}`);
+            return;
+          }
+
+          setFeedbackMsg(`✓ Registered successfully in Supabase! (${data.user?.email})`);
+          setTimeout(() => {
+            loginUser(data.user?.email || email, fullName, 'DRIVER');
+          }, 500);
+          return;
+        }
+      } catch (err: unknown) {
+        console.warn('[Supabase Auth] Falling back to simulation:', err);
+      }
+    }
+
+    // Graceful Simulation Fallback
     setTimeout(() => {
       setIsLoading(false);
       setFeedbackMsg(isSignIn ? 'Signed in as EV Driver / Host!' : 'Account registered successfully!');
       setTimeout(() => {
-        // Standard users log in with role 'DRIVER' (isAdmin = false, Grid Optimizer hidden)
         loginUser(email, isSignIn ? userProfile.personal.fullName : fullName, 'DRIVER');
       }, 500);
     }, 600);
   };
 
   // Google SSO (Standard User -> isAdmin = false)
-  const handleGoogleAuth = () => {
+  const handleGoogleAuth = async () => {
     setIsLoading(true);
     setFeedbackMsg('Connecting with Google...');
+
+    const config = getActiveSupabaseConfig();
+    if (config.isConfigured) {
+      try {
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            redirectTo: window.location.origin,
+          },
+        });
+        if (error) {
+          console.warn('[Supabase Google Auth] OAuth error:', error.message);
+        } else {
+          return;
+        }
+      } catch (err) {
+        console.warn('[Supabase Google Auth] OAuth fallback:', err);
+      }
+    }
+
     setTimeout(() => {
       setIsLoading(false);
       loginUser('shivharsh.google@evkal.org', 'Shivharsh Rai', 'DRIVER');
@@ -75,10 +149,30 @@ export function AuthPage() {
   };
 
   // Official DISCOM Admin Submit (isAdmin = true, unlocks Grid Optimizer)
-  const handleOfficialSubmit = (e: React.FormEvent) => {
+  const handleOfficialSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setFeedbackMsg(null);
+
+    const config = getActiveSupabaseConfig();
+    if (config.isConfigured) {
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: officialEmail.trim(),
+          password: officialPasskey,
+        });
+
+        if (!error && data.user) {
+          setFeedbackMsg(`✓ Official DISCOM clearance verified via Supabase! (${data.user.email})`);
+          setTimeout(() => {
+            loginAsAdmin(officialAdminId, data.user.email || officialEmail);
+          }, 500);
+          return;
+        }
+      } catch (err) {
+        console.warn('[Official Supabase Auth] Clearance fallback:', err);
+      }
+    }
 
     setTimeout(() => {
       setIsLoading(false);
@@ -145,12 +239,23 @@ export function AuthPage() {
         </button>
       </div>
 
-      <div className="absolute top-4 sm:top-6 right-4 sm:right-6 z-20 hidden sm:flex items-center gap-2">
+      <div className="absolute top-4 sm:top-6 right-4 sm:right-6 z-20 flex items-center gap-2">
+        <button
+          type="button"
+          onClick={() => setIsVerifyModalOpen(true)}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/80 hover:bg-slate-900 text-blue-300 hover:text-blue-200 border border-blue-500/40 backdrop-blur-md text-xs font-semibold shadow-lg transition-all cursor-pointer"
+          title="Verify live Supabase database connection and authentication"
+        >
+          <Database className="h-3.5 w-3.5 text-blue-400" />
+          <span className="hidden xs:inline">Verify Database</span>
+          <span className="xs:hidden">DB Check</span>
+        </button>
+
         {isOfficial ? (
           <button
             type="button"
             onClick={handleAdminDemo}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-purple-500/20 hover:bg-purple-500/30 text-purple-200 border border-purple-400/40 backdrop-blur-md text-xs font-bold shadow-lg transition-all cursor-pointer"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-purple-500/20 hover:bg-purple-500/30 text-purple-200 border border-purple-400/40 backdrop-blur-md text-xs font-bold shadow-lg transition-all cursor-pointer"
             title="Authenticate with DISCOM Feeder Admin Demo"
           >
             <ShieldCheck className="h-3.5 w-3.5 text-purple-300" />
@@ -160,7 +265,7 @@ export function AuthPage() {
           <button
             type="button"
             onClick={handleDriverDemo}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 backdrop-blur-md text-xs font-bold shadow-lg transition-all cursor-pointer"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 backdrop-blur-md text-xs font-bold shadow-lg transition-all cursor-pointer"
             title="Authenticate as Standard EV Driver / Host"
           >
             <Sparkles className="h-3.5 w-3.5 text-emerald-400" />
@@ -398,6 +503,19 @@ export function AuthPage() {
                   Control
                 </div>
               </div>
+            </div>
+
+            {/* Supabase Verification Action */}
+            <div className="mt-3.5 pt-2.5 border-t border-purple-200/60 flex items-center justify-between text-[11px]">
+              <span className="text-slate-500 font-medium">Supabase Database &amp; Auth</span>
+              <button
+                type="button"
+                onClick={() => setIsVerifyModalOpen(true)}
+                className="inline-flex items-center gap-1 font-bold text-purple-700 hover:text-purple-900 cursor-pointer underline hover:no-underline"
+              >
+                <Database className="h-3 w-3 text-purple-600" />
+                <span>Verify Status &rarr;</span>
+              </button>
             </div>
           </div>
         ) : (
@@ -662,9 +780,28 @@ export function AuthPage() {
                 </div>
               </div>
             </div>
+
+            {/* Supabase Verification Action */}
+            <div className="mt-3.5 pt-2.5 border-t border-slate-200/80 flex items-center justify-between text-[11px]">
+              <span className="text-slate-500 font-medium">Supabase Database &amp; Auth</span>
+              <button
+                type="button"
+                onClick={() => setIsVerifyModalOpen(true)}
+                className="inline-flex items-center gap-1 font-bold text-emerald-700 hover:text-emerald-900 cursor-pointer underline hover:no-underline"
+              >
+                <Database className="h-3 w-3 text-emerald-600" />
+                <span>Verify Connection &rarr;</span>
+              </button>
+            </div>
           </div>
         )}
       </div>
+
+      {/* Supabase Database & Auth Diagnostics Modal */}
+      <SupabaseVerificationModal
+        isOpen={isVerifyModalOpen}
+        onClose={() => setIsVerifyModalOpen(false)}
+      />
     </div>
   );
 }
