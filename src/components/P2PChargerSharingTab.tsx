@@ -122,7 +122,7 @@ export function P2PChargerSharingTab() {
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 text-xs font-semibold transition-colors cursor-pointer"
                 >
                   <Zap className="h-3.5 w-3.5 text-emerald-600" />
-                  <span>My Charger &amp; Earnings</span>
+                  <span>Host Dashboard</span>
                 </button>
 
                 <button
