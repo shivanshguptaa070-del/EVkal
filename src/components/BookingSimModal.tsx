@@ -26,20 +26,20 @@ export function BookingSimModal() {
     advanceBookingStage,
     closeBookingModal,
     p2pQuery,
+    setActiveTab,
+    setP2PSubView,
   } = useSimulationStore();
 
   const [copiedPin, setCopiedPin] = useState(false);
   const [rating, setRating] = useState(5);
+  const [isHostDeclined, setIsHostDeclined] = useState(false);
 
-  // Auto-advance simulation timer for stage 2 (Transmitting -> Accepted)
+  // Reset declined state when stage changes
   useEffect(() => {
-    if (bookingStage === 'TRANSMITTING') {
-      const timer = setTimeout(() => {
-        advanceBookingStage();
-      }, 2000);
-      return () => clearTimeout(timer);
+    if (bookingStage === 'REVIEW') {
+      setIsHostDeclined(false);
     }
-  }, [bookingStage, advanceBookingStage]);
+  }, [bookingStage]);
 
   if (!isBookingModalOpen || !selectedChargerForBooking) {
     return null;
@@ -289,34 +289,153 @@ export function BookingSimModal() {
             </div>
           )}
 
-          {/* STAGE 2: TRANSMITTING (Awaiting Confirmation) */}
+          {/* STAGE 2: TRANSMITTING (Awaiting Host Approval) */}
           {bookingStage === 'TRANSMITTING' && (
-            <div className="py-12 px-4 text-center space-y-6 animate-fade-in">
-              <div className="relative h-20 w-20 mx-auto">
-                <div className="absolute inset-0 rounded-full border-4 border-emerald-500/30 animate-ping" />
-                <div className="relative h-20 w-20 rounded-full bg-emerald-50 border-2 border-emerald-500 flex items-center justify-center text-emerald-600">
-                  <Zap className="h-9 w-9 animate-pulse" />
+            isHostDeclined ? (
+              <div className="py-8 px-4 text-center space-y-5 animate-fade-in">
+                <div className="h-16 w-16 mx-auto rounded-full bg-rose-50 border-2 border-rose-500 text-rose-600 flex items-center justify-center shadow-md">
+                  <X className="h-8 w-8 stroke-[2.5]" />
+                </div>
+                <div className="max-w-md mx-auto space-y-2">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-100 text-rose-800 text-xs font-bold">
+                    <span>Host Busy</span>
+                  </div>
+                  <h3 className="text-lg font-black text-slate-900">
+                    Request Declined by {listing.hostName}
+                  </h3>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    The host is currently unable to accept your charging slot (Host charger is occupied or personal vehicle is currently charging). Please pick another nearby community charger.
+                  </p>
+                </div>
+                <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsHostDeclined(false);
+                      setBookingStage('REVIEW');
+                    }}
+                    className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer transition-colors"
+                  >
+                    <RotateCcw className="h-3.5 w-3.5" />
+                    <span>Try Re-Submitting</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={closeBookingModal}
+                    className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs cursor-pointer transition-colors"
+                  >
+                    <span>Find Another Nearby Charger</span>
+                  </button>
                 </div>
               </div>
-              <div className="max-w-sm mx-auto space-y-2">
-                <h3 className="text-lg font-black text-slate-900">
-                  Transmitting Request to {listing.hostName}
-                </h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Encrypting session credentials and awaiting host response. (Simulated automated acceptance in 2 seconds...)
-                </p>
+            ) : (
+              <div className="py-8 px-4 text-center space-y-6 animate-fade-in">
+                {/* Radar Pulsing Animation */}
+                <div className="relative h-20 w-20 mx-auto">
+                  <div className="absolute inset-0 rounded-full border-4 border-amber-500/30 animate-ping" />
+                  <div className="relative h-20 w-20 rounded-full bg-amber-50 border-2 border-amber-500 flex items-center justify-center text-amber-600 shadow-md">
+                    <Clock className="h-9 w-9 animate-pulse" />
+                  </div>
+                </div>
+
+                {/* Status Header */}
+                <div className="max-w-md mx-auto space-y-2">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-bold border border-amber-200">
+                    <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
+                    <span>Awaiting Host Approval</span>
+                  </div>
+                  <h3 className="text-lg font-black text-slate-900">
+                    Waiting for {listing.hostName} to Allow Request
+                  </h3>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Your request has been dispatched to the host. For privacy and security, the exact garage address and gate access PIN will remain strictly locked until <strong className="text-slate-800">{listing.hostName}</strong> reviews and allows your session.
+                  </p>
+                </div>
+
+                {/* Security & Locking Status Card */}
+                <div className="max-w-md mx-auto p-4 rounded-2xl bg-slate-50 border border-slate-200/80 text-left space-y-2.5 text-xs shadow-2xs">
+                  <div className="flex items-center justify-between text-slate-700 font-semibold border-b border-slate-200/70 pb-2">
+                    <span className="flex items-center gap-2">
+                      <Lock className="h-4 w-4 text-amber-600" />
+                      <span>Exact Garage Address:</span>
+                    </span>
+                    <span className="text-amber-800 font-bold bg-amber-100/70 px-2 py-0.5 rounded text-[11px]">
+                      🔒 Locked until host approves
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-slate-700 font-semibold border-b border-slate-200/70 pb-2">
+                    <span className="flex items-center gap-2">
+                      <Zap className="h-4 w-4 text-emerald-600" />
+                      <span>Requested Energy:</span>
+                    </span>
+                    <span className="text-slate-900 font-bold">
+                      {p2pQuery.vehicleBatteryPct ? `${(60 * (1 - p2pQuery.vehicleBatteryPct / 100)).toFixed(1)} kWh` : '28.35 kWh'} • {listing.maxPowerKw} kW {listing.connectorTypes?.join(', ') || 'TYPE_2'}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-slate-700 font-semibold">
+                    <span className="flex items-center gap-2">
+                      <Shield className="h-4 w-4 text-blue-600" />
+                      <span>DISCOM Feeder Safety:</span>
+                    </span>
+                    <span className="text-emerald-700 font-bold">
+                      ✓ Transformer Capacity OK
+                    </span>
+                  </div>
+                </div>
+
+                {/* Host Decision Action Card (Simulation for Judges & 2-Sided Peer Testing) */}
+                <div className="max-w-md mx-auto p-4 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 text-white shadow-xl space-y-3 text-left border border-slate-700">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
+                      <span className="text-[11px] font-black uppercase tracking-wider text-emerald-400">
+                        Host Control (Awaiting Host Action)
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-slate-400">Simulate Host</span>
+                  </div>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    The session will not advance until <strong className="text-white">{listing.hostName}</strong> approves. Decide as host:
+                  </p>
+
+                  <div className="flex flex-wrap items-center gap-2 pt-1">
+                    {/* Allow Request button */}
+                    <button
+                      type="button"
+                      onClick={() => advanceBookingStage()}
+                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold shadow-md hover:shadow-emerald-500/25 transition-all cursor-pointer"
+                    >
+                      <CheckCircle2 className="h-4 w-4" />
+                      <span>✓ Allow Request (Host Accepts)</span>
+                    </button>
+
+                    {/* Decline Request button */}
+                    <button
+                      type="button"
+                      onClick={() => setIsHostDeclined(true)}
+                      className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-rose-300 border border-slate-700 text-xs font-bold transition-all cursor-pointer"
+                    >
+                      <X className="h-4 w-4" />
+                      <span>Decline</span>
+                    </button>
+                  </div>
+
+                  <div className="pt-1 text-center">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        closeBookingModal();
+                        setActiveTab('HOST_DASHBOARD');
+                        setP2PSubView('HOST_DASHBOARD');
+                      }}
+                      className="text-[11px] text-slate-400 hover:text-emerald-400 underline cursor-pointer transition-colors"
+                    >
+                      Or switch to Host Dashboard to review &amp; accept requests &rarr;
+                    </button>
+                  </div>
+                </div>
               </div>
-              <div>
-                <button
-                  type="button"
-                  onClick={advanceBookingStage}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50"
-                >
-                  <span>Fast-Forward: Simulate Instant Accept</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </button>
-              </div>
-            </div>
+            )
           )}
 
           {/* STAGE 3: ACCEPTED (Address & Gate PIN Revealed) */}

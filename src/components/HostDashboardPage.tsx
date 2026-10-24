@@ -18,6 +18,7 @@ import {
   Edit3,
   ChevronDown,
 } from 'lucide-react';
+import { useSimulationStore } from '../store/useSimulationStore';
 
 interface DaySchedule {
   day: string;
@@ -41,6 +42,8 @@ interface IncomingRequest {
 }
 
 export function HostDashboardPage() {
+  const { bookingStage, setBookingStage } = useSimulationStore();
+
   // Stats state
   const [isListingPaused, setIsListingPaused] = useState(false);
   const [illustrativeEarnings, setIllustrativeEarnings] = useState<number>(0.0);
@@ -143,6 +146,9 @@ export function HostDashboardPage() {
     );
     setIllustrativeEarnings((prev) => Number((prev + req.calculatedEarnings).toFixed(2)));
     showToast(`✓ Booking accepted for ${req.vehicleName}! Driver notified.`);
+    if (bookingStage === 'TRANSMITTING') {
+      setBookingStage('ACCEPTED');
+    }
   };
 
   const handleDeclineRequest = (req: IncomingRequest) => {
