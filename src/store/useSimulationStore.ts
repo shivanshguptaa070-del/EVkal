@@ -766,18 +766,19 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
 
   openListChargerModal: () =>
     set({
-      isListChargerModalOpen: true,
+      isListChargerModalOpen: false,
       p2pSubView: 'LIST_CHARGER',
       activeP1SubPage: 'P2P_LIST_CHARGER',
     }),
   closeListChargerModal: () =>
     set({
       isListChargerModalOpen: false,
-      p2pSubView: 'BROWSE',
+      p2pSubView: 'FIND_CHARGERS',
       activeP1SubPage: 'P2P_EXPLORE',
     }),
   setP2PSubView: (view) =>
     set({
+      isListChargerModalOpen: false,
       p2pSubView: view,
       activeP1SubPage:
         view === 'LIST_CHARGER'

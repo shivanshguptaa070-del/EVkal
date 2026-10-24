@@ -21,7 +21,7 @@ export function P2PFilterBar({
   onRadiusChange,
   onToggleFilterModal,
 }: P2PFilterBarProps) {
-  const { setP2PQuery } = useSimulationStore();
+  const { setP2PQuery, setP2PSubView } = useSimulationStore();
 
   const handleConnectorSelect = (value: string) => {
     onConnectorChange(value);
@@ -85,7 +85,7 @@ export function P2PFilterBar({
         {/* + List Charger Button */}
         <button
           type="button"
-          onClick={onToggleFilterModal}
+          onClick={() => setP2PSubView('LIST_CHARGER')}
           className="inline-flex items-center gap-1.5 px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-[#059669] border border-emerald-200 rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer"
           title="List your community charger"
         >

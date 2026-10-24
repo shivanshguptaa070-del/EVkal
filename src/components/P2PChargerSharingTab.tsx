@@ -10,22 +10,52 @@ import { MyBookingsPage } from './MyBookingsPage';
 import { HostEarningsPage } from './HostEarningsPage';
 import { MembershipPricingPage } from './MembershipPricingPage';
 import { BookingSimModal } from './BookingSimModal';
-import { ListChargerModal } from './ListChargerModal';
 import { useSimulationStore } from '../store/useSimulationStore';
 
 export function P2PChargerSharingTab() {
   const {
     p2pSubView,
     setP2PSubView,
-    openListChargerModal,
     userProfile,
     openProfileView,
     setActiveProfileTab,
+    p2pQuery,
+    setP2PQuery,
   } = useSimulationStore();
-
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedConnector, setSelectedConnector] = useState('TYPE_2');
-  const [selectedRadius, setSelectedRadius] = useState(5);
+  const [selectedConnector, setSelectedConnector] = useState<string>(p2pQuery.requiredConnector || 'TYPE_2');
+  const [selectedRadius, setSelectedRadius] = useState<number>(p2pQuery.radiusKm || 5);
+  const [isSearchTriggered, setIsSearchTriggered] = useState(false);
+
+  // Triggered when user clicks "Find Compatible Nearby Chargers" in Hero Card
+  const handleFindNearbyChargers = () => {
+    setSelectedConnector(p2pQuery.requiredConnector);
+    setSelectedRadius(p2pQuery.radiusKm);
+    setIsSearchTriggered(true);
+  };
+
+  const handleResetSearch = () => {
+    setSelectedConnector('ALL');
+    setSelectedRadius(10);
+    setSearchQuery('');
+    setIsSearchTriggered(false);
+    setP2PQuery({
+      requiredConnector: 'TYPE_2',
+      radiusKm: 10,
+    });
+  };
+
+  const handleConnectorChange = (connector: string) => {
+    setSelectedConnector(connector);
+    if (connector !== 'ALL') {
+      setP2PQuery({ requiredConnector: connector as any });
+    }
+  };
+
+  const handleRadiusChange = (radius: number) => {
+    setSelectedRadius(radius);
+    setP2PQuery({ radiusKm: radius });
+  };
 
   return (
     <div className="flex flex-col lg:flex-row items-start gap-6 animate-fade-in pb-12">
@@ -111,24 +141,28 @@ export function P2PChargerSharingTab() {
             </div>
 
             {/* Critical Low Battery Alert Function (At the Top) */}
-            <LowBatteryHeroInput />
+            <LowBatteryHeroInput onFindChargers={handleFindNearbyChargers} />
 
             {/* Top Search & Filter Toolbar */}
             <P2PFilterBar
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}
               selectedConnector={selectedConnector}
-              onConnectorChange={setSelectedConnector}
+              onConnectorChange={handleConnectorChange}
               selectedRadius={selectedRadius}
-              onRadiusChange={setSelectedRadius}
-              onToggleFilterModal={openListChargerModal}
+              onRadiusChange={handleRadiusChange}
+              onToggleFilterModal={() => setP2PSubView('LIST_CHARGER')}
             />
 
             {/* Main 2-Column Interface: Left Map + Right Nearby Chargers List */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
               {/* Left Column (6 cols): Interactive Delhi South Map */}
               <section className="lg:col-span-6 xl:col-span-6 h-full">
-                <DelhiInteractiveMap />
+                <DelhiInteractiveMap
+                  selectedConnector={selectedConnector}
+                  selectedRadius={selectedRadius}
+                  isSearchTriggered={isSearchTriggered}
+                />
               </section>
 
               {/* Right Column (6 cols): Nearby Chargers List */}
@@ -137,6 +171,10 @@ export function P2PChargerSharingTab() {
                   searchQuery={searchQuery}
                   selectedConnector={selectedConnector}
                   selectedRadius={selectedRadius}
+                  isSearchTriggered={isSearchTriggered}
+                  onResetSearch={handleResetSearch}
+                  onConnectorChange={handleConnectorChange}
+                  onRadiusChange={handleRadiusChange}
                 />
               </section>
             </div>
@@ -166,7 +204,6 @@ export function P2PChargerSharingTab() {
 
       {/* Interactive Modals */}
       <BookingSimModal />
-      <ListChargerModal />
     </div>
   );
 }

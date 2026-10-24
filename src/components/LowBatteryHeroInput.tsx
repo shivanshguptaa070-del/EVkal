@@ -1,9 +1,16 @@
-import { AlertTriangle, Navigation, Zap, Search, ArrowRight, ChevronDown } from 'lucide-react';
+import { useState } from 'react';
+import { AlertTriangle, Navigation, Zap, Search, ArrowRight, ChevronDown, Check, Loader2 } from 'lucide-react';
 import { useSimulationStore } from '../store/useSimulationStore';
 import type { ConnectorType } from '../types/p2p';
 
-export function LowBatteryHeroInput() {
+interface LowBatteryHeroInputProps {
+  onFindChargers?: () => void;
+}
+
+export function LowBatteryHeroInput({ onFindChargers }: LowBatteryHeroInputProps) {
   const { p2pQuery, setP2PQuery } = useSimulationStore();
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchFeedback, setSearchFeedback] = useState(false);
   const isCritical = p2pQuery.vehicleBatteryPct <= 10;
 
   const handleBatteryChange = (pct: number) => {
@@ -15,13 +22,33 @@ export function LowBatteryHeroInput() {
     });
   };
 
-  const handleScrollToChargers = () => {
-    const el = document.getElementById('available-chargers-heading');
-    el?.scrollIntoView({ behavior: 'smooth' });
+  const handleExecuteSearch = () => {
+    setIsSearching(true);
+    setSearchFeedback(true);
+
+    // Call callback to sync filters and trigger active search in parent
+    onFindChargers?.();
+
+    // Smooth scroll to the chargers section with pulse highlight
+    setTimeout(() => {
+      setIsSearching(false);
+      const el = document.getElementById('nearby-chargers-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        el.classList.add('ring-2', 'ring-emerald-400', 'ring-offset-2');
+        setTimeout(() => {
+          el.classList.remove('ring-2', 'ring-emerald-400', 'ring-offset-2');
+        }, 2000);
+      }
+    }, 250);
+
+    setTimeout(() => {
+      setSearchFeedback(false);
+    }, 3500);
   };
 
   return (
-    <div className="bg-[#FFFDF5] border border-[#FDE68A] rounded-3xl p-4 sm:p-5 shadow-sm space-y-4">
+    <div className="bg-[#FFFDF5] border border-[#FDE68A] rounded-3xl p-4 sm:p-5 shadow-sm space-y-4 transition-all">
       {/* Top Controls Flex/Grid Row */}
       <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 sm:gap-6">
         {/* 1. Alert Banner Icon & Text */}
@@ -138,12 +165,29 @@ export function LowBatteryHeroInput() {
       {/* Bottom Full-Width Emerald CTA Button */}
       <button
         type="button"
-        onClick={handleScrollToChargers}
-        className="w-full py-3 px-5 bg-[#059669] hover:bg-[#047857] active:scale-[0.99] text-white font-bold rounded-2xl text-xs sm:text-sm transition-all shadow-sm flex items-center justify-center gap-2"
+        id="find-nearby-chargers-btn"
+        disabled={isSearching}
+        onClick={handleExecuteSearch}
+        className="w-full py-3 px-5 bg-[#059669] hover:bg-[#047857] active:scale-[0.99] disabled:opacity-85 text-white font-bold rounded-2xl text-xs sm:text-sm transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
       >
-        <Search className="h-4 w-4" />
-        <span>Find Compatible Nearby Chargers</span>
-        <ArrowRight className="h-4 w-4" />
+        {isSearching ? (
+          <>
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <span>Searching Compatible Chargers...</span>
+          </>
+        ) : searchFeedback ? (
+          <>
+            <Check className="h-4 w-4" />
+            <span>Filtering Compatible Nearby Chargers...</span>
+            <ArrowRight className="h-4 w-4" />
+          </>
+        ) : (
+          <>
+            <Search className="h-4 w-4" />
+            <span>Find Compatible Nearby Chargers</span>
+            <ArrowRight className="h-4 w-4" />
+          </>
+        )}
       </button>
     </div>
   );
