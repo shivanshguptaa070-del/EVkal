@@ -16,6 +16,7 @@ import {
   saveCustomSupabaseConfig,
   clearCustomSupabaseConfig,
   verifyDatabaseConnection,
+  cleanSupabaseUrl,
   type DatabaseVerificationResult,
 } from '../../lib/supabase';
 
@@ -36,7 +37,8 @@ export function SupabaseVerificationModal({ isOpen, onClose }: Props) {
     if (isOpen) {
       const active = getActiveSupabaseConfig();
       setConfig(active);
-      setInputUrl(active.url.includes('placeholder') || active.url.includes('dummy') ? '' : active.url);
+      const cleaned = cleanSupabaseUrl(active.url);
+      setInputUrl(cleaned.includes('placeholder') || cleaned.includes('dummy') ? '' : cleaned);
       setInputAnonKey(active.anonKey.includes('dummy') ? '' : active.anonKey);
       runVerification();
     }
@@ -58,7 +60,9 @@ export function SupabaseVerificationModal({ isOpen, onClose }: Props) {
       alert('Please provide both Supabase Project URL and Anon API Key.');
       return;
     }
-    saveCustomSupabaseConfig(inputUrl.trim(), inputAnonKey.trim());
+    const cleaned = cleanSupabaseUrl(inputUrl.trim());
+    setInputUrl(cleaned);
+    saveCustomSupabaseConfig(cleaned, inputAnonKey.trim());
     runVerification();
   }
 

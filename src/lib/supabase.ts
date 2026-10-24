@@ -7,6 +7,17 @@ const STORAGE_KEY_ANON = 'evkal_supabase_anon_key';
 const FALLBACK_URL = 'https://demo-evkal.supabase.co';
 const FALLBACK_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dummy_anon_key_for_evkal_fallback';
 
+export function cleanSupabaseUrl(rawUrl: string): string {
+  if (!rawUrl) return '';
+  const trimmed = rawUrl.trim();
+  try {
+    const parsed = new URL(trimmed);
+    return parsed.origin;
+  } catch {
+    return trimmed.replace(/\/+$/, '');
+  }
+}
+
 export function getActiveSupabaseConfig(): {
   url: string;
   anonKey: string;
@@ -17,8 +28,12 @@ export function getActiveSupabaseConfig(): {
   const customAnon = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY_ANON) : null;
 
   if (customUrl && customAnon) {
+    const cleanUrl = cleanSupabaseUrl(customUrl);
+    if (cleanUrl !== customUrl && typeof window !== 'undefined') {
+      localStorage.setItem(STORAGE_KEY_URL, cleanUrl);
+    }
     return {
-      url: customUrl.trim(),
+      url: cleanUrl,
       anonKey: customAnon.trim(),
       source: 'custom',
       isConfigured: true,
@@ -30,7 +45,7 @@ export function getActiveSupabaseConfig(): {
 
   if (envUrl && envAnon && !envUrl.includes('placeholder') && !envUrl.includes('your-project')) {
     return {
-      url: envUrl.trim(),
+      url: cleanSupabaseUrl(envUrl),
       anonKey: envAnon.trim(),
       source: 'env',
       isConfigured: true,
@@ -38,7 +53,7 @@ export function getActiveSupabaseConfig(): {
   }
 
   return {
-    url: envUrl?.trim() || FALLBACK_URL,
+    url: cleanSupabaseUrl(envUrl) || FALLBACK_URL,
     anonKey: envAnon?.trim() || FALLBACK_ANON_KEY,
     source: 'none',
     isConfigured: false,
@@ -46,10 +61,14 @@ export function getActiveSupabaseConfig(): {
 }
 
 let supabaseInstance: SupabaseClient | null = null;
+let lastUsedUrl = '';
+let lastUsedAnonKey = '';
 
 export function getSupabase(): SupabaseClient {
   const config = getActiveSupabaseConfig();
-  if (!supabaseInstance) {
+  if (!supabaseInstance || lastUsedUrl !== config.url || lastUsedAnonKey !== config.anonKey) {
+    lastUsedUrl = config.url;
+    lastUsedAnonKey = config.anonKey;
     supabaseInstance = createClient(config.url, config.anonKey, {
       auth: {
         persistSession: true,
@@ -61,14 +80,28 @@ export function getSupabase(): SupabaseClient {
   return supabaseInstance;
 }
 
-export const supabase = getSupabase();
+// Dynamic Proxy ensures any module importing 'supabase' always talks to the live client
+export const supabase: SupabaseClient = new Proxy({} as SupabaseClient, {
+  get(_target, prop) {
+    const client = getSupabase();
+    const value = Reflect.get(client, prop);
+    if (typeof value === 'function') {
+      return value.bind(client);
+    }
+    return value;
+  },
+});
 
 export function saveCustomSupabaseConfig(url: string, anonKey: string): void {
+  const sanitizedUrl = cleanSupabaseUrl(url);
+  const sanitizedKey = anonKey.trim();
   if (typeof window !== 'undefined') {
-    localStorage.setItem(STORAGE_KEY_URL, url.trim());
-    localStorage.setItem(STORAGE_KEY_ANON, anonKey.trim());
+    localStorage.setItem(STORAGE_KEY_URL, sanitizedUrl);
+    localStorage.setItem(STORAGE_KEY_ANON, sanitizedKey);
     // Re-initialize singleton instance
-    supabaseInstance = createClient(url.trim(), anonKey.trim(), {
+    lastUsedUrl = sanitizedUrl;
+    lastUsedAnonKey = sanitizedKey;
+    supabaseInstance = createClient(sanitizedUrl, sanitizedKey, {
       auth: {
         persistSession: true,
         autoRefreshToken: true,
