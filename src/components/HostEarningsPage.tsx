@@ -13,6 +13,16 @@ import {
   Sparkles,
   Download,
   Settings,
+  Lock,
+  ShieldCheck,
+  LogOut,
+  Mail,
+  KeyRound,
+  Eye,
+  EyeOff,
+  AlertCircle,
+  ArrowRight,
+  ArrowLeft,
 } from 'lucide-react';
 import { useSimulationStore } from '../store/useSimulationStore';
 
@@ -138,7 +148,21 @@ const RECENT_SESSIONS: RecentSession[] = [
 ];
 
 export function HostEarningsPage() {
-  const { setP2PSubView } = useSimulationStore();
+  const {
+    setP2PSubView,
+    isHostAuthenticated,
+    hostEmail,
+    hostLoginError,
+    loginHost,
+    logoutHost,
+    clearHostLoginError,
+  } = useSimulationStore();
+
+  const [inputEmail, setInputEmail] = useState('');
+  const [inputPassword, setInputPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [isSubmittingLogin, setIsSubmittingLogin] = useState(false);
+
   const [timeRange, setTimeRange] = useState<'6M' | '3M' | '1Y'>('6M');
   const [chargers, setChargers] = useState<HostChargerItem[]>(INITIAL_CHARGERS);
   const [selectedSession, setSelectedSession] = useState<RecentSession | null>(null);
@@ -170,7 +194,21 @@ export function HostEarningsPage() {
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 3000);
+    setTimeout(() => setToastMessage(null), 3500);
+  };
+
+  const handleHostLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmittingLogin(true);
+    clearHostLoginError();
+
+    setTimeout(() => {
+      const success = loginHost(inputEmail, inputPassword);
+      setIsSubmittingLogin(false);
+      if (success) {
+        showToast('Welcome back, Shivharsh! Host Dashboard unlocked.');
+      }
+    }, 350);
   };
 
   const handleToggleCharger = (chargerId: string) => {
@@ -186,6 +224,140 @@ export function HostEarningsPage() {
     );
   };
 
+  // If NOT authenticated, show the secure Host Login Portal
+  if (!isHostAuthenticated) {
+    return (
+      <div className="max-w-xl mx-auto py-8 px-4 animate-fade-in space-y-5">
+        <button
+          type="button"
+          onClick={() => setP2PSubView('FIND_CHARGERS')}
+          className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          <span>Back to Public Chargers</span>
+        </button>
+
+        <div className="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-9 shadow-xl space-y-6">
+          <div className="text-center space-y-3">
+            <div className="h-16 w-16 mx-auto rounded-3xl bg-emerald-50 text-emerald-600 flex items-center justify-center shadow-inner border border-emerald-100">
+              <Lock className="h-8 w-8" />
+            </div>
+            <div>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-black uppercase tracking-wider mb-2">
+                <ShieldCheck className="h-3.5 w-3.5" />
+                <span>Protected Host Portal</span>
+              </span>
+              <h2 className="text-2xl font-black text-slate-900 tracking-tight">
+                Host Dashboard Login
+              </h2>
+              <p className="text-xs text-slate-500 font-medium max-w-sm mx-auto mt-1">
+                Access to private charger revenue, bank settlements, and charger hardware controls is restricted strictly to the verified host.
+              </p>
+            </div>
+          </div>
+
+          {hostLoginError && (
+            <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-start gap-2.5 animate-shake">
+              <AlertCircle className="h-4 w-4 shrink-0 mt-0.5 text-rose-500" />
+              <span>{hostLoginError}</span>
+            </div>
+          )}
+
+          <form onSubmit={handleHostLogin} className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 block">
+                Host Email Address
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <input
+                  type="email"
+                  required
+                  value={inputEmail}
+                  onChange={(e) => {
+                    setInputEmail(e.target.value);
+                    if (hostLoginError) clearHostLoginError();
+                  }}
+                  placeholder="shivharshtiwari86017@gmail.com"
+                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 block">
+                Host Security Password
+              </label>
+              <div className="relative">
+                <KeyRound className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  value={inputPassword}
+                  onChange={(e) => {
+                    setInputPassword(e.target.value);
+                    if (hostLoginError) clearHostLoginError();
+                  }}
+                  placeholder="Enter host password"
+                  className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                  title={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmittingLogin}
+              className="w-full py-3 bg-[#059669] hover:bg-[#047857] text-white text-xs font-black rounded-xl shadow-md shadow-emerald-700/20 transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-70"
+            >
+              {isSubmittingLogin ? (
+                <span>Authenticating Credentials...</span>
+              ) : (
+                <>
+                  <span>Authorize &amp; Access Host Dashboard</span>
+                  <ArrowRight className="h-4 w-4" />
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* Quick Helper for Testing Convenience */}
+          <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
+            <div className="flex items-center justify-between text-[11px] font-bold text-slate-600">
+              <span className="flex items-center gap-1.5 text-slate-500">
+                <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+                <span>Authorized Host Credentials:</span>
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  setInputEmail('shivharshtiwari86017@gmail.com');
+                  setInputPassword('Shiv@123');
+                  clearHostLoginError();
+                }}
+                className="text-[11px] font-bold text-emerald-700 hover:text-emerald-800 underline cursor-pointer"
+              >
+                Auto-fill Login
+              </button>
+            </div>
+            <div className="text-[10px] font-mono text-slate-600 bg-white p-2.5 rounded-xl border border-slate-200 space-y-0.5">
+              <div>Email: <strong className="text-slate-900">shivharshtiwari86017@gmail.com</strong></div>
+              <div>Password: <strong className="text-slate-900">Shiv@123</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // When Authenticated: Render Full Host Dashboard with Host Profile Bar
   return (
     <div className="space-y-6 pb-12 animate-fade-in max-w-7xl mx-auto">
       {/* Toast Notification */}
@@ -196,14 +368,48 @@ export function HostEarningsPage() {
         </div>
       )}
 
+      {/* 0. Authenticated Host Badge & Logout Header */}
+      <div className="p-3.5 sm:p-4 rounded-3xl bg-emerald-50/90 border border-emerald-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 rounded-2xl bg-[#059669] text-white flex items-center justify-center font-black text-sm shadow-xs">
+            ST
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-black text-slate-900">Shivharsh Tiwari</span>
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-200 text-emerald-950 text-[10px] font-extrabold">
+                <ShieldCheck className="h-3 w-3 text-emerald-700" />
+                <span>Verified Host</span>
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-600 font-medium">
+              Authorized Account: <span className="font-bold text-slate-800">{hostEmail || 'shivharshtiwari86017@gmail.com'}</span>
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => {
+            logoutHost();
+            showToast('Logged out from Host Dashboard.');
+          }}
+          className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:text-rose-600 hover:border-rose-200 hover:bg-rose-50 text-xs font-bold transition-all cursor-pointer w-fit shadow-2xs"
+          title="Logout from host session"
+        >
+          <LogOut className="h-3.5 w-3.5" />
+          <span>Logout Host</span>
+        </button>
+      </div>
+
       {/* 1. Header Row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-            Host Earnings
+            Host Dashboard &amp; Earnings
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">
-            Track your income, platform commission and charger performance.
+            Private manager for your chargers, platform facilitation fees, and revenue settlements.
           </p>
         </div>
 

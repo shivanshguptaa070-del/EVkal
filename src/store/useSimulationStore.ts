@@ -435,6 +435,14 @@ interface SimulationState {
   setAdminRole: (isAdmin: boolean) => void;
   toggleAdminRole: () => void;
 
+  // Host Authentication state
+  isHostAuthenticated: boolean;
+  hostEmail: string | null;
+  hostLoginError: string | null;
+  loginHost: (email: string, pass: string) => boolean;
+  logoutHost: () => void;
+  clearHostLoginError: () => void;
+
   // Actions
   setActiveTab: (tab: ActiveTab) => void;
   setActiveP0SubPage: (page: P0SubPage) => void;
@@ -506,6 +514,12 @@ const initialSolverOutput = runSmartChargingOptimisation(
   INITIAL_REGIONAL
 );
 
+export const AUTHORIZED_HOST_CREDENTIALS = {
+  email: 'shivharshtiwari86017@gmail.com',
+  password: 'Shiv@123',
+  name: 'Shivharsh Tiwari',
+};
+
 export const useSimulationStore = create<SimulationState>((set, get) => ({
   activeTab: 'LANDING',
   activeP0SubPage: 'PAGE_1_DASHBOARD',
@@ -520,6 +534,11 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
   // Authentication state
   isAuthenticated: true,
   authMode: 'SIGN_IN',
+
+  // Host Auth state
+  isHostAuthenticated: typeof window !== 'undefined' ? localStorage.getItem('evkal_host_auth') === 'true' : false,
+  hostEmail: typeof window !== 'undefined' ? localStorage.getItem('evkal_host_email') : null,
+  hostLoginError: null,
 
   transformerConfig: INITIAL_CONFIG,
   backgroundLoad: INITIAL_BACKGROUND,
@@ -538,7 +557,7 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
   chargerListings: INITIAL_CHARGERS,
   isListChargerModalOpen: false,
   activeP1SubPage: 'P2P_EXPLORE',
-  p2pSubView: 'BROWSE',
+  p2pSubView: 'FIND_CHARGERS',
   newlyAddedListingId: null,
   selectedChargerForBooking: null,
   bookingStage: 'REVIEW',
@@ -1049,4 +1068,44 @@ export const useSimulationStore = create<SimulationState>((set, get) => ({
       });
     }
   },
+
+  loginHost: (email: string, pass: string) => {
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanPass = pass.trim();
+    if (
+      cleanEmail === AUTHORIZED_HOST_CREDENTIALS.email.toLowerCase() &&
+      cleanPass === AUTHORIZED_HOST_CREDENTIALS.password
+    ) {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('evkal_host_auth', 'true');
+        localStorage.setItem('evkal_host_email', AUTHORIZED_HOST_CREDENTIALS.email);
+      }
+      set({
+        isHostAuthenticated: true,
+        hostEmail: AUTHORIZED_HOST_CREDENTIALS.email,
+        hostLoginError: null,
+      });
+      return true;
+    } else {
+      set({
+        hostLoginError:
+          'Access Denied: Invalid Host Credentials. Only shivharshtiwari86017@gmail.com with the authorized password can access the Host Portal.',
+      });
+      return false;
+    }
+  },
+
+  logoutHost: () => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('evkal_host_auth');
+      localStorage.removeItem('evkal_host_email');
+    }
+    set({
+      isHostAuthenticated: false,
+      hostEmail: null,
+      hostLoginError: null,
+    });
+  },
+
+  clearHostLoginError: () => set({ hostLoginError: null }),
 }));

@@ -11,7 +11,16 @@ import {
 import { useSimulationStore } from '../store/useSimulationStore';
 
 export function Header() {
-  const { activeTab, setActiveTab, isLive, regionalStress, toggleNetworkFallback, openProfileView } = useSimulationStore();
+  const {
+    activeTab,
+    setActiveTab,
+    isLive,
+    regionalStress,
+    toggleNetworkFallback,
+    openProfileView,
+    setP2PSubView,
+    isHostAuthenticated,
+  } = useSimulationStore();
   const [currentTime, setCurrentTime] = useState<string>('19:00 IST');
 
   useEffect(() => {
@@ -192,23 +201,49 @@ export function Header() {
             <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
           </div>
 
-          {/* User Profile Avatar Pill: [ST] Shivharsh T. ⌄ */}
-          <button
-            type="button"
-            onClick={() => openProfileView()}
+          {/* User Profile Avatar Pill: [ST] Shivharsh T. or [EV] Guest Driver */}
+          <div
+            onClick={() => {
+              if (isHostAuthenticated) {
+                openProfileView();
+              } else {
+                setActiveTab('P1_P2P');
+                setP2PSubView('HOST_EARNINGS');
+              }
+            }}
             className={`inline-flex items-center gap-2 px-2.5 py-1.5 rounded-xl border text-xs font-bold cursor-pointer shadow-sm transition-all ${
-              isLightMode
-                ? 'bg-white border-slate-200/90 text-slate-800 hover:bg-slate-50'
-                : 'bg-slate-900 border-slate-800 text-slate-200 hover:bg-slate-850'
+              isHostAuthenticated
+                ? isLightMode
+                  ? 'bg-emerald-50 border-emerald-200 text-emerald-950 hover:bg-emerald-100'
+                  : 'bg-emerald-950/40 border-emerald-800 text-emerald-300 hover:bg-emerald-950/60'
+                : isLightMode
+                ? 'bg-white border-slate-200/90 text-slate-700 hover:bg-slate-50'
+                : 'bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-850'
             }`}
-            title="Open User Profile"
+            title={
+              isHostAuthenticated
+                ? 'Logged in as Host: Shivharsh Tiwari (shivharshtiwari86017@gmail.com). Click to view profile.'
+                : 'Public Guest session. Click to access Host Dashboard.'
+            }
           >
-            <div className="h-6 w-6 rounded-full bg-violet-100 text-violet-800 flex items-center justify-center text-[10px] font-black">
-              ST
+            <div
+              className={`h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-black ${
+                isHostAuthenticated
+                  ? 'bg-[#059669] text-white shadow-2xs'
+                  : 'bg-slate-200 text-slate-700'
+              }`}
+            >
+              {isHostAuthenticated ? 'ST' : 'EV'}
             </div>
-            <span>Shivharsh T.</span>
-            <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
-          </button>
+            <span>{isHostAuthenticated ? 'Shivharsh T. (Host)' : 'Guest Driver'}</span>
+            {!isHostAuthenticated ? (
+              <span className="text-[10px] text-emerald-700 font-extrabold bg-emerald-100 px-1.5 py-0.5 rounded-md border border-emerald-200">
+                Host Login
+              </span>
+            ) : (
+              <ChevronDown className="h-3.5 w-3.5 text-emerald-600" />
+            )}
+          </div>
         </div>
       </div>
     </header>
